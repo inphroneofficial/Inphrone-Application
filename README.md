@@ -1,102 +1,104 @@
-Inphrone – People-Powered Entertainment Intelligence
-📱 What is Inphrone?
+🎬 Inphrone
+People-Powered Entertainment Intelligence
 
-Inphrone is a people-powered entertainment intelligence platform that connects audiences and creators across Film, Music, TV/OTT, Gaming, and Social Media.
+Inphrone is a people-powered entertainment intelligence platform that captures real audience behavior and transforms it into actionable insights for creators, studios, and platforms across Film, Music, TV/OTT, Gaming, and Social Media.
 
-The name combines:
+📌 Overview
+
+Inphrone bridges the gap between what audiences consume and what creators need to know.
+
+The name comes from:
 
 IN → Insights
 
 PHRONE → Phronesis (Greek for practical wisdom)
 
-Together, it represents real human insight transformed into actionable intelligence.
+Together, it represents human-driven intelligence guided by real-world behavior.
 
-🎯 Core Mission
+🎯 Mission
 
-To democratize entertainment intelligence by:
+Democratize entertainment intelligence by:
 
 Giving audiences a meaningful voice
 
-Providing creators and studios with authentic, real-time insights
+Delivering authentic, real-time insights to industry professionals
 
-✨ Key Features
-1. InphroSync™ – Daily Entertainment Pulse 🌟
+✨ Core Features
+🌟 InphroSync™ — Daily Entertainment Pulse
 
-A habit-forming daily engagement engine:
+A flagship daily engagement system designed to build habit and insight:
 
-3 short questions about yesterday’s entertainment consumption
+🧠 3 daily questions based on yesterday’s entertainment consumption
 
-Swipeable, Tinder-style interaction
+👉 Swipeable card interface (mobile-first, intuitive UX)
 
-Live community stats with demographic filters
+📊 Live community insights with demographic filters
 
-Daily & weekly streak tracking
+🔥 Streak tracking to encourage consistency
 
-Gamified feedback (confetti, progress visuals)
+🎉 Gamified feedback (confetti, progress indicators, animations)
 
-Mobile-first, premium UI
+📱 Premium mobile-first experience
 
-2. Opinion Sharing & Deep Insights
+🗣️ Opinion Sharing & Insight Engine
 
 Submit opinions across 7 entertainment categories
 
-Rich metadata (genre, budget range, target audience)
+Rich metadata support (genre, budget range, target audience)
 
-Upvote system for industry users
+Upvoting system for non-audience users
 
-View & engagement analytics
+View and engagement analytics
 
-Weekly trend summaries
+Weekly opinion trend summaries
 
-3. Location-Aware Reward System 🎁
+🎁 Location-Aware Rewards System
 
-Local currency support (USD, INR, GBP, EUR, AUD, CAD)
+🌍 Local currency support (USD, INR, GBP, EUR, AUD, CAD)
 
-Multi-category rewards (Entertainment, Food, Fashion, Tech, Travel)
+🛍️ Multiple categories: Entertainment, Food, Fashion, Tech, Travel
 
-Coupon lifecycle tracking (active / used / expired)
+⏳ Track active, used, and expired rewards
 
-Sharing via email
+✉️ Share rewards via email
 
-Real-time expiration awareness
+🕒 Real-time expiration awareness
 
-4. Advanced Gamification Layer 🏆
+🏆 Gamification & Progression
 
-Contribution streak tiers
+🔥 Weekly and long-term streak tiers
 
-Achievement & wisdom badges
+🏅 Achievement & wisdom badges
 
-Evolving Creative Soul Avatar
+🎭 Creative Soul Avatar that evolves with user activity
 
-Cultural Energy Map (geo-trend visualization)
+🗺️ Cultural Energy Map for geo-based trend visualization
 
-Expertise recognition by category
+🎓 Category-based expertise recognition
 
-5. Multi-User Intelligence System
+👥 Multi-User Intelligence Model
 
-Tailored insights for:
+Tailored experiences for different stakeholders:
 
-Audiences
+Audience – Share opinions, earn rewards, view insights
 
-Creators
+Creators – Access feedback and demographic trends
 
-Studios / Production Houses
+Studios / Production Houses – Market and content intelligence
 
-OTT Platforms
+OTT Platforms – Performance and consumption analytics
 
-Music Labels
+Music Labels – Genre and artist insights
 
-Gaming Companies
+Gaming Companies – Player preference data
 
-TV Networks
+TV Networks – Broadcast trend analysis
 
-Each role receives context-specific analytics and insights.
+📈 Real-Time Analytics
 
-6. Real-Time Analytics
+Global and category-level trend dashboards
 
-Global and category-level trends
-
-Demographic breakdowns
+Demographic breakdowns (age, gender, location)
 
 Weekly consumption analytics
 
@@ -105,7 +107,7 @@ Opinion engagement metrics
 Time-spent and behavior tracking
 
 🏗️ Technology Stack
-Frontend
+⚛️ Frontend
 
 React 18 + TypeScript
 
@@ -121,7 +123,7 @@ TanStack Query
 
 Recharts
 
-Backend & Infrastructure
+☁️ Backend & Infrastructure
 
 PostgreSQL with Row Level Security (RLS)
 
@@ -133,9 +135,9 @@ Secure authentication (Email + Google OAuth)
 
 File storage for uploads
 
-Lovable Cloud for managed backend & infrastructure
+Lovable Cloud (managed backend & infrastructure)
 
-Supporting Libraries
+🧩 Supporting Libraries
 
 canvas-confetti
 
@@ -145,73 +147,71 @@ zod
 
 date-fns
 
-🎨 Design Philosophy
+🎨 Design Principles
 
-Inphrone follows a cinematic, premium design language:
+🌙 Dark-mode first
 
-Dark-mode first
+🎬 Cinematic, premium visual language
 
-Semantic color tokens
+🎯 Semantic color tokens
 
-Micro-interactions & motion polish
+✨ Micro-interactions and motion polish
 
-Glass-morphism & subtle gradients
+📱 Mobile-first responsiveness
 
-Mobile-first responsiveness
-
-WCAG-compliant accessibility
+♿ WCAG-compliant accessibility
 
 🔐 Security & Privacy
 
-Row Level Security on all data
+🔒 Row Level Security on all database tables
 
-User-isolated access
+👤 User-isolated data access
 
-Secure authentication & verification
+📧 Verified authentication flows
 
-Grace period for account deletion
+⏳ Grace period for account deletion
 
-Data restoration safeguards
+♻️ Secure data restoration mechanisms
 
-📈 Analytics & Monitoring
+📊 Analytics & Monitoring
 
-Engagement & retention tracking
+User engagement and retention tracking
 
 Performance monitoring
 
-Error boundaries & logging
+Error boundaries and logging
 
-Database-level insights
+Database-level insights and observability
 
-🔮 Product Roadmap
+🔮 Roadmap
 
-Planned expansions include:
+Planned enhancements include:
 
-Native mobile apps
+📱 Native mobile applications
 
-AI-powered insight recommendations
+🤖 AI-powered insight recommendations
 
-Advanced creator dashboards
+📊 Advanced creator and studio dashboards
 
-Multi-language support
+🌐 Multi-language support
 
-Strategic partner integrations
+🤝 Strategic partner integrations
 
-🧠 What Makes Inphrone Different?
+🚀 Why Inphrone?
 
-Daily ritual-based engagement (not passive analytics)
+✅ Daily habit-forming engagement
 
-Swipe-first, consumer-grade UX
+✅ Consumer-grade swipe UX
 
-Real-time cultural intelligence
+✅ Real-time cultural intelligence
 
-Location-aware personalization
+✅ Location-aware personalization
 
-Gamification that feels earned
+✅ Meaningful gamification
 
-One platform serving audience + industry
+✅ One platform serving audience + industry
 
 📄 License
 
-This project is private and proprietary.
+🔐 Private & Proprietary
 All rights reserved.
