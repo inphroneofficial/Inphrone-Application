@@ -1,3 +1,6 @@
+// =====================
+// SettingsDialog.tsx
+// =====================
 import { useState, useEffect, createContext, useContext, ReactNode, useRef } from "react";
 import { Settings, Sun, Moon, Monitor, Bell, BellOff, Globe, Compass, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -20,7 +23,12 @@ import { useTheme } from "next-themes";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
 import { useWebPushNotifications } from "@/hooks/useWebPushNotifications";
 import { motion } from "framer-motion";
+import Shepherd from "shepherd.js";
+import "shepherd.js/dist/css/shepherd.css";
 
+// =====================
+// Interfaces
+// =====================
 interface UserSettings {
   notifications_enabled: boolean;
   email_notifications: boolean;
@@ -29,11 +37,11 @@ interface UserSettings {
   tour_completed?: boolean;
 }
 
-import { translations, getTranslation } from "@/lib/translations";
-
 // =====================
 // Language Context
 // =====================
+import { translations, getTranslation } from "@/lib/translations";
+
 interface LanguageContextType {
   language: string;
   t: (key: string) => string;
@@ -62,14 +70,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     };
 
     window.addEventListener('language-change', handleLanguageChange as EventListener);
-    return () => {
-      window.removeEventListener('language-change', handleLanguageChange as EventListener);
-    };
+    return () => window.removeEventListener('language-change', handleLanguageChange as EventListener);
   }, []);
 
-  const t = (key: string): string => {
-    return getTranslation(language, key);
-  };
+  const t = (key: string) => getTranslation(language, key);
 
   const updateLanguage = (lang: string) => {
     setLanguage(lang);
@@ -85,17 +89,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 }
 
 // =====================
-// Web Push Toggle Component
+// WebPushToggle
 // =====================
 function WebPushToggle() {
-  const { 
-    isSupported, 
-    isSubscribed, 
-    isLoading, 
-    subscribeToPush, 
-    unsubscribeFromPush,
-    permission 
-  } = useWebPushNotifications();
+  const { isSupported, isSubscribed, isLoading, subscribeToPush, unsubscribeFromPush, permission } = useWebPushNotifications();
   const { t } = useLanguage();
 
   if (!isSupported) return null;
@@ -129,24 +126,23 @@ function WebPushToggle() {
 }
 
 // =====================
-// Tour Hook (Singleton)
+// Singleton Tour Hook
 // =====================
-let tourInstance: any = null; // singleton tour instance
+let tourInstance: any = null;
 
 export function useTour() {
   const lock = useRef(false);
+  const { t } = useLanguage();
 
   const startTour = () => {
-    if (lock.current) return; // Prevent double start
+    if (lock.current) return;
     lock.current = true;
 
-    // If previous tour exists, destroy it
     if (tourInstance) {
-      tourInstance.end?.();
+      tourInstance.cancel();
       tourInstance = null;
     }
 
-    // Example: using Shepherd.js or your tour library
     tourInstance = new Shepherd.Tour({
       defaultStepOptions: {
         cancelIcon: { enabled: true },
@@ -154,23 +150,36 @@ export function useTour() {
       },
     });
 
-    // Add your tour steps here
+    // Example steps - adjust your selectors to match your app
     tourInstance.addStep({
       id: "step1",
-      text: "Welcome to the tour!",
-      attachTo: { element: ".some-element", on: "bottom" },
+      text: t("applicationTour"),
+      attachTo: { element: "#settings-button", on: "bottom" },
+      buttons: [{ text: t("next"), action: tourInstance.next }],
     });
 
-    // Reset lock when tour ends
-    tourInstance.on("complete", () => {
-      lock.current = false;
-      tourInstance = null;
+    tourInstance.addStep({
+      id: "step2",
+      text: t("exploreTour"),
+      attachTo: { element: "#notifications-section", on: "bottom" },
+      buttons: [
+        { text: t("back"), action: tourInstance.back },
+        { text: t("next"), action: tourInstance.next },
+      ],
     });
 
-    tourInstance.on("cancel", () => {
-      lock.current = false;
-      tourInstance = null;
+    tourInstance.addStep({
+      id: "step3",
+      text: t("exploreTour"),
+      attachTo: { element: "#language-section", on: "bottom" },
+      buttons: [
+        { text: t("back"), action: tourInstance.back },
+        { text: t("finish"), action: tourInstance.complete },
+      ],
     });
+
+    tourInstance.on("complete", () => { lock.current = false; tourInstance = null; });
+    tourInstance.on("cancel", () => { lock.current = false; tourInstance = null; });
 
     tourInstance.start();
   };
@@ -178,7 +187,6 @@ export function useTour() {
   useEffect(() => {
     const handler = () => startTour();
     window.addEventListener("start-guided-tour", handler);
-
     return () => window.removeEventListener("start-guided-tour", handler);
   }, []);
 
@@ -186,7 +194,7 @@ export function useTour() {
 }
 
 // =====================
-// Settings Dialog
+// SettingsDialog Component
 // =====================
 export function SettingsDialog() {
   const [open, setOpen] = useState(false);
@@ -203,14 +211,14 @@ export function SettingsDialog() {
   });
   const [loading, setLoading] = useState(false);
 
-  // Listen for open-settings-dialog event from mobile menu
+  // Open dialog event
   useEffect(() => {
     const handleOpenSettings = () => setOpen(true);
     window.addEventListener('open-settings-dialog', handleOpenSettings);
     return () => window.removeEventListener('open-settings-dialog', handleOpenSettings);
   }, []);
 
-  // Sync theme when dialog opens
+  // Sync theme and fetch settings
   useEffect(() => {
     if (open && theme) {
       setSettings(prev => ({ ...prev, theme_mode: theme as 'light' | 'dark' | 'system' }));
@@ -233,14 +241,13 @@ export function SettingsDialog() {
     if (data?.settings && typeof data.settings === 'object') {
       const savedSettings = data.settings as any;
       const savedLanguage = savedSettings.language ?? 'en';
-      const newSettings = {
+      setSettings({
         notifications_enabled: savedSettings.notifications_enabled ?? true,
         email_notifications: savedSettings.email_notifications ?? true,
         language: savedLanguage,
         theme_mode: (theme as 'light' | 'dark' | 'system') ?? 'dark',
         tour_completed: savedSettings.tour_completed ?? false,
-      };
-      setSettings(newSettings);
+      });
       setAppLanguage(savedLanguage);
     }
   };
@@ -248,29 +255,16 @@ export function SettingsDialog() {
   const updateSettings = async (newSettings: Partial<UserSettings>) => {
     setLoading(true);
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      setLoading(false);
-      return;
-    }
+    if (!user) { setLoading(false); return; }
 
     const updatedSettings = { ...settings, ...newSettings };
+    const { error } = await supabase.from('profiles').update({ settings: updatedSettings }).eq('id', user.id);
 
-    const { error } = await supabase
-      .from('profiles')
-      .update({ settings: updatedSettings })
-      .eq('id', user.id);
-
-    if (error) {
-      toast.error('Failed to update settings');
-      setLoading(false);
-      return;
-    }
+    if (error) { toast.error('Failed to update settings'); setLoading(false); return; }
 
     setSettings(updatedSettings);
-
     if (newSettings.theme_mode) setTheme(newSettings.theme_mode);
     if (newSettings.language) setAppLanguage(newSettings.language);
-
     toast.success(t('settingsUpdated'));
     setLoading(false);
   };
@@ -280,14 +274,11 @@ export function SettingsDialog() {
     setTimeout(() => {
       document.body.style.overflow = '';
       document.body.style.pointerEvents = '';
-      startTour(); // singleton tour start
+      startTour();
     }, 400);
   };
 
-  const handleResetToEnglish = () => {
-    updateSettings({ language: 'en' });
-    toast.success(t('languageReset'));
-  };
+  const handleResetToEnglish = () => { updateSettings({ language: 'en' }); toast.success(t('languageReset')); };
 
   const languages = [
     { value: 'en', label: 'English', native: 'English' },
@@ -313,21 +304,18 @@ export function SettingsDialog() {
   ];
 
   // =====================
-  // JSX for SettingsDialog
+  // JSX - SettingsDialog
   // =====================
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="text-foreground hover:bg-muted">
+        <Button id="settings-button" variant="ghost" size="icon" className="text-foreground hover:bg-muted">
           <Settings className="h-5 w-5" />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[450px] max-h-[85vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Settings className="w-5 h-5" />
-            {t('settings')}
-          </DialogTitle>
+          <DialogTitle className="flex items-center gap-2"><Settings className="w-5 h-5" />{t('settings')}</DialogTitle>
           <DialogDescription>{t('customizeExperience')}</DialogDescription>
         </DialogHeader>
 
@@ -367,7 +355,7 @@ export function SettingsDialog() {
             </div>
 
             <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
+              <div id="notifications-section" className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
                 <div className="flex-1">
                   <Label htmlFor="notifications" className="cursor-pointer flex items-center gap-2">
                     {settings.notifications_enabled ? <Bell className="w-4 h-4 text-primary" /> : <BellOff className="w-4 h-4 text-muted-foreground" />}
@@ -387,9 +375,7 @@ export function SettingsDialog() {
                     </Badge>
                   </div>
                   {permission !== 'granted' && permission !== 'denied' && (
-                    <Button variant="outline" size="sm" onClick={async () => { const granted = await requestPermission(); if (granted) toast.success(t('notificationsEnabled')); }} className="text-xs h-7">
-                      {t('enable')}
-                    </Button>
+                    <Button variant="outline" size="sm" onClick={async () => { const granted = await requestPermission(); if (granted) toast.success(t('notificationsEnabled')); }} className="text-xs h-7">{t('enable')}</Button>
                   )}
                   {permission === 'denied' && <span className="text-xs text-destructive">{t('enableInBrowser')}</span>}
                 </div>
@@ -413,7 +399,7 @@ export function SettingsDialog() {
               <Globe className="w-4 h-4" />
               <h3 className="font-semibold">{t('language')}</h3>
             </div>
-            <div className="flex gap-2">
+            <div id="language-section" className="flex gap-2">
               <Select value={settings.language} onValueChange={(value) => updateSettings({ language: value })} disabled={loading}>
                 <SelectTrigger className="flex-1"><SelectValue placeholder={t('selectLanguage')} /></SelectTrigger>
                 <SelectContent>
