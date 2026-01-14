@@ -1,247 +1,217 @@
-# Inphrone - People-Powered Entertainment Intelligence
+Inphrone – People-Powered Entertainment Intelligence
+📱 What is Inphrone?
 
-## 📱 What is Inphrone?
+Inphrone is a people-powered entertainment intelligence platform that connects audiences and creators across Film, Music, TV/OTT, Gaming, and Social Media.
 
-**Inphrone** is a revolutionary entertainment insights platform that bridges the gap between audiences and content creators across Film, Music, TV/OTT, Gaming, and Social Media. The name combines "IN" (Insights) + "PHRONE" (Phronesis - practical wisdom in Greek), representing wisdom guided by real human insight.
+The name combines:
 
-### Core Mission
-Democratize entertainment intelligence by giving audiences a voice while providing creators with authentic, actionable insights.
+IN → Insights
 
-## 🎯 Project Info
+PHRONE → Phronesis (Greek for practical wisdom)
 
-**URL**: https://lovable.dev/projects/8e949255-418c-439e-adf7-07937b6dc022
+Together, it represents real human insight transformed into actionable intelligence.
 
-## ✨ Key Features
+🎯 Core Mission
 
-### 1. **InphroSync - Daily Entertainment Pulse** 🌟
-Our flagship feature that drives daily engagement:
-- **3 Daily Questions** about yesterday's entertainment consumption
-- **Interactive Swipeable Cards** - Tinder-style interface for engaging interaction
-- **Real-time Community Insights** with live stats and demographic filters
-- **Streak Tracking** - Build daily habits and earn rewards
-- **Gamified Experience** - Confetti celebrations, progress indicators, and visual feedback
-- **Demographic Filtering** - View results by age, gender, and location
-- **Mobile-First Design** - Premium UI optimized for all devices
+To democratize entertainment intelligence by:
 
-### 2. **Opinion Sharing & Insights**
-- Submit detailed opinions across 7 entertainment categories
-- Rich opinion data: title, genre, budget estimates, target audience
-- Upvoting system for non-audience users
-- View tracking and analytics
-- Weekly opinion statistics
+Giving audiences a meaningful voice
 
-### 3. **Location-Aware Reward System** 🎁
-- Coupons display in user's local currency (USD, INR, GBP, EUR, AUD, CAD)
-- Multiple categories: Entertainment, Electronics, Food, Fashion, Travel
-- Track active, used, and expired coupons
-- Share coupons with friends via email
-- Detailed merchant information and usage instructions
-- Real-time expiration tracking
+Providing creators and studios with authentic, real-time insights
 
-### 4. **Advanced Gamification** 🏆
-- **Streak Tracker**: Weekly contribution streaks with tier progression
-- **Badge System**: Earn achievements across different activities
-- **Creative Soul Avatar**: Personalized avatar that evolves with contributions
-- **Cultural Energy Map**: Visualize trends by location
-- **Wisdom Badges**: Recognition for category expertise
+✨ Key Features
+1. InphroSync™ – Daily Entertainment Pulse 🌟
 
-### 5. **Multi-User Type System**
-- **Audience**: Share opinions, earn rewards, view insights
-- **Creators**: Access analytics and demographic data
-- **Studios/Production**: Industry-level insights and trend analysis
-- **OTT Platforms**: Content performance metrics
-- **Music Labels**: Genre preferences and artist insights
-- **Gaming Companies**: Gaming content feedback
-- **TV Networks**: Broadcasting insights
+A habit-forming daily engagement engine:
 
-### 6. **Real-Time Analytics**
-- Global insights overview with trend analysis
-- Category-specific dashboards
-- Demographic analytics (age, gender, location)
-- Weekly content type analytics
-- Opinion upvote breakdown by user type
-- Time-spent tracking
+3 short questions about yesterday’s entertainment consumption
 
-## 🏗️ Technical Stack
+Swipeable, Tinder-style interaction
 
-### Frontend
-- **React 18** + **TypeScript** for type-safe development
-- **Vite** for lightning-fast builds
-- **Tailwind CSS** with custom design system
-- **Framer Motion** for premium animations
-- **shadcn/ui** component library
-- **TanStack Query** for data management
-- **Recharts** for data visualization
+Live community stats with demographic filters
 
-### Backend (Lovable Cloud)
-- **PostgreSQL** with Row Level Security (RLS)
-- **Real-time subscriptions** via Supabase
-- **Edge Functions** for serverless logic
-- **Authentication**: Email/password + Google OAuth
-- **File Storage** for uploads
+Daily & weekly streak tracking
 
-### Key Libraries
-- `canvas-confetti` - Celebration effects
-- `framer-motion` - Smooth animations
-- `react-hook-form` - Form management
-- `zod` - Schema validation
-- `date-fns` - Date utilities
+Gamified feedback (confetti, progress visuals)
 
-## 🚀 Getting Started
+Mobile-first, premium UI
 
-### Prerequisites
-- Node.js 18+ ([install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating))
-- npm or bun package manager
+2. Opinion Sharing & Deep Insights
 
-### Installation
+Submit opinions across 7 entertainment categories
 
-```bash
-# Clone the repository
-git clone <YOUR_GIT_URL>
+Rich metadata (genre, budget range, target audience)
 
-# Navigate to project directory
-cd inphrone
+Upvote system for industry users
 
-# Install dependencies
-npm install
-# or
-bun install
+View & engagement analytics
 
-# Start development server
-npm run dev
-# or
-bun dev
-```
+Weekly trend summaries
 
-### Environment Variables
-Create a `.env` file (already configured in Lovable projects):
-```env
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_PUBLISHABLE_KEY=your_anon_key
-VITE_SUPABASE_PROJECT_ID=your_project_id
-```
+3. Location-Aware Reward System 🎁
 
-## 📝 Development Workflow
+Local currency support (USD, INR, GBP, EUR, AUD, CAD)
 
-### Using Lovable (Recommended)
-1. Visit the [Lovable Project](https://lovable.dev/projects/8e949255-418c-439e-adf7-07937b6dc022)
-2. Start prompting to make changes
-3. Changes are automatically committed to the repo
-4. Live preview updates instantly
+Multi-category rewards (Entertainment, Food, Fashion, Tech, Travel)
 
-### Using Your IDE
-1. Clone the repository
-2. Make changes locally
-3. Push to trigger Lovable sync
-4. Test in the live preview
+Coupon lifecycle tracking (active / used / expired)
 
-### Using GitHub Directly
-1. Navigate to files in GitHub
-2. Click "Edit" button (pencil icon)
-3. Make changes and commit
-4. Lovable will sync automatically
+Sharing via email
 
-### Using GitHub Codespaces
-1. Click "Code" → "Codespaces" → "New codespace"
-2. Edit in browser-based VS Code
-3. Commit and push when done
+Real-time expiration awareness
 
-## 🎨 Design Philosophy
+4. Advanced Gamification Layer 🏆
 
-Inphrone follows a **cinematic premium design** approach:
-- **Dark mode first** with light mode support
-- **Semantic color tokens** for consistent theming
-- **Micro-animations** for delightful interactions
-- **Glass morphism** and gradient effects
-- **Mobile-first responsive** design
-- **Accessibility** built-in (WCAG compliant)
+Contribution streak tiers
 
-## 🚢 Deployment
+Achievement & wisdom badges
 
-### Quick Deploy
-Simply open [Lovable](https://lovable.dev/projects/8e949255-418c-439e-adf7-07937b6dc022) and click **Share → Publish**
+Evolving Creative Soul Avatar
 
-### Custom Domain
-1. Navigate to Project > Settings > Domains
-2. Click "Connect Domain"
-3. Follow DNS configuration instructions
-4. [Learn more about custom domains](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Cultural Energy Map (geo-trend visualization)
 
-### Deployment Platforms
-- **Vercel** (recommended) - See `VERCEL_DEPLOYMENT_README.md`
-- **Netlify** - Works out of the box
-- **Cloudflare Pages** - Fast global CDN
+Expertise recognition by category
 
-## 📚 Documentation
+5. Multi-User Intelligence System
 
-- `DEPLOYMENT_AND_OVERVIEW.md` - Comprehensive feature overview
-- `VERCEL_DEPLOYMENT_README.md` - Detailed Vercel deployment guide
-- `README_FUTURE_IMPROVEMENTS.md` - Planned enhancements
-- `BETA_LAUNCH_CHECKLIST.md` - Pre-launch checklist
+Tailored insights for:
 
-## 🔐 Security Features
+Audiences
 
-- **Row Level Security (RLS)** on all database tables
-- **User-specific data access** - Users can only access their own data
-- **Secure authentication** with email verification
-- **7-day grace period** for account deletion
-- **Account restoration** capability
+Creators
 
-## 🎯 What Makes Inphrone Unique?
+Studios / Production Houses
 
-1. **Daily Habit Formation**: InphroSync creates a daily ritual for users
-2. **Swipeable Interface**: Premium, engaging UI that users love
-3. **Real-time Insights**: See community trends as they happen
-4. **Location-Aware**: Currency and content localized to user's region
-5. **Gamification Done Right**: Rewards feel earned, not forced
-6. **Multi-Stakeholder Platform**: Serves both audiences and industry professionals
+OTT Platforms
 
-## 🤝 Contributing
+Music Labels
 
-We welcome contributions! Please follow these steps:
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+Gaming Companies
 
-## 📞 Support
+TV Networks
 
-- **Issues**: Use GitHub Issues for bug reports
-- **Discussions**: Use GitHub Discussions for questions
-- **Email**: Contact through the app's feedback form
+Each role receives context-specific analytics and insights.
 
-## 📈 Analytics & Monitoring
+6. Real-Time Analytics
 
-- **User Analytics**: Track engagement and usage patterns
-- **Performance Monitoring**: Vercel Analytics integration
-- **Error Tracking**: Console logs and error boundaries
-- **Database Insights**: Lovable Cloud dashboard
+Global and category-level trends
 
-## 🔮 Future Roadmap
+Demographic breakdowns
 
-See `README_FUTURE_IMPROVEMENTS.md` for detailed plans including:
-- Mobile app (React Native)
-- AI-powered recommendations
-- Advanced analytics dashboard
-- Multi-language support
-- Partnership integrations
+Weekly consumption analytics
 
-## 📄 License
+Opinion engagement metrics
 
-This project is private and proprietary. All rights reserved.
+Time-spent and behavior tracking
 
-## 🌟 Technologies We Love
+🏗️ Technology Stack
+Frontend
 
-This project is built with:
-- ⚛️ **React** - UI library
-- 📘 **TypeScript** - Type safety
-- ⚡ **Vite** - Build tool
-- 🎨 **Tailwind CSS** - Styling
-- 🎭 **Framer Motion** - Animations
-- 🗄️ **Supabase** - Backend
-- ☁️ **Lovable Cloud** - Deployment
+React 18 + TypeScript
 
----
+Vite
 
-**Built with ❤️ using [Lovable](https://lovable.dev)**
+Tailwind CSS (custom design system)
+
+Framer Motion
+
+shadcn/ui
+
+TanStack Query
+
+Recharts
+
+Backend & Infrastructure
+
+PostgreSQL with Row Level Security (RLS)
+
+Real-time subscriptions
+
+Edge Functions
+
+Secure authentication (Email + Google OAuth)
+
+File storage for uploads
+
+Lovable Cloud for managed backend & infrastructure
+
+Supporting Libraries
+
+canvas-confetti
+
+react-hook-form
+
+zod
+
+date-fns
+
+🎨 Design Philosophy
+
+Inphrone follows a cinematic, premium design language:
+
+Dark-mode first
+
+Semantic color tokens
+
+Micro-interactions & motion polish
+
+Glass-morphism & subtle gradients
+
+Mobile-first responsiveness
+
+WCAG-compliant accessibility
+
+🔐 Security & Privacy
+
+Row Level Security on all data
+
+User-isolated access
+
+Secure authentication & verification
+
+Grace period for account deletion
+
+Data restoration safeguards
+
+📈 Analytics & Monitoring
+
+Engagement & retention tracking
+
+Performance monitoring
+
+Error boundaries & logging
+
+Database-level insights
+
+🔮 Product Roadmap
+
+Planned expansions include:
+
+Native mobile apps
+
+AI-powered insight recommendations
+
+Advanced creator dashboards
+
+Multi-language support
+
+Strategic partner integrations
+
+🧠 What Makes Inphrone Different?
+
+Daily ritual-based engagement (not passive analytics)
+
+Swipe-first, consumer-grade UX
+
+Real-time cultural intelligence
+
+Location-aware personalization
+
+Gamification that feels earned
+
+One platform serving audience + industry
+
+📄 License
+
+This project is private and proprietary.
+All rights reserved.
