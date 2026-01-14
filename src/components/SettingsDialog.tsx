@@ -31,7 +31,9 @@ interface UserSettings {
 
 import { translations, getTranslation } from "@/lib/translations";
 
-// Language Context for app-wide translation
+// =====================
+// Language Context
+// =====================
 interface LanguageContextType {
   language: string;
   t: (key: string) => string;
@@ -82,7 +84,9 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// =====================
 // Web Push Toggle Component
+// =====================
 function WebPushToggle() {
   const { 
     isSupported, 
@@ -124,11 +128,73 @@ function WebPushToggle() {
   );
 }
 
+// =====================
+// Tour Hook (Singleton)
+// =====================
+let tourInstance: any = null; // singleton tour instance
+
+export function useTour() {
+  const lock = useRef(false);
+
+  const startTour = () => {
+    if (lock.current) return; // Prevent double start
+    lock.current = true;
+
+    // If previous tour exists, destroy it
+    if (tourInstance) {
+      tourInstance.end?.();
+      tourInstance = null;
+    }
+
+    // Example: using Shepherd.js or your tour library
+    tourInstance = new Shepherd.Tour({
+      defaultStepOptions: {
+        cancelIcon: { enabled: true },
+        scrollTo: { behavior: "smooth", block: "center" },
+      },
+    });
+
+    // Add your tour steps here
+    tourInstance.addStep({
+      id: "step1",
+      text: "Welcome to the tour!",
+      attachTo: { element: ".some-element", on: "bottom" },
+    });
+
+    // Reset lock when tour ends
+    tourInstance.on("complete", () => {
+      lock.current = false;
+      tourInstance = null;
+    });
+
+    tourInstance.on("cancel", () => {
+      lock.current = false;
+      tourInstance = null;
+    });
+
+    tourInstance.start();
+  };
+
+  useEffect(() => {
+    const handler = () => startTour();
+    window.addEventListener("start-guided-tour", handler);
+
+    return () => window.removeEventListener("start-guided-tour", handler);
+  }, []);
+
+  return { startTour };
+}
+
+// =====================
+// Settings Dialog
+// =====================
 export function SettingsDialog() {
   const [open, setOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const { isSupported, permission, requestPermission } = usePushNotifications();
   const { language: currentLanguage, setLanguage: setAppLanguage, t } = useLanguage();
+  const { startTour } = useTour();
+
   const [settings, setSettings] = useState<UserSettings>({
     notifications_enabled: true,
     email_notifications: true,
@@ -137,28 +203,17 @@ export function SettingsDialog() {
   });
   const [loading, setLoading] = useState(false);
 
-  // This ref prevents the tour from starting twice
-  const tourLock = useRef(false);
-
   // Listen for open-settings-dialog event from mobile menu
   useEffect(() => {
-    const handleOpenSettings = () => {
-      setOpen(true);
-    };
-    
+    const handleOpenSettings = () => setOpen(true);
     window.addEventListener('open-settings-dialog', handleOpenSettings);
-    return () => {
-      window.removeEventListener('open-settings-dialog', handleOpenSettings);
-    };
+    return () => window.removeEventListener('open-settings-dialog', handleOpenSettings);
   }, []);
 
-  // Sync settings.theme_mode with current theme when dialog opens or theme changes
+  // Sync theme when dialog opens
   useEffect(() => {
     if (open && theme) {
-      setSettings(prev => ({
-        ...prev,
-        theme_mode: theme as 'light' | 'dark' | 'system'
-      }));
+      setSettings(prev => ({ ...prev, theme_mode: theme as 'light' | 'dark' | 'system' }));
       fetchSettings();
     }
   }, [open, theme]);
@@ -173,10 +228,7 @@ export function SettingsDialog() {
       .eq('id', user.id)
       .single();
 
-    if (error) {
-      console.error('Error fetching settings:', error);
-      return;
-    }
+    if (error) return;
 
     if (data?.settings && typeof data.settings === 'object') {
       const savedSettings = data.settings as any;
@@ -215,36 +267,20 @@ export function SettingsDialog() {
     }
 
     setSettings(updatedSettings);
-    
-    if (newSettings.theme_mode) {
-      setTheme(newSettings.theme_mode);
-    }
 
-    if (newSettings.language) {
-      setAppLanguage(newSettings.language);
-    }
-    
+    if (newSettings.theme_mode) setTheme(newSettings.theme_mode);
+    if (newSettings.language) setAppLanguage(newSettings.language);
+
     toast.success(t('settingsUpdated'));
     setLoading(false);
   };
 
-  const handleStartTour = async () => {
-    if (tourLock.current) return; // Prevent double start
-    tourLock.current = true;
-
-    // Close dialog first
+  const handleStartTour = () => {
     setOpen(false);
-
     setTimeout(() => {
       document.body.style.overflow = '';
       document.body.style.pointerEvents = '';
-
-      window.dispatchEvent(new CustomEvent('start-guided-tour'));
-
-      // Release lock after a short delay
-      setTimeout(() => {
-        tourLock.current = false;
-      }, 500);
+      startTour(); // singleton tour start
     }, 400);
   };
 
@@ -276,6 +312,9 @@ export function SettingsDialog() {
     { value: 'id', label: 'Indonesian', native: 'Bahasa Indonesia' },
   ];
 
+  // =====================
+  // JSX for SettingsDialog
+  // =====================
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -289,48 +328,31 @@ export function SettingsDialog() {
             <Settings className="w-5 h-5" />
             {t('settings')}
           </DialogTitle>
-          <DialogDescription>
-            {t('customizeExperience')}
-          </DialogDescription>
+          <DialogDescription>{t('customizeExperience')}</DialogDescription>
         </DialogHeader>
+
         <div className="space-y-6 py-4">
-          {/* Display Mode Section */}
+          {/* Display Mode */}
           <div className="space-y-4">
             <div className="flex items-center gap-2 pb-2 border-b border-border">
               <h3 className="font-semibold">{t('displayMode')}</h3>
             </div>
-            
-            <RadioGroup 
-              value={settings.theme_mode} 
+            <RadioGroup
+              value={settings.theme_mode}
               onValueChange={(value: 'light' | 'dark' | 'system') => updateSettings({ theme_mode: value })}
               className="grid grid-cols-3 gap-3"
             >
-              <Label 
-                htmlFor="light" 
-                className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                  settings.theme_mode === 'light' ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/50'
-                }`}
-              >
+              <Label htmlFor="light" className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 cursor-pointer transition-all ${settings.theme_mode === 'light' ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/50'}`}>
                 <RadioGroupItem value="light" id="light" className="sr-only" />
                 <Sun className="w-6 h-6" />
                 <span className="text-sm font-medium">{t('light')}</span>
               </Label>
-              <Label 
-                htmlFor="dark" 
-                className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                  settings.theme_mode === 'dark' ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/50'
-                }`}
-              >
+              <Label htmlFor="dark" className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 cursor-pointer transition-all ${settings.theme_mode === 'dark' ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/50'}`}>
                 <RadioGroupItem value="dark" id="dark" className="sr-only" />
                 <Moon className="w-6 h-6" />
                 <span className="text-sm font-medium">{t('dark')}</span>
               </Label>
-              <Label 
-                htmlFor="system" 
-                className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                  settings.theme_mode === 'system' ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/50'
-                }`}
-              >
+              <Label htmlFor="system" className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 cursor-pointer transition-all ${settings.theme_mode === 'system' ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/50'}`}>
                 <RadioGroupItem value="system" id="system" className="sr-only" />
                 <Monitor className="w-6 h-6" />
                 <span className="text-sm font-medium">{t('system')}</span>
@@ -338,156 +360,90 @@ export function SettingsDialog() {
             </RadioGroup>
           </div>
 
-          {/* Notifications Section */}
+          {/* Notifications */}
           <div className="space-y-4">
             <div className="flex items-center gap-2 pb-2 border-b border-border">
               <h3 className="font-semibold">{t('notifications')}</h3>
             </div>
-            
+
             <div className="space-y-3">
               <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
                 <div className="flex-1">
                   <Label htmlFor="notifications" className="cursor-pointer flex items-center gap-2">
-                    {settings.notifications_enabled ? (
-                      <Bell className="w-4 h-4 text-primary" />
-                    ) : (
-                      <BellOff className="w-4 h-4 text-muted-foreground" />
-                    )}
+                    {settings.notifications_enabled ? <Bell className="w-4 h-4 text-primary" /> : <BellOff className="w-4 h-4 text-muted-foreground" />}
                     {t('pushNotifications')}
                   </Label>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {t('pushDescription')}
-                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">{t('pushDescription')}</p>
                 </div>
-                <Switch
-                  id="notifications"
-                  checked={settings.notifications_enabled}
-                  onCheckedChange={(checked) =>
-                    updateSettings({ notifications_enabled: checked })
-                  }
-                  disabled={loading}
-                />
+                <Switch id="notifications" checked={settings.notifications_enabled} onCheckedChange={(checked) => updateSettings({ notifications_enabled: checked })} disabled={loading} />
               </div>
-              
+
               {isSupported && (
                 <div className="px-3 py-2 rounded-lg bg-muted/20 flex items-center justify-between">
                   <div className="text-xs text-muted-foreground">
-                    {t('browserPermission')}: 
-                    <Badge 
-                      variant={permission === 'granted' ? 'default' : permission === 'denied' ? 'destructive' : 'secondary'}
-                      className="ml-2 text-xs"
-                    >
+                    {t('browserPermission')}:
+                    <Badge variant={permission === 'granted' ? 'default' : permission === 'denied' ? 'destructive' : 'secondary'} className="ml-2 text-xs">
                       {permission === 'granted' ? t('allowed') : permission === 'denied' ? t('blocked') : t('notSet')}
                     </Badge>
                   </div>
                   {permission !== 'granted' && permission !== 'denied' && (
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={async () => {
-                        const granted = await requestPermission();
-                        if (granted) {
-                          toast.success(t('notificationsEnabled'));
-                        }
-                      }}
-                      className="text-xs h-7"
-                    >
+                    <Button variant="outline" size="sm" onClick={async () => { const granted = await requestPermission(); if (granted) toast.success(t('notificationsEnabled')); }} className="text-xs h-7">
                       {t('enable')}
                     </Button>
                   )}
-                  {permission === 'denied' && (
-                    <span className="text-xs text-destructive">
-                      {t('enableInBrowser')}
-                    </span>
-                  )}
+                  {permission === 'denied' && <span className="text-xs text-destructive">{t('enableInBrowser')}</span>}
                 </div>
               )}
-              
+
               <WebPushToggle />
             </div>
-            
+
             <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
               <div className="flex-1">
-                <Label htmlFor="email-notifications" className="cursor-pointer">
-                  {t('emailNotifications')}
-                </Label>
-                <p className="text-xs text-muted-foreground mt-1">
-                  {t('emailDescription')}
-                </p>
+                <Label htmlFor="email-notifications" className="cursor-pointer">{t('emailNotifications')}</Label>
+                <p className="text-xs text-muted-foreground mt-1">{t('emailDescription')}</p>
               </div>
-              <Switch
-                id="email-notifications"
-                checked={settings.email_notifications}
-                onCheckedChange={(checked) =>
-                  updateSettings({ email_notifications: checked })
-                }
-                disabled={loading}
-              />
+              <Switch id="email-notifications" checked={settings.email_notifications} onCheckedChange={(checked) => updateSettings({ email_notifications: checked })} disabled={loading} />
             </div>
           </div>
 
-          {/* Language Section */}
+          {/* Language */}
           <div className="space-y-4">
             <div className="flex items-center gap-2 pb-2 border-b border-border">
               <Globe className="w-4 h-4" />
               <h3 className="font-semibold">{t('language')}</h3>
             </div>
             <div className="flex gap-2">
-              <Select
-                value={settings.language}
-                onValueChange={(value) => updateSettings({ language: value })}
-                disabled={loading}
-              >
-                <SelectTrigger className="flex-1">
-                  <SelectValue placeholder={t('selectLanguage')} />
-                </SelectTrigger>
+              <Select value={settings.language} onValueChange={(value) => updateSettings({ language: value })} disabled={loading}>
+                <SelectTrigger className="flex-1"><SelectValue placeholder={t('selectLanguage')} /></SelectTrigger>
                 <SelectContent>
-                  {languages.map((lang) => (
+                  {languages.map(lang => (
                     <SelectItem key={lang.value} value={lang.value}>
-                      <span className="flex items-center gap-2">
-                        <span>{lang.native}</span>
-                        <span className="text-muted-foreground text-xs">({lang.label})</span>
-                      </span>
+                      <span className="flex items-center gap-2"><span>{lang.native}</span><span className="text-muted-foreground text-xs">({lang.label})</span></span>
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleResetToEnglish}
-                disabled={loading || settings.language === 'en'}
-                className="flex items-center gap-1 whitespace-nowrap"
-              >
+              <Button variant="outline" size="sm" onClick={handleResetToEnglish} disabled={loading || settings.language === 'en'} className="flex items-center gap-1 whitespace-nowrap">
                 <RotateCcw className="w-3 h-3" />
                 {t('defaultEnglish')}
               </Button>
             </div>
           </div>
 
-          {/* Application Tour Section */}
+          {/* Tour */}
           <div className="space-y-4">
             <div className="flex items-center gap-2 pb-2 border-b border-border">
               <Compass className="w-4 h-4" />
               <h3 className="font-semibold">{t('applicationTour')}</h3>
             </div>
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <Button
-                variant="outline"
-                onClick={handleStartTour}
-                disabled={loading}
-                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-primary/10 to-accent/10 border-primary/30 hover:border-primary hover:bg-gradient-to-r hover:from-primary/20 hover:to-accent/20 transition-all"
-              >
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Button variant="outline" onClick={handleStartTour} disabled={loading} className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-primary/10 to-accent/10 border-primary/30 hover:border-primary hover:bg-gradient-to-r hover:from-primary/20 hover:to-accent/20 transition-all">
                 <Compass className="w-4 h-4 animate-pulse" />
                 {t('exploreTour')}
               </Button>
             </motion.div>
-            <p className="text-xs text-muted-foreground text-center">
-              {t('tourDescription')}
-            </p>
+            <p className="text-xs text-muted-foreground text-center">{t('tourDescription')}</p>
           </div>
         </div>
       </DialogContent>
