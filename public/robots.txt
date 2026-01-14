@@ -1,0 +1,47 @@
+# Robots.txt for Inphrone - Entertainment Intelligence Platform
+# https://inphrone.com
+
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 2
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+Crawl-delay: 2
+
+User-agent: YandexBot
+Allow: /
+Crawl-delay: 2
+
+User-agent: *
+Allow: /
+Crawl-delay: 1
+
+# Sitemaps
+Sitemap: https://inphrone.com/sitemap.xml
+
+# Disallow admin and private paths
+User-agent: *
+Disallow: /admin
+Disallow: /api/
+Disallow: /*.json$

@@ -1,0 +1,46 @@
+project_id = "kwkfmwgqwpaynawgtghf"
+
+[functions.inphrone-chat]
+verify_jwt = false
+
+[functions.send-weekly-digest]
+verify_jwt = false
+
+[functions.delete-account]
+verify_jwt = true
+
+[functions.soft-delete-account]
+verify_jwt = true
+
+[functions.delete-all-auth-users]
+verify_jwt = false
+
+[functions.fetch-cuelinks-coupons]
+verify_jwt = false
+
+[functions.populate-coupon-pool]
+verify_jwt = false
+
+[functions.ai-insights]
+verify_jwt = true
+
+[functions.send-notification-email]
+verify_jwt = false
+
+[functions.send-push-notification]
+verify_jwt = true
+
+[functions.get-vapid-key]
+verify_jwt = false
+
+[functions.send-feedback]
+verify_jwt = false
+
+[functions.cleanup-all-data]
+verify_jwt = false
+
+[functions.delete-individual-user]
+verify_jwt = false
+
+[functions.public-platform-counts]
+verify_jwt = false
