@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext, useContext, ReactNode } from "react";
+import { useState, useEffect, createContext, useContext, ReactNode, useRef } from "react";
 import { Settings, Sun, Moon, Monitor, Bell, BellOff, Globe, Compass, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -50,17 +50,15 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState('en');
 
   useEffect(() => {
-    // Load language from localStorage or profile
     const savedLang = localStorage.getItem('inphrone_language');
     if (savedLang && translations[savedLang]) {
       setLanguage(savedLang);
     }
-    
-    // Listen for language changes from other components
+
     const handleLanguageChange = (event: CustomEvent<{ language: string }>) => {
       setLanguage(event.detail.language);
     };
-    
+
     window.addEventListener('language-change', handleLanguageChange as EventListener);
     return () => {
       window.removeEventListener('language-change', handleLanguageChange as EventListener);
@@ -74,7 +72,6 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const updateLanguage = (lang: string) => {
     setLanguage(lang);
     localStorage.setItem('inphrone_language', lang);
-    // Dispatch event for other components to sync
     window.dispatchEvent(new CustomEvent('language-change', { detail: { language: lang } }));
   };
 
@@ -140,6 +137,9 @@ export function SettingsDialog() {
   });
   const [loading, setLoading] = useState(false);
 
+  // This ref prevents the tour from starting twice
+  const tourLock = useRef(false);
+
   // Listen for open-settings-dialog event from mobile menu
   useEffect(() => {
     const handleOpenSettings = () => {
@@ -181,7 +181,6 @@ export function SettingsDialog() {
     if (data?.settings && typeof data.settings === 'object') {
       const savedSettings = data.settings as any;
       const savedLanguage = savedSettings.language ?? 'en';
-      // Use current theme as source of truth for theme_mode
       const newSettings = {
         notifications_enabled: savedSettings.notifications_enabled ?? true,
         email_notifications: savedSettings.email_notifications ?? true,
@@ -217,12 +216,10 @@ export function SettingsDialog() {
 
     setSettings(updatedSettings);
     
-    // Apply theme mode changes
     if (newSettings.theme_mode) {
       setTheme(newSettings.theme_mode);
     }
 
-    // Apply language changes
     if (newSettings.language) {
       setAppLanguage(newSettings.language);
     }
@@ -232,17 +229,22 @@ export function SettingsDialog() {
   };
 
   const handleStartTour = async () => {
+    if (tourLock.current) return; // Prevent double start
+    tourLock.current = true;
+
     // Close dialog first
     setOpen(false);
-    
-    // Longer delay to ensure dialog is fully closed and DOM is clean
+
     setTimeout(() => {
-      // Reset any body styles that might be left from dialog
       document.body.style.overflow = '';
       document.body.style.pointerEvents = '';
-      
-      // Dispatch event to trigger tour
+
       window.dispatchEvent(new CustomEvent('start-guided-tour'));
+
+      // Release lock after a short delay
+      setTimeout(() => {
+        tourLock.current = false;
+      }, 500);
     }, 400);
   };
 
@@ -342,7 +344,6 @@ export function SettingsDialog() {
               <h3 className="font-semibold">{t('notifications')}</h3>
             </div>
             
-            {/* Browser Push Notifications */}
             <div className="space-y-3">
               <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
                 <div className="flex-1">
@@ -368,7 +369,6 @@ export function SettingsDialog() {
                 />
               </div>
               
-              {/* Browser Permission Status */}
               {isSupported && (
                 <div className="px-3 py-2 rounded-lg bg-muted/20 flex items-center justify-between">
                   <div className="text-xs text-muted-foreground">
@@ -403,11 +403,9 @@ export function SettingsDialog() {
                 </div>
               )}
               
-              {/* Web Push Subscription */}
               <WebPushToggle />
             </div>
             
-            {/* Email Notifications */}
             <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30">
               <div className="flex-1">
                 <Label htmlFor="email-notifications" className="cursor-pointer">
