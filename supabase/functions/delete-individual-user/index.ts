@@ -120,6 +120,7 @@ Deno.serve(async (req) => {
     await supabaseClient.from('tv_profiles').delete().eq('user_id', userId)
     await supabaseClient.from('gaming_profiles').delete().eq('user_id', userId)
     await supabaseClient.from('music_profiles').delete().eq('user_id', userId)
+    await supabaseClient.from('developer_profiles').delete().eq('user_id', userId)
 
     // 6. Delete user roles (if any non-admin roles)
     await supabaseClient.from('user_roles').delete().eq('user_id', userId)

@@ -189,6 +189,9 @@ export function UserManagement() {
 
   const handleDeleteUser = async (userId: string, userName: string) => {
     try {
+      // Optimistically remove from UI immediately
+      setUsers(prevUsers => prevUsers.filter(user => user.id !== userId));
+      
       const { data, error } = await supabase.functions.invoke("delete-individual-user", {
         body: { userId }
       });
@@ -197,13 +200,16 @@ export function UserManagement() {
 
       if (data?.success) {
         toast.success(`User ${userName} and all associated data deleted successfully`);
-        fetchUsers();
       } else {
+        // Revert if failed
+        fetchUsers();
         throw new Error(data?.error || "Failed to delete user");
       }
     } catch (error: any) {
       console.error("Error deleting user:", error);
       toast.error(`Failed to delete user: ${error.message}`);
+      // Refresh to restore correct state on error
+      fetchUsers();
     }
   };
 

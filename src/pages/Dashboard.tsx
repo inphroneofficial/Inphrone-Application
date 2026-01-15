@@ -71,7 +71,6 @@ const Dashboard = () => {
   const [totalUsers, setTotalUsers] = useState(0);
   const daysLeftInWeek = getDaysUntilNextMondayUTC();
   const [sessionLogId, setSessionLogId] = useState<string | null>(null);
-  const [showTour, setShowTour] = useState(false);
 
   // Real-time like notifications
   useRealtimeLikeNotifications(user?.id || null);
@@ -81,18 +80,6 @@ const Dashboard = () => {
   
   // Keep-alive mechanism
   useKeepAlive();
-
-  // Listen for guided tour start event from settings
-  useEffect(() => {
-    const handleStartTour = () => {
-      setShowTour(true);
-    };
-    
-    window.addEventListener('start-guided-tour', handleStartTour);
-    return () => {
-      window.removeEventListener('start-guided-tour', handleStartTour);
-    };
-  }, []);
 
   useEffect(() => {
     let opinionsChannel: any = null;
@@ -466,11 +453,6 @@ const Dashboard = () => {
     <div className="min-h-screen bg-background pt-16">
       {/* Email Verification Banner */}
       <EmailVerificationBanner />
-      
-      {/* Guided Tour for First-Time Users */}
-      {showTour && (
-        <GuidedTour onComplete={() => setShowTour(false)} />
-      )}
       
       <Navbar />
       

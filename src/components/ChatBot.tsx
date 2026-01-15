@@ -344,16 +344,21 @@ What would you like to explore today?` }
 
   const streamChat = async (userMessage: string) => {
     const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/inphrone-chat`;
-    
+
+    // Use the real user JWT when available (gives the backend function authenticated context)
+    const { data: { session } } = await supabase.auth.getSession();
+    const authToken = session?.access_token ?? import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+
     const resp = await fetch(CHAT_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+        Authorization: `Bearer ${authToken}`,
       },
-      body: JSON.stringify({ 
-        messages: [...messages, { role: "user", content: userMessage }].slice(-6),
-        model: "google/gemini-2.5-flash"
+      body: JSON.stringify({
+        messages: [...messages, { role: "user", content: userMessage }].slice(-12),
+        model: "google/gemini-2.5-flash",
       }),
     });
 
@@ -408,37 +413,12 @@ What would you like to explore today?` }
     }
   };
 
-  const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
+  const handleSend = async (overrideMessage?: string) => {
+    const userMessage = (overrideMessage ?? input).trim();
+    if (!userMessage || isLoading) return;
 
-    const userMessage = input.trim();
     setInput("");
     setMessages(prev => [...prev, { role: "user", content: userMessage }]);
-
-    // Re-check authentication status before sending
-    const { data: { session } } = await supabase.auth.getSession();
-    const currentlyAuthenticated = !!session;
-
-    if (!currentlyAuthenticated) {
-      const insightKeywords = ['insight', 'opinion', 'trend', 'analytics', 'demographic', 'popular', 'upvote', 'data', 'statistics', 'view', 'analysis', 'report'];
-      const hasInsightQuery = insightKeywords.some(keyword => 
-        userMessage.toLowerCase().includes(keyword)
-      );
-
-      if (hasInsightQuery) {
-        setMessages(prev => [...prev, { 
-          role: "assistant", 
-          content: "🔐 **Authentication Required**\n\nTo access live insights and analytics, please sign in or create an account.\n\n**Benefits of signing in:**\n• Real-time category analytics\n• Demographic breakdowns\n• Trending opinion data\n• Personalized recommendations\n\nClick **Sign In** or **Sign Up** to unlock full access!" 
-        }]);
-        return;
-      }
-
-      setMessages(prev => [...prev, { 
-        role: "assistant", 
-        content: "👋 I see you're exploring Inphrone!\n\nWhile I can answer general questions, signing in unlocks:\n• **Live platform analytics**\n• **Personalized insights**\n• **Full feature access**\n\nWould you like to know more about what Inphrone offers, or ready to sign up?" 
-      }]);
-      return;
-    }
 
     setIsLoading(true);
 
@@ -708,7 +688,7 @@ What would you like to know?` }
                           <SuggestedQuestion
                             key={q}
                             question={q}
-                            onClick={() => { setInput(q); }}
+                            onClick={() => handleSend(q)}
                             index={i}
                           />
                         ))}

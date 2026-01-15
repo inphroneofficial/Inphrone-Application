@@ -1,19 +1,9 @@
 import { useState } from "react";
-import { Heart, Instagram, Facebook, Youtube, Send, Mail, Code } from "lucide-react";
-import { FaXTwitter, FaReddit } from "react-icons/fa6";
-import { SiMedium, SiProducthunt } from "react-icons/si";
+import { Heart, Code, Instagram, Facebook, Youtube, Send, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DeveloperModal } from "./DeveloperModal";
+import { FaXTwitter, FaReddit } from "react-icons/fa6";
 import { useLanguage } from "./SettingsDialog";
-
-// Custom Substack Icon
-export function SubstackIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg {...props} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M4 6h2v12H4V6zm4 3h2v9H8V9zm4 1h2v8h-2v-8zm4 2h2v6h-2v-6z" />
-    </svg>
-  );
-}
 
 export function Footer() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,9 +16,6 @@ export function Footer() {
     { icon: FaReddit, href: "https://www.reddit.com/user/officialinphrone/", label: "Reddit" },
     { icon: Facebook, href: "https://www.facebook.com/inphrone/", label: "Facebook" },
     { icon: Send, href: "https://t.me/inphroneofficial", label: "Telegram" },
-    { icon: SubstackIcon, href: "https://substack.com/@inphrone", label: "Substack" },
-    { icon: SiProducthunt, href: "https://www.producthunt.com/@inphrone", label: "Product Hunt" },
-    { icon: SiMedium, href: "https://medium.com/@inphrone", label: "Medium" },
   ];
 
   const footerLinks = {
@@ -57,16 +44,11 @@ export function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
             {/* Brand Section */}
             <div className="lg:col-span-2">
-              <h3 className="font-bold text-xl mb-4">
-                Inphrone<sup className="text-xs font-normal">™</sup>
-              </h3>
+              <h3 className="font-bold text-xl mb-4">Inphrone<sup className="text-xs font-normal">™</sup></h3>
               <p className="text-sm text-muted-foreground mb-4">
                 World's first People-Powered Entertainment Intelligence Platform. Where audience emotion meets creative vision.
               </p>
-              <a
-                href="mailto:inphrone@gmail.com"
-                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary"
-              >
+              <a href="mailto:inphrone@gmail.com" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary">
                 <Mail className="h-4 w-4" />
                 inphrone@gmail.com
               </a>
@@ -137,9 +119,11 @@ export function Footer() {
 
           {/* IP Protection Notice */}
           <div className="text-center py-6 space-y-3 border-b border-border/50">
-            <p className="text-sm text-muted-foreground">© 2026 Inphrone. All Rights Reserved.</p>
+            <p className="text-sm text-muted-foreground">
+              © 2026 Inphrone. All Rights Reserved.
+            </p>
             <p className="text-xs text-muted-foreground/80 max-w-2xl mx-auto">
-              Inphrone™ and the Inphrone logo are trademarks of the platform and its founder.
+              Inphrone™ and the Inphrone logo are trademarks of the platform and its founder. 
               Unauthorized use or reproduction is strictly prohibited.
             </p>
             <div className="flex items-center justify-center gap-4 text-xs">
@@ -155,7 +139,9 @@ export function Footer() {
 
           {/* Developer Credit */}
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground pt-4">
-            <div className="text-xs text-muted-foreground/60">Proprietary algorithms protected under IP laws</div>
+            <div className="text-xs text-muted-foreground/60">
+              Proprietary algorithms protected under IP laws
+            </div>
             <div className="flex items-center gap-2">
               <span>Made with</span>
               <Heart className="h-4 w-4 text-red-500 animate-pulse" />
