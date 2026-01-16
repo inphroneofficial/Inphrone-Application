@@ -1,28 +1,30 @@
 {
-  "name": "Inphrone – People-Powered Entertainment Intelligence Platform",
+  "name": "Inphrone — Audience Intelligence Before Content Exists",
   "short_name": "Inphrone",
-  "description": "World’s first people-powered entertainment intelligence platform. Share opinions and insights on Film, Music, OTT, TV, YouTube, Gaming, Social Media, Apps, and Digital Culture.",
-  
+
+  "description": "The world’s first people-powered audience intelligence platform. Capture explicit audience demand before films, music, games, or platforms are built.",
+
   "start_url": "/?source=pwa",
   "scope": "/",
-  
+  "id": "com.inphrone.web",
+
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone"],
-  
-  "orientation": "portrait-primary",
-  
-  "background_color": "#1F0021",
+
+  "orientation": "any",
+
+  "background_color": "#0b0b0b",
   "theme_color": "#b91c1c",
-  
+
   "lang": "en",
   "dir": "ltr",
-  
+
   "categories": [
     "entertainment",
-    "social",
-    "productivity",
-    "news",
-    "technology"
+    "technology",
+    "analytics",
+    "business",
+    "productivity"
   ],
 
   "icons": [
@@ -52,7 +54,7 @@
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "Inphrone Intelligence Dashboard"
+      "label": "Inphrone Audience Intelligence Dashboard"
     },
     {
       "src": "/screenshots/inphrone-mobile.png",
@@ -70,7 +72,6 @@
     }
   ],
 
-  "id": "/",
   "launch_handler": {
     "client_mode": ["navigate-existing", "auto"]
   },
@@ -79,31 +80,29 @@
     "preferred_width": 420
   },
 
-  "related_applications": [],
   "prefer_related_applications": false,
 
   "shortcuts": [
-  {
-    "name": "InphroSync Daily Pulse",
-    "short_name": "InphroSync",
-    "description": "Check today’s entertainment pulse across all categories",
-    "url": "/inphrosync",
-    "icons": [{ "src": "/icons/inphro-logo-96.png", "sizes": "96x96", "type": "image/png" }]
-  },
-  {
-    "name": "Your Turn Competitions",
-    "short_name": "Your Turn",
-    "description": "Join slot competitions and share your opinions",
-    "url": "/yourturn",  
-    "icons": [{ "src": "/icons/yourturn-logo-96.png", "sizes": "96x96", "type": "image/png" }]
-  },
-  {
-    "name": "Audience Insights",
-    "short_name": "Insights",
-    "description": "View real-time audience insights",
-    "url": "/insights",
-    "icons": [{ "src": "/icons/insights-logo-96.png", "sizes": "96x96", "type": "image/png" }]
-  }
-]
-
+    {
+      "name": "InphroSync Daily Pulse",
+      "short_name": "InphroSync",
+      "description": "Check today’s audience pulse across entertainment categories",
+      "url": "/inphrosync",
+      "icons": [{ "src": "/icons/inphro-logo-96.png", "sizes": "96x96", "type": "image/png" }]
+    },
+    {
+      "name": "Your Turn Competitions",
+      "short_name": "Your Turn",
+      "description": "Join opinion-based competitions and influence content direction",
+      "url": "/yourturn",
+      "icons": [{ "src": "/icons/yourturn-logo-96.png", "sizes": "96x96", "type": "image/png" }]
+    },
+    {
+      "name": "Audience Insights",
+      "short_name": "Insights",
+      "description": "View real-time audience intelligence and demand signals",
+      "url": "/insights",
+      "icons": [{ "src": "/icons/insights-logo-96.png", "sizes": "96x96", "type": "image/png" }]
+    }
+  ]
 }

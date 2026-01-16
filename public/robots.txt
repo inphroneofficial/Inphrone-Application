@@ -1,24 +1,21 @@
 # ==============================================================================
-# Robots.txt for Inphrone™ – People-Powered Entertainment Intelligence Platform
+# robots.txt for Inphrone™ — Audience Intelligence Before Content Exists
 # Website: https://inphrone.com
 # Company: Inphrone
-# Founder: Thangella Gadidamalla (Male, He/Him)
-# Location: Hyderabad, Telangana, India
 # Last Updated: January 16, 2026
 # ==============================================================================
 # Purpose:
 # - Allow full crawling of public content
-# - Protect sensitive/private endpoints
-# - Support Google Knowledge Graph & social previews
+# - Protect sensitive and private endpoints
+# - Support search engines, social previews, and AI discovery
 # - Maintain crawl efficiency at scale
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
-# Google
+# Google (no crawl-delay; managed via Search Console)
 # ------------------------------------------------------------------------------
 User-agent: Googlebot
 Allow: /
-Crawl-delay: 1
 
 # ------------------------------------------------------------------------------
 # Bing / Microsoft
@@ -67,15 +64,17 @@ Crawl-delay: 1
 # ------------------------------------------------------------------------------
 # Sensitive / Non-Public Paths (Security + SEO Hygiene)
 # ------------------------------------------------------------------------------
-Disallow: /admin
+Disallow: /admin/
 Disallow: /api/
 Disallow: /_internal/
 Disallow: /private/
-Disallow: /*.json$
+
+# Block auth-related query leaks
 Disallow: /*?*token=
 Disallow: /*?*auth=
+Disallow: /*?*session=
 
 # ------------------------------------------------------------------------------
-# Sitemap Declaration
+# Sitemap
 # ------------------------------------------------------------------------------
 Sitemap: https://inphrone.com/sitemap.xml
