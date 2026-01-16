@@ -1,61 +1,109 @@
 {
-  "name": "Inphrone - Audience Intelligence Platform",
+  "name": "Inphrone – People-Powered Entertainment Intelligence Platform",
   "short_name": "Inphrone",
-  "description": "World's first people-powered entertainment intelligence platform. Share opinions on Film, Music, OTT, TV, YouTube, Gaming, Social Media & App Development.",
-  "start_url": "/",
+  "description": "World’s first people-powered entertainment intelligence platform. Share opinions and insights on Film, Music, OTT, TV, YouTube, Gaming, Social Media, Apps, and Digital Culture.",
+  
+  "start_url": "/?source=pwa",
   "scope": "/",
+  
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  
   "orientation": "portrait-primary",
+  
   "background_color": "#1F0021",
   "theme_color": "#b91c1c",
-  "lang": "en",
-  "categories": ["entertainment", "social", "productivity"],
   
+  "lang": "en",
+  "dir": "ltr",
+  
+  "categories": [
+    "entertainment",
+    "social",
+    "productivity",
+    "news",
+    "technology"
+  ],
+
   "icons": [
     {
-      "src": "/inphrone-logo-192.png",
+      "src": "/icons/inphrone-logo-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/inphrone-logo-512.png",
+      "src": "/icons/inphrone-logo-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/inphrone-logo.svg",
+      "src": "/icons/inphrone-logo.svg",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ],
 
   "screenshots": [
     {
-      "src": "/screenshot-wide.png",
+      "src": "/screenshots/inphrone-dashboard-wide.png",
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "Inphrone Dashboard"
+      "label": "Inphrone Intelligence Dashboard"
     },
     {
-      "src": "/screenshot-narrow.png",
+      "src": "/screenshots/inphrone-mobile.png",
       "sizes": "720x1280",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Inphrone Mobile"
+      "label": "Inphrone Mobile Experience"
     },
     {
-      "src": "/screenshot-tablet.png",
+      "src": "/screenshots/inphrone-tablet.png",
       "sizes": "1280x1024",
       "type": "image/png",
       "form_factor": "tablet",
-      "label": "Inphrone Tablet"
+      "label": "Inphrone Tablet View"
     }
   ],
 
+  "id": "/",
+  "launch_handler": {
+    "client_mode": ["navigate-existing", "auto"]
+  },
+
+  "edge_side_panel": {
+    "preferred_width": 420
+  },
+
   "related_applications": [],
-  "prefer_related_applications": false
+  "prefer_related_applications": false,
+
+  "shortcuts": [
+  {
+    "name": "InphroSync Daily Pulse",
+    "short_name": "InphroSync",
+    "description": "Check today’s entertainment pulse across all categories",
+    "url": "/inphrosync",
+    "icons": [{ "src": "/icons/inphro-logo-96.png", "sizes": "96x96", "type": "image/png" }]
+  },
+  {
+    "name": "Your Turn Competitions",
+    "short_name": "Your Turn",
+    "description": "Join slot competitions and share your opinions",
+    "url": "/yourturn",  
+    "icons": [{ "src": "/icons/yourturn-logo-96.png", "sizes": "96x96", "type": "image/png" }]
+  },
+  {
+    "name": "Audience Insights",
+    "short_name": "Insights",
+    "description": "View real-time audience insights",
+    "url": "/insights",
+    "icons": [{ "src": "/icons/insights-logo-96.png", "sizes": "96x96", "type": "image/png" }]
+  }
+]
+
 }

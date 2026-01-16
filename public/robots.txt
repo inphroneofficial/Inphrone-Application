@@ -1,56 +1,81 @@
-# Robots.txt for Inphrone - Entertainment Intelligence Platform
-# https://inphrone.com
+# ==============================================================================
+# Robots.txt for Inphrone™ – People-Powered Entertainment Intelligence Platform
+# Website: https://inphrone.com
+# Company: Inphrone
+# Founder: Thangella Gadidamalla (Male, He/Him)
+# Location: Hyderabad, Telangana, India
+# Last Updated: January 16, 2026
+# ==============================================================================
+# Purpose:
+# - Allow full crawling of public content
+# - Protect sensitive/private endpoints
+# - Support Google Knowledge Graph & social previews
+# - Maintain crawl efficiency at scale
+# ==============================================================================
 
-# Googlebot
+# ------------------------------------------------------------------------------
+# Google
+# ------------------------------------------------------------------------------
 User-agent: Googlebot
 Allow: /
 Crawl-delay: 1
 
-# Bingbot
+# ------------------------------------------------------------------------------
+# Bing / Microsoft
+# ------------------------------------------------------------------------------
 User-agent: Bingbot
 Allow: /
 Crawl-delay: 1
 
-# Twitterbot
+# ------------------------------------------------------------------------------
+# Social Media Crawlers (Preview Cards / Rich Embeds)
+# ------------------------------------------------------------------------------
 User-agent: Twitterbot
 Allow: /
 
-# Facebook External Hit
 User-agent: facebookexternalhit
 Allow: /
 
-# LinkedInBot
 User-agent: LinkedInBot
 Allow: /
 
-# Yahoo Slurp
+# ------------------------------------------------------------------------------
+# Other Major Search Engines
+# ------------------------------------------------------------------------------
+User-agent: DuckDuckBot
+Allow: /
+
 User-agent: Slurp
 Allow: /
 Crawl-delay: 2
 
-# DuckDuckBot
-User-agent: DuckDuckBot
-Allow: /
-
-# Baiduspider
 User-agent: Baiduspider
 Allow: /
 Crawl-delay: 2
 
-# Yandex
 User-agent: YandexBot
 Allow: /
 Crawl-delay: 2
 
-# Default rule for all other bots
+# ------------------------------------------------------------------------------
+# Default Rule (All Other Crawlers)
+# ------------------------------------------------------------------------------
 User-agent: *
 Allow: /
 Crawl-delay: 1
 
-# Disallow sensitive or private paths
+# ------------------------------------------------------------------------------
+# Sensitive / Non-Public Paths (Security + SEO Hygiene)
+# ------------------------------------------------------------------------------
 Disallow: /admin
 Disallow: /api/
+Disallow: /_internal/
+Disallow: /private/
 Disallow: /*.json$
+Disallow: /*?*token=
+Disallow: /*?*auth=
 
-# Sitemap
+# ------------------------------------------------------------------------------
+# Sitemap Declaration
+# ------------------------------------------------------------------------------
 Sitemap: https://inphrone.com/sitemap.xml
