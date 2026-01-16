@@ -24,7 +24,7 @@ For licensing inquiries: inphrone@gmail.com
     <title>Inphrone™ | People-Powered Entertainment Intelligence</title>
     <meta name="description" content="Inphrone is the world's first people-powered entertainment intelligence platform. Share opinions on Film, Music, OTT, TV, YouTube, Gaming, Social Media & App Development. Founded by Thangella Gadidamalla." />
     <meta name="keywords" content="Inphrone, entertainment insights, audience intelligence, creator platform, film insights, music trends, TV analytics, gaming feedback, OTT analytics, YouTube trends, social media insights, app development feedback, Thangella Gadidamalla, entertainment data, content creation, InphroSync, Your Turn, audience opinions" />
-    <meta name="author" content="Inphrone - Founded by Thangella Gadidamalla" />
+    <meta name="author" content="Thangella Gadidamalla" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="googlebot" content="index, follow" />
     <link rel="canonical" href="https://inphrone.com" />
@@ -73,7 +73,11 @@ For licensing inquiries: inphrone@gmail.com
       gtag('config', 'G-VYM9KY8V1E');
     </script>
 
-    <!-- Structured Data : Organization (ENHANCED WITH LOCATION) -->
+    <!-- ========================= -->
+    <!-- STRUCTURED DATA -->
+    <!-- ========================= -->
+
+    <!-- Organization -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -82,7 +86,7 @@ For licensing inquiries: inphrone@gmail.com
       "alternateName": "INPHRONE",
       "url": "https://inphrone.com",
       "logo": "https://inphrone.com/inphrone-logo.jpg",
-      "description": "World's first people-powered entertainment intelligence platform connecting audiences and creators across Film, Music, OTT, TV, YouTube, Gaming, Social Media, and App Development.",
+      "description": "World's first people-powered entertainment intelligence platform connecting audiences and creators.",
       "founder": {
         "@type": "Person",
         "name": "Thangella Gadidamalla",
@@ -111,19 +115,23 @@ For licensing inquiries: inphrone@gmail.com
         "https://youtube.com/@inphrone",
         "https://www.reddit.com/user/officialinphrone/",
         "https://www.facebook.com/inphrone/",
-        "https://t.me/inphroneofficial"
+        "https://t.me/inphroneofficial",
+        "https://www.linkedin.com/company/inphrone",
+        "https://substack.com/@inphrone",
+        "https://www.producthunt.com/@inphrone",
+        "https://medium.com/@inphrone"
       ]
     }
     </script>
 
-    <!-- Structured Data : Founder / Person (NEW – ADDITIVE) -->
+    <!-- Founder / Person -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Person",
       "name": "Thangella Gadidamalla",
       "gender": "Male",
-      "jobTitle": "Founder",
+      "jobTitle": "Founder & Product Architect",
       "worksFor": {
         "@type": "Organization",
         "name": "Inphrone"
@@ -143,20 +151,10 @@ For licensing inquiries: inphrone@gmail.com
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": "Inphrone",
-      "alternateName": "INPHRONE - Audience Intelligence Platform",
       "url": "https://inphrone.com",
-      "description": "World's first people-powered entertainment intelligence platform",
       "publisher": {
         "@type": "Organization",
         "name": "Inphrone"
-      },
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": {
-          "@type": "EntryPoint",
-          "urlTemplate": "https://inphrone.com/insights?q={search_term_string}"
-        },
-        "query-input": "required name=search_term_string"
       }
     }
     </script>
@@ -173,30 +171,7 @@ For licensing inquiries: inphrone@gmail.com
         "@type": "Offer",
         "price": "0",
         "priceCurrency": "USD"
-      },
-      "description": "People-powered entertainment intelligence platform with 8 categories.",
-      "author": {
-        "@type": "Person",
-        "name": "Thangella Gadidamalla"
       }
-    }
-    </script>
-
-    <!-- FAQ -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "What is Inphrone?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Inphrone is the world's first people-powered entertainment intelligence platform."
-          }
-        }
-      ]
     }
     </script>
 
@@ -206,7 +181,24 @@ For licensing inquiries: inphrone@gmail.com
   </head>
 
   <body>
+    <!-- Root div for React App -->
     <div id="root"></div>
+
+    <!-- Crawlable social links (non-visual) -->
+    <nav aria-label="Inphrone social links" style="display:none">
+      <a href="https://instagram.com/inphrone">Instagram</a>
+      <a href="https://x.com/inphrone">X</a>
+      <a href="https://youtube.com/@inphrone">YouTube</a>
+      <a href="https://www.reddit.com/user/officialinphrone/">Reddit</a>
+      <a href="https://www.facebook.com/inphrone/">Facebook</a>
+      <a href="https://t.me/inphroneofficial">Telegram</a>
+      <a href="https://www.linkedin.com/company/inphrone">LinkedIn</a>
+      <a href="https://substack.com/@inphrone">Substack</a>
+      <a href="https://www.producthunt.com/@inphrone">Product Hunt</a>
+      <a href="https://medium.com/@inphrone">Medium</a>
+    </nav>
+
+    <!-- React Main Script -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
