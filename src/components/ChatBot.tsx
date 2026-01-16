@@ -675,9 +675,9 @@ What would you like to know?` }
                     {isLoading && <TypingIndicator />}
                   </AnimatePresence>
                   
-                  {/* Suggested questions - Only show before first user interaction */}
+                  {/* Suggested questions - Show after every assistant response */}
                   <AnimatePresence>
-                    {!isLoading && messages.length === 1 && messages[0].role === 'assistant' && (
+                    {!isLoading && messages.length > 0 && messages[messages.length - 1].role === 'assistant' && (
                       <motion.div 
                         className="flex flex-wrap gap-2 pt-3"
                         initial={{ opacity: 0, y: 10 }}

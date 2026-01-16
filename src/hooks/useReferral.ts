@@ -116,21 +116,20 @@ export function useReferral() {
     }
 
     try {
-      // Find the referral code
-      const { data: codeData, error: findError } = await supabase
-        .from('referral_codes')
-        .select('*')
-        .eq('code', code.toUpperCase())
-        .eq('is_active', true)
-        .single();
+      // Use secure RPC function to validate and get referral code data
+      // This prevents exposing user_id relationships via direct table queries
+      const { data: validationResult, error: findError } = await supabase
+        .rpc('validate_and_get_referral_code', { input_code: code });
 
-      if (findError || !codeData) {
+      if (findError || !validationResult || validationResult.length === 0) {
         toast.error('Invalid referral code');
         return false;
       }
 
+      const codeData = validationResult[0];
+
       // Check if user is trying to use their own code
-      if (codeData.user_id === userId) {
+      if (codeData.owner_user_id === userId) {
         toast.error('You cannot use your own referral code');
         return false;
       }
@@ -151,9 +150,9 @@ export function useReferral() {
       const { error: claimError } = await supabase
         .from('referral_claims')
         .insert({
-          referral_code_id: codeData.id,
+          referral_code_id: codeData.code_id,
           referred_user_id: userId,
-          referrer_user_id: codeData.user_id,
+          referrer_user_id: codeData.owner_user_id,
           bonus_awarded: false
         });
 

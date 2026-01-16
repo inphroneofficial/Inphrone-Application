@@ -26,6 +26,7 @@ import {
   Layers,
   Clock,
   Heart,
+  Lock,
 } from "lucide-react";
 
 interface PlatformStats {
@@ -89,7 +90,8 @@ const AdvancedDataCard = ({
   icon: Icon, 
   gradient,
   delay = 0,
-  subtext
+  subtext,
+  isBlurred = false
 }: { 
   title: string; 
   value: number; 
@@ -99,6 +101,7 @@ const AdvancedDataCard = ({
   gradient: string;
   delay?: number;
   subtext?: string;
+  isBlurred?: boolean;
 }) => {
   const animatedValue = useAnimatedCounter(value, 2000, delay);
   
@@ -115,7 +118,7 @@ const AdvancedDataCard = ({
           <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center shadow-lg`}>
             <Icon className="w-5 h-5 text-white" />
           </div>
-          {trend && (
+          {trend && !isBlurred && (
             <motion.div 
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -127,11 +130,13 @@ const AdvancedDataCard = ({
             </motion.div>
           )}
         </div>
-        <p className="text-2xl md:text-3xl font-black font-display text-foreground tracking-tight">
-          {animatedValue.toLocaleString()}{suffix}
-        </p>
+        <div className={isBlurred ? "blur-sm select-none" : ""}>
+          <p className="text-2xl md:text-3xl font-black font-display text-foreground tracking-tight">
+            {animatedValue.toLocaleString()}{suffix}
+          </p>
+        </div>
         <p className="text-xs font-medium text-muted-foreground mt-1">{title}</p>
-        {subtext && (
+        {subtext && !isBlurred && (
           <p className="text-[10px] text-muted-foreground/70 mt-0.5">{subtext}</p>
         )}
       </div>
@@ -146,7 +151,8 @@ const CategoryBar = ({
   maxCount, 
   color, 
   delay,
-  icon: Icon
+  icon: Icon,
+  isBlurred = false
 }: { 
   name: string; 
   count: number; 
@@ -154,6 +160,7 @@ const CategoryBar = ({
   color: string;
   delay: number;
   icon: any;
+  isBlurred?: boolean;
 }) => {
   const percentage = maxCount > 0 ? (count / maxCount) * 100 : 0;
   
@@ -170,13 +177,13 @@ const CategoryBar = ({
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between mb-1">
           <span className="text-xs font-medium text-foreground truncate">{name}</span>
-          <span className="text-xs font-bold text-foreground ml-2">{count}</span>
+          <span className={`text-xs font-bold text-foreground ml-2 ${isBlurred ? "blur-sm" : ""}`}>{count}</span>
         </div>
         <div className="h-2 bg-muted/50 rounded-full overflow-hidden">
           <motion.div
-            className={`h-full bg-gradient-to-r ${color} rounded-full`}
+            className={`h-full bg-gradient-to-r ${color} rounded-full ${isBlurred ? "opacity-50" : ""}`}
             initial={{ width: 0 }}
-            animate={{ width: `${percentage}%` }}
+            animate={{ width: isBlurred ? "30%" : `${percentage}%` }}
             transition={{ delay: delay + 0.2, duration: 0.8, ease: "easeOut" }}
           />
         </div>
@@ -185,15 +192,38 @@ const CategoryBar = ({
   );
 };
 
+// Sign-in prompt overlay
+const SignInPrompt = ({ onSignIn }: { onSignIn: () => void }) => (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    className="absolute inset-0 z-20 flex items-center justify-center bg-background/80 backdrop-blur-md rounded-2xl"
+  >
+    <div className="text-center p-6 max-w-xs">
+      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mx-auto mb-4 shadow-xl">
+        <Lock className="w-8 h-8 text-white" />
+      </div>
+      <h3 className="text-lg font-bold mb-2">Sign in for Full Access</h3>
+      <p className="text-sm text-muted-foreground mb-4">
+        Get detailed analytics, trending insights, and real-time data updates.
+      </p>
+      <Button onClick={onSignIn} className="w-full bg-gradient-to-r from-primary to-accent">
+        Sign In / Sign Up
+        <ArrowRight className="w-4 h-4 ml-2" />
+      </Button>
+    </div>
+  </motion.div>
+);
+
 // Animated donut chart with real proportions
-const LiveDonutChart = ({ data }: { data: CategoryData[] }) => {
+const LiveDonutChart = ({ data, isBlurred = false }: { data: CategoryData[]; isBlurred?: boolean }) => {
   const total = data.reduce((sum, item) => sum + item.opinion_count, 0);
   const colors = ["#ef4444", "#8b5cf6", "#3b82f6", "#10b981", "#f59e0b", "#ec4899"];
   
   let offset = 0;
   
   return (
-    <div className="relative w-24 h-24 mx-auto">
+    <div className={`relative w-24 h-24 mx-auto ${isBlurred ? "blur-sm" : ""}`}>
       <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
         <circle
           cx="18"
@@ -238,7 +268,7 @@ const LiveDonutChart = ({ data }: { data: CategoryData[] }) => {
 };
 
 // Weekly trend sparkline with real data
-const WeeklySparkline = ({ data }: { data: DailyData[] }) => {
+const WeeklySparkline = ({ data, isBlurred = false }: { data: DailyData[]; isBlurred?: boolean }) => {
   const counts = data.map(d => d.count);
   const max = Math.max(...counts, 1);
   const min = Math.min(...counts, 0);
@@ -251,7 +281,7 @@ const WeeklySparkline = ({ data }: { data: DailyData[] }) => {
   });
   
   return (
-    <div className="flex items-end gap-1 h-12 w-full">
+    <div className={`flex items-end gap-1 h-12 w-full ${isBlurred ? "blur-sm" : ""}`}>
       {paddedData.map((value, i) => (
         <motion.div
           key={i}
@@ -261,11 +291,13 @@ const WeeklySparkline = ({ data }: { data: DailyData[] }) => {
           transition={{ delay: 0.3 + i * 0.08, duration: 0.5 }}
           whileHover={{ scale: 1.1 }}
         >
-          <div className="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
-            <span className="text-[10px] font-bold text-foreground bg-card/90 px-1.5 py-0.5 rounded border border-border/50 whitespace-nowrap">
-              {value}
-            </span>
-          </div>
+          {!isBlurred && (
+            <div className="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+              <span className="text-[10px] font-bold text-foreground bg-card/90 px-1.5 py-0.5 rounded border border-border/50 whitespace-nowrap">
+                {value}
+              </span>
+            </div>
+          )}
         </motion.div>
       ))}
     </div>
@@ -283,7 +315,7 @@ interface RealActivity {
 }
 
 // Live activity feed with REAL database activities (anonymous + privacy-safe)
-const LiveActivityFeed = () => {
+const LiveActivityFeed = ({ isBlurred = false, limit = 4 }: { isBlurred?: boolean; limit?: number }) => {
   const [activities, setActivities] = useState<RealActivity[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -336,7 +368,7 @@ const LiveActivityFeed = () => {
         `
         )
         .order("created_at", { ascending: false })
-        .limit(5);
+        .limit(isBlurred ? 2 : 5);
 
       // Recent upvotes (user_type is already stored on the upvote row)
       const { data: recentUpvotes } = await supabase
@@ -348,14 +380,14 @@ const LiveActivityFeed = () => {
         `
         )
         .order("created_at", { ascending: false })
-        .limit(5);
+        .limit(isBlurred ? 2 : 5);
 
       // Recent profile creations (new users) — anonymous
       const { data: recentUsers } = await supabase
         .from("profiles")
         .select("id, user_type, created_at")
         .order("created_at", { ascending: false })
-        .limit(3);
+        .limit(isBlurred ? 1 : 3);
 
       const allActivities: RealActivity[] = [];
 
@@ -397,7 +429,7 @@ const LiveActivityFeed = () => {
       });
 
       allActivities.sort((a, b) => b.time.getTime() - a.time.getTime());
-      setActivities(allActivities.slice(0, 4));
+      setActivities(allActivities.slice(0, limit));
       setIsLoading(false);
     } catch (error) {
       console.error("Error fetching activities:", error);
@@ -408,32 +440,34 @@ const LiveActivityFeed = () => {
   useEffect(() => {
     fetchRealActivities();
 
-    // Realtime subscription for new activities
-    const activityChannel = supabase
-      .channel("realtime-activity")
-      .on("postgres_changes", { event: "INSERT", schema: "public", table: "opinions" }, () => {
-        fetchRealActivities();
-      })
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "opinion_upvotes" },
-        () => {
+    if (!isBlurred) {
+      // Realtime subscription for new activities
+      const activityChannel = supabase
+        .channel("realtime-activity")
+        .on("postgres_changes", { event: "INSERT", schema: "public", table: "opinions" }, () => {
           fetchRealActivities();
-        }
-      )
-      .on("postgres_changes", { event: "INSERT", schema: "public", table: "profiles" }, () => {
-        fetchRealActivities();
-      })
-      .subscribe();
+        })
+        .on(
+          "postgres_changes",
+          { event: "INSERT", schema: "public", table: "opinion_upvotes" },
+          () => {
+            fetchRealActivities();
+          }
+        )
+        .on("postgres_changes", { event: "INSERT", schema: "public", table: "profiles" }, () => {
+          fetchRealActivities();
+        })
+        .subscribe();
 
-    // Refresh every 15 seconds
-    const interval = setInterval(fetchRealActivities, 15000);
+      // Refresh every 15 seconds
+      const interval = setInterval(fetchRealActivities, 15000);
 
-    return () => {
-      supabase.removeChannel(activityChannel);
-      clearInterval(interval);
-    };
-  }, []);
+      return () => {
+        supabase.removeChannel(activityChannel);
+        clearInterval(interval);
+      };
+    }
+  }, [isBlurred, limit]);
 
   if (isLoading) {
     return (
@@ -452,7 +486,7 @@ const LiveActivityFeed = () => {
   }
 
   return (
-    <div className="space-y-2">
+    <div className={`space-y-2 ${isBlurred ? "blur-sm" : ""}`}>
       <AnimatePresence mode="popLayout">
         {activities.map((activity) => (
           <motion.div
@@ -491,7 +525,7 @@ const LiveActivityFeed = () => {
                 {getTimeAgo(activity.time)}
               </p>
             </div>
-            <LivePulse />
+            {!isBlurred && <LivePulse />}
           </motion.div>
         ))}
       </AnimatePresence>
@@ -502,6 +536,8 @@ const LiveActivityFeed = () => {
 export const LiveDataHero = () => {
   const navigate = useNavigate();
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [showSignInPrompt, setShowSignInPrompt] = useState(false);
   const [stats, setStats] = useState<PlatformStats>({
     totalUsers: 0,
     totalOpinions: 0,
@@ -513,6 +549,33 @@ export const LiveDataHero = () => {
   const [categoryData, setCategoryData] = useState<CategoryData[]>([]);
   const [weeklyData, setWeeklyData] = useState<DailyData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  
+  // Check authentication status
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setIsAuthenticated(!!session);
+    };
+    
+    checkAuth();
+    
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(!!session);
+    });
+    
+    return () => subscription.unsubscribe();
+  }, []);
+  
+  // Show sign-in prompt after 10 seconds for unauthenticated users
+  useEffect(() => {
+    if (isAuthenticated === false) {
+      const timer = setTimeout(() => {
+        setShowSignInPrompt(true);
+      }, 10000); // 10 seconds
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isAuthenticated]);
   
   // Fetch real data from Supabase
   useEffect(() => {
@@ -597,21 +660,27 @@ export const LiveDataHero = () => {
     
     fetchData();
     
-    // Update key totals immediately when profiles (new users / country changes) change
-    const statsChannel = supabase
-      .channel('realtime-platform-stats')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, () => {
-        fetchData();
-      })
-      .subscribe();
-    
-    // Refresh data every 30 seconds
-    const refreshInterval = setInterval(fetchData, 30000);
-    return () => {
-      supabase.removeChannel(statsChannel);
-      clearInterval(refreshInterval);
-    };
-  }, []);
+    // Only set up realtime for authenticated users
+    if (isAuthenticated) {
+      const statsChannel = supabase
+        .channel('realtime-platform-stats')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' }, () => {
+          fetchData();
+        })
+        .subscribe();
+      
+      // Refresh data every 30 seconds
+      const refreshInterval = setInterval(fetchData, 30000);
+      return () => {
+        supabase.removeChannel(statsChannel);
+        clearInterval(refreshInterval);
+      };
+    } else {
+      // For unauthenticated, refresh less frequently
+      const refreshInterval = setInterval(fetchData, 60000);
+      return () => clearInterval(refreshInterval);
+    }
+  }, [isAuthenticated]);
   
   // Update current time
   useEffect(() => {
@@ -653,6 +722,9 @@ export const LiveDataHero = () => {
   ];
   
   const maxCategoryCount = Math.max(...categoryData.map(c => c.opinion_count), 1);
+  
+  // Determine if data should be blurred (for unauthenticated users viewing detailed data)
+  const shouldBlurDetails = !isAuthenticated;
   
   return (
     <section className="relative min-h-[100vh] flex items-center justify-center overflow-hidden pt-4 pb-16">
@@ -753,7 +825,7 @@ export const LiveDataHero = () => {
               </p>
             </motion.div>
             
-            {/* Live stats row */}
+            {/* Live stats row - always show basic stats */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -858,6 +930,13 @@ export const LiveDataHero = () => {
               
               {/* Dashboard container */}
               <div className="relative bg-card/95 backdrop-blur-2xl border border-border/50 rounded-2xl shadow-2xl overflow-hidden">
+                {/* Sign in prompt overlay for unauthenticated users */}
+                <AnimatePresence>
+                  {showSignInPrompt && !isAuthenticated && (
+                    <SignInPrompt onSignIn={() => navigate("/auth")} />
+                  )}
+                </AnimatePresence>
+                
                 {/* Header */}
                 <div className="flex items-center justify-between p-5 border-b border-border/50 bg-muted/20">
                   <div className="flex items-center gap-3">
@@ -866,7 +945,9 @@ export const LiveDataHero = () => {
                     </div>
                     <div>
                       <span className="text-sm font-bold text-foreground">Live Dashboard</span>
-                      <p className="text-[10px] text-muted-foreground">Powered by real audience data</p>
+                      <p className="text-[10px] text-muted-foreground">
+                        {isAuthenticated ? "Full access enabled" : "Preview mode"}
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
@@ -877,29 +958,29 @@ export const LiveDataHero = () => {
                 
                 {/* Main content */}
                 <div className="p-5 space-y-5">
-                  {/* Top stats row */}
+                  {/* Top stats row - always visible */}
                   <div className="grid grid-cols-2 gap-3">
                     <AdvancedDataCard
                       title="Total Users"
                       value={stats.totalUsers}
                       icon={Users}
                       gradient="from-primary to-primary/70"
-                      trend="+12%"
+                      trend={isAuthenticated ? "+12%" : undefined}
                       delay={300}
-                      subtext="Active community members"
+                      subtext={isAuthenticated ? "Active community members" : undefined}
                     />
                     <AdvancedDataCard
                       title="Total Opinions"
                       value={stats.totalOpinions}
                       icon={MessageSquare}
                       gradient="from-violet-500 to-purple-600"
-                      trend="+8%"
+                      trend={isAuthenticated ? "+8%" : undefined}
                       delay={450}
-                      subtext="Authentic insights shared"
+                      subtext={isAuthenticated ? "Authentic insights shared" : undefined}
                     />
                   </div>
                   
-                  {/* Second stats row */}
+                  {/* Second stats row - blur for unauthenticated */}
                   <div className="grid grid-cols-3 gap-3">
                     <AdvancedDataCard
                       title="Categories"
@@ -914,6 +995,7 @@ export const LiveDataHero = () => {
                       icon={ThumbsUp}
                       gradient="from-amber-500 to-orange-500"
                       delay={750}
+                      isBlurred={shouldBlurDetails}
                     />
                     <AdvancedDataCard
                       title="Views"
@@ -921,77 +1003,76 @@ export const LiveDataHero = () => {
                       icon={Eye}
                       gradient="from-emerald-500 to-teal-500"
                       delay={900}
+                      isBlurred={shouldBlurDetails}
                     />
                   </div>
                   
-                  {/* Charts section */}
+                  {/* Middle section - Charts & Categories */}
                   <div className="grid grid-cols-2 gap-4">
-                    {/* Category breakdown */}
-                    <div className="p-4 rounded-xl bg-muted/20 border border-border/30">
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="text-xs font-bold text-foreground">Category Analysis</span>
+                    {/* Category breakdown - partial visibility */}
+                    <div className="p-4 rounded-xl bg-muted/30 border border-border/30">
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-xs font-bold text-foreground">Categories</span>
                         <BarChart3 className="w-3.5 h-3.5 text-muted-foreground" />
                       </div>
-                      <div className="space-y-3">
-                        {categoryData.slice(0, 5).map((cat, i) => (
+                      <div className="space-y-2.5">
+                        {categoryData.slice(0, shouldBlurDetails ? 3 : 5).map((cat, i) => (
                           <CategoryBar
                             key={cat.category_name}
                             name={cat.category_name}
                             count={cat.opinion_count}
                             maxCount={maxCategoryCount}
                             color={categoryColors[cat.category_name] || "from-gray-500 to-gray-600"}
-                            icon={categoryIcons[cat.category_name] || Sparkles}
                             delay={0.5 + i * 0.08}
+                            icon={categoryIcons[cat.category_name] || Layers}
+                            isBlurred={shouldBlurDetails && i >= 2}
                           />
                         ))}
+                        {shouldBlurDetails && (
+                          <p className="text-[10px] text-center text-muted-foreground pt-1">
+                            Sign in to see all categories
+                          </p>
+                        )}
                       </div>
                     </div>
                     
-                    {/* Donut + trend */}
+                    {/* Donut + Sparkline */}
                     <div className="space-y-4">
                       {/* Donut chart */}
-                      <div className="p-4 rounded-xl bg-muted/20 border border-border/30">
-                        <div className="flex items-center justify-between mb-3">
+                      <div className="p-4 rounded-xl bg-muted/30 border border-border/30">
+                        <div className="flex items-center justify-between mb-2">
                           <span className="text-xs font-bold text-foreground">Distribution</span>
                           <Target className="w-3.5 h-3.5 text-muted-foreground" />
                         </div>
-                        <LiveDonutChart data={categoryData} />
+                        <LiveDonutChart data={categoryData} isBlurred={shouldBlurDetails} />
                       </div>
                       
-                      {/* Weekly trend */}
-                      <div className="p-4 rounded-xl bg-muted/20 border border-border/30">
-                        <div className="flex items-center justify-between mb-3">
-                          <span className="text-xs font-bold text-foreground">7-Day Trend</span>
-                          <TrendingUp className="w-3.5 h-3.5 text-emerald-500" />
+                      {/* Weekly activity */}
+                      <div className="p-4 rounded-xl bg-muted/30 border border-border/30">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-xs font-bold text-foreground">This Week</span>
+                          <Clock className="w-3.5 h-3.5 text-muted-foreground" />
                         </div>
-                        <WeeklySparkline data={weeklyData} />
+                        <WeeklySparkline data={weeklyData} isBlurred={shouldBlurDetails} />
                       </div>
                     </div>
                   </div>
                   
                   {/* Live activity feed */}
-                  <div className="p-4 rounded-xl bg-muted/20 border border-border/30">
+                  <div className="p-4 rounded-xl bg-muted/30 border border-border/30">
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-xs font-bold text-foreground">Live Activity</span>
-                      <div className="flex items-center gap-1.5">
-                        <Zap className="w-3.5 h-3.5 text-amber-500" />
-                        <span className="text-[10px] text-muted-foreground">Real-time</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold text-foreground">Live Activity</span>
+                        <LivePulse />
                       </div>
+                      <Zap className="w-3.5 h-3.5 text-amber-500" />
                     </div>
-                    <LiveActivityFeed />
-                  </div>
-                </div>
-                
-                {/* Footer */}
-                <div className="px-5 py-3 border-t border-border/30 bg-muted/10 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-3.5 h-3.5 text-muted-foreground" />
-                    <span className="text-[10px] text-muted-foreground">
-                      Last updated: {currentTime.toLocaleTimeString()}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-[10px] font-medium text-primary">Auto-refresh: 30s</span>
+                    <LiveActivityFeed isBlurred={shouldBlurDetails} limit={shouldBlurDetails ? 2 : 4} />
+                    {shouldBlurDetails && (
+                      <p className="text-[10px] text-center text-muted-foreground pt-2">
+                        Sign in for full activity feed
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>

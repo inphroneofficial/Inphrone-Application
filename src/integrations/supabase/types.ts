@@ -2511,7 +2511,17 @@ export type Database = {
         Returns: boolean
       }
       is_non_audience_user: { Args: { _user_id: string }; Returns: boolean }
+      is_referral_code_valid: { Args: { input_code: string }; Returns: boolean }
       restore_account: { Args: never; Returns: Json }
+      validate_and_get_referral_code: {
+        Args: { input_code: string }
+        Returns: {
+          code: string
+          code_id: string
+          is_valid: boolean
+          owner_user_id: string
+        }[]
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
