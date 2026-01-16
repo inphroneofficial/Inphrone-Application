@@ -2,7 +2,6 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 
-  <!-- Homepage -->
   <url>
     <loc>https://inphrone.com/</loc>
     <lastmod>2026-01-16</lastmod>
@@ -10,12 +9,9 @@
     <priority>1.0</priority>
     <image:image>
       <image:loc>https://inphrone.com/inphrone-logo.png</image:loc>
-      <image:caption>Inphrone — Audience Intelligence Before Content Exists</image:caption>
-      <image:title>Inphrone Logo</image:title>
     </image:image>
   </url>
 
-  <!-- Core Features -->
   <url>
     <loc>https://inphrone.com/insights</loc>
     <lastmod>2026-01-16</lastmod>
@@ -23,8 +19,6 @@
     <priority>0.95</priority>
     <image:image>
       <image:loc>https://inphrone.com/screenshots/inphrone-dashboard-wide.png</image:loc>
-      <image:caption>Inphrone Audience Intelligence Dashboard</image:caption>
-      <image:title>Insights Dashboard</image:title>
     </image:image>
   </url>
 
@@ -42,15 +36,6 @@
     <priority>0.9</priority>
   </url>
 
-  <!-- Dashboard (only keep if public) -->
-  <url>
-    <loc>https://inphrone.com/dashboard</loc>
-    <lastmod>2026-01-16</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.85</priority>
-  </url>
-
-  <!-- About -->
   <url>
     <loc>https://inphrone.com/about</loc>
     <lastmod>2026-01-16</lastmod>
@@ -58,15 +43,13 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- Auth (low priority, functional page) -->
   <url>
-    <loc>https://inphrone.com/auth</loc>
+    <loc>https://inphrone.com/blog</loc>
     <lastmod>2026-01-16</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
 
-  <!-- Resources -->
   <url>
     <loc>https://inphrone.com/faq</loc>
     <lastmod>2026-01-16</lastmod>
@@ -75,66 +58,24 @@
   </url>
 
   <url>
-    <loc>https://inphrone.com/help-center</loc>
-    <lastmod>2026-01-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://inphrone.com/blog</loc>
-    <lastmod>2026-01-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-    <image:image>
-      <image:loc>https://inphrone.com/screenshots/inphrone-blog.png</image:loc>
-      <image:caption>Inphrone Thought Leadership & Audience Intelligence</image:caption>
-      <image:title>Inphrone Blog</image:title>
-    </image:image>
-  </url>
-
-  <url>
-    <loc>https://inphrone.com/reviews</loc>
-    <lastmod>2026-01-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.65</priority>
-  </url>
-
-  <!-- Company -->
-  <url>
-    <loc>https://inphrone.com/careers</loc>
-    <lastmod>2026-01-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-
-  <url>
     <loc>https://inphrone.com/contact</loc>
     <lastmod>2026-01-16</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.5</priority>
   </url>
 
-  <url>
-    <loc>https://inphrone.com/feedback</loc>
-    <lastmod>2026-01-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.55</priority>
-  </url>
-
-  <!-- Legal -->
   <url>
     <loc>https://inphrone.com/privacy-policy</loc>
     <lastmod>2026-01-16</lastmod>
     <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.3</priority>
   </url>
 
   <url>
     <loc>https://inphrone.com/terms</loc>
     <lastmod>2026-01-16</lastmod>
     <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
+    <priority>0.3</priority>
   </url>
 
 </urlset>
