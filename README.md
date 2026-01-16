@@ -214,4 +214,4 @@ Planned enhancements include:
 📄 License
 
 🔐 Private & Proprietary
-All rights reserved.
+All rights reserved. 

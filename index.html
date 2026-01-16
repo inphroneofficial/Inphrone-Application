@@ -73,7 +73,7 @@ For licensing inquiries: inphrone@gmail.com
       gtag('config', 'G-VYM9KY8V1E');
     </script>
 
-    <!-- Structured Data -->
+    <!-- Structured Data : Organization (ENHANCED WITH LOCATION) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -86,9 +86,20 @@ For licensing inquiries: inphrone@gmail.com
       "founder": {
         "@type": "Person",
         "name": "Thangella Gadidamalla",
-        "jobTitle": "Founder"
+        "gender": "Male"
       },
       "foundingDate": "2025",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Hyderabad",
+        "addressRegion": "Telangana",
+        "addressCountry": "India"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 17.3850,
+        "longitude": 78.4867
+      },
       "contactPoint": {
         "@type": "ContactPoint",
         "email": "inphrone@gmail.com",
@@ -105,6 +116,28 @@ For licensing inquiries: inphrone@gmail.com
     }
     </script>
 
+    <!-- Structured Data : Founder / Person (NEW – ADDITIVE) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Thangella Gadidamalla",
+      "gender": "Male",
+      "jobTitle": "Founder",
+      "worksFor": {
+        "@type": "Organization",
+        "name": "Inphrone"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Hyderabad",
+        "addressRegion": "Telangana",
+        "addressCountry": "India"
+      }
+    }
+    </script>
+
+    <!-- WebSite -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -115,11 +148,7 @@ For licensing inquiries: inphrone@gmail.com
       "description": "World's first people-powered entertainment intelligence platform",
       "publisher": {
         "@type": "Organization",
-        "name": "Inphrone",
-        "founder": {
-          "@type": "Person",
-          "name": "Thangella Gadidamalla"
-        }
+        "name": "Inphrone"
       },
       "potentialAction": {
         "@type": "SearchAction",
@@ -132,6 +161,7 @@ For licensing inquiries: inphrone@gmail.com
     }
     </script>
 
+    <!-- Software Application -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -144,23 +174,15 @@ For licensing inquiries: inphrone@gmail.com
         "price": "0",
         "priceCurrency": "USD"
       },
-      "description": "People-powered entertainment intelligence platform with 8 categories: Film, Music, OTT, TV, YouTube, Gaming, Social Media, App Development. Features include InphroSync daily pulse, Your Turn competitions, and real-time insights.",
+      "description": "People-powered entertainment intelligence platform with 8 categories.",
       "author": {
         "@type": "Person",
         "name": "Thangella Gadidamalla"
-      },
-      "featureList": [
-        "Share weekly entertainment opinions",
-        "8 entertainment categories",
-        "InphroSync daily entertainment pulse",
-        "Your Turn slot competitions",
-        "Real-time audience insights",
-        "Wisdom badges and streaks",
-        "Location-based analytics"
-      ]
+      }
     }
     </script>
 
+    <!-- FAQ -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -171,50 +193,20 @@ For licensing inquiries: inphrone@gmail.com
           "name": "What is Inphrone?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Inphrone is the world's first people-powered entertainment intelligence platform that bridges audiences and creators. It allows users to share opinions across 8 entertainment categories: Film, Music, OTT, TV, YouTube, Gaming, Social Media, and App Development."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Who founded Inphrone?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Inphrone was founded by Thangella Gadidamalla with the vision of creating a platform where audience emotion meets creative vision."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "What are the main features of Inphrone?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Inphrone features include: Weekly opinion sharing across 8 categories, InphroSync daily entertainment pulse, Your Turn slot competitions (9 AM, 2 PM, 7 PM IST), Wisdom badges and streaks, location-based analytics, and real-time audience insights for creators and studios."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Is Inphrone free to use?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes, Inphrone is completely free for all users including Audiences, Creators, Studios, OTT Platforms, TV Networks, Gaming Companies, Music Labels, and App Developers."
+            "text": "Inphrone is the world's first people-powered entertainment intelligence platform."
           }
         }
       ]
     }
     </script>
 
-    <!-- Preconnect for performance -->
+    <!-- Preconnect -->
     <link rel="preconnect" href="https://www.googletagmanager.com" />
     <link rel="preconnect" href="https://www.google-analytics.com" />
-
-    <!-- Preload fonts or critical scripts (if any) -->
-    <!-- Example: <link rel="preload" href="/fonts/Roboto.woff2" as="font" type="font/woff2" crossorigin="anonymous"> -->
-
   </head>
-  <body>
-    <!-- Root div for React App -->
-    <div id="root"></div>
 
-    <!-- React Main Script -->
+  <body>
+    <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
