@@ -2,10 +2,10 @@
 ================================================================================
 ⚠️ LEGAL NOTICE - INPHRONE™ PROPRIETARY CODE
 
-This codebase, including all associated intellectual property, algorithms, 
-data structures, and brand assets, is the exclusive property of Inphrone™ 
-and its founder. Unauthorized copying, modification, distribution, reverse 
-engineering, or scraping of this code or its outputs is strictly prohibited 
+This codebase, including all associated intellectual property, algorithms,
+data structures, and brand assets, is the exclusive property of Inphrone™
+and its founder. Unauthorized copying, modification, distribution, reverse
+engineering, or scraping of this code or its outputs is strictly prohibited
 and may result in legal action.
 
 © 2026 Inphrone. All Rights Reserved.
@@ -17,12 +17,14 @@ For licensing inquiries: inphrone@gmail.com
 <!doctype html>
 <html lang="en">
 <head>
+
   <!-- ===================================================== -->
   <!-- CORE DOCUMENT -->
   <!-- ===================================================== -->
   <meta charset="UTF-8" />
   <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+  <meta name="color-scheme" content="dark light" />
 
   <!-- ===================================================== -->
   <!-- PRIMARY META (BRAND + NARRATIVE) -->
@@ -42,7 +44,13 @@ For licensing inquiries: inphrone@gmail.com
   <link rel="canonical" href="https://inphrone.com" />
 
   <!-- ===================================================== -->
-  <!-- SECURITY & HARDENING (HTML-SAFE LAYER) -->
+  <!-- GLOBAL LANGUAGE TARGETING -->
+  <!-- ===================================================== -->
+  <link rel="alternate" hreflang="en" href="https://inphrone.com" />
+  <link rel="alternate" hreflang="x-default" href="https://inphrone.com" />
+
+  <!-- ===================================================== -->
+  <!-- SECURITY & HARDENING -->
   <!-- ===================================================== -->
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
@@ -50,6 +58,19 @@ For licensing inquiries: inphrone@gmail.com
   <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
   <meta http-equiv="Permissions-Policy"
         content="camera=(), microphone=(), geolocation=(), payment=(), usb=(), accelerometer=(), gyroscope=()" />
+
+  <!-- CONTENT SECURITY POLICY -->
+  <meta http-equiv="Content-Security-Policy"
+        content="
+          default-src 'self';
+          script-src 'self' https://www.googletagmanager.com https://www.google-analytics.com;
+          style-src 'self' 'unsafe-inline';
+          img-src 'self' https://inphrone.com data:;
+          connect-src 'self' https://www.google-analytics.com;
+          frame-ancestors 'none';
+          base-uri 'self';
+          form-action 'self';
+        " />
 
   <!-- ===================================================== -->
   <!-- THEME / PWA -->
@@ -136,6 +157,17 @@ For licensing inquiries: inphrone@gmail.com
   }
   </script>
 
+  <!-- BRAND -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Brand",
+    "name": "Inphrone",
+    "logo": "https://inphrone.com/inphrone-logo.jpg",
+    "slogan": "Audience Intelligence Before Content Exists"
+  }
+  </script>
+
   <!-- PERSON -->
   <script type="application/ld+json">
   {
@@ -157,6 +189,7 @@ For licensing inquiries: inphrone@gmail.com
     "@type": "SoftwareApplication",
     "name": "Inphrone",
     "applicationCategory": "BusinessApplication",
+    "applicationSubCategory": "Audience Intelligence",
     "operatingSystem": "Web",
     "description": "An audience intelligence system that captures explicit human intent to help creators, studios, and platforms make decisions before production.",
     "featureList": [
@@ -167,6 +200,11 @@ For licensing inquiries: inphrone@gmail.com
       "Creator–audience alignment",
       "Entertainment decision insights"
     ],
+    "softwareHelp": "https://inphrone.com/support",
+    "creator": {
+      "@type": "Organization",
+      "name": "Inphrone"
+    },
     "offers": {
       "@type": "Offer",
       "price": "0",
@@ -188,9 +226,20 @@ For licensing inquiries: inphrone@gmail.com
     }
   }
   </script>
+
 </head>
 
 <body>
+
+  <!-- ===================================================== -->
+  <!-- NO-JS FALLBACK -->
+  <!-- ===================================================== -->
+  <noscript>
+    <p style="background:#000;color:#fff;padding:16px;text-align:center">
+      Inphrone requires JavaScript to deliver real-time audience intelligence.
+    </p>
+  </noscript>
+
   <!-- ===================================================== -->
   <!-- REACT ROOT WITH INLINE LOADER -->
   <!-- ===================================================== -->
@@ -220,7 +269,7 @@ For licensing inquiries: inphrone@gmail.com
       }
     </style>
 
-    <div id="inphrone-loader" aria-label="Loading Inphrone">
+    <div id="inphrone-loader" role="status" aria-live="polite" aria-label="Loading Inphrone">
       <div class="inphrone-spinner"></div>
     </div>
   </div>
@@ -240,5 +289,6 @@ For licensing inquiries: inphrone@gmail.com
   <!-- REACT ENTRY -->
   <!-- ===================================================== -->
   <script type="module" src="/src/main.tsx"></script>
+
 </body>
 </html>

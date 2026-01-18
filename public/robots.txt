@@ -1,31 +1,104 @@
 # ==============================================================================
-# robots.txt for Inphrone™ — Audience Intelligence Before Content Exists
+# robots.txt — Inphrone™
+# Audience Intelligence Before Content Exists
 # Website: https://inphrone.com
 # Company: Inphrone
 # Last Updated: January 16, 2026
 # ==============================================================================
-# Purpose:
-# - Allow full crawling of public content
-# - Protect sensitive and private endpoints
+#
+# PURPOSE
+# ------------------------------------------------------------------------------
+# - Allow full crawling of public-facing content
+# - Protect sensitive, internal, and non-public endpoints
 # - Support search engines, social previews, and AI discovery
-# - Maintain crawl efficiency at scale
+# - Maintain crawl efficiency and security at scale
+# - Follow Google, Bing, and modern crawler best practices
+#
+# IMPORTANT NOTES
+# ------------------------------------------------------------------------------
+# - Google ignores Crawl-delay (managed via Search Console)
+# - robots.txt does NOT secure content — it guides crawlers only
+# - All rules below apply globally unless overridden
 # ==============================================================================
 
-# ------------------------------------------------------------------------------
-# Google (no crawl-delay; managed via Search Console)
-# ------------------------------------------------------------------------------
-User-agent: Googlebot
-Allow: /
 
 # ------------------------------------------------------------------------------
-# Bing / Microsoft
+# GLOBAL RULES — APPLY TO ALL CRAWLERS (INCLUDING GOOGLEBOT)
 # ------------------------------------------------------------------------------
-User-agent: Bingbot
+User-agent: *
+
+# Allow full access to public content
 Allow: /
+
+
+# ------------------------------------------------------------------------------
+# SENSITIVE / NON-PUBLIC PATHS
+# ------------------------------------------------------------------------------
+# Administrative & internal systems
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_internal/
+Disallow: /private/
+Disallow: /server/
+Disallow: /config/
+
+# Authentication & account flows
+Disallow: /login/
+Disallow: /signup/
+Disallow: /logout/
+Disallow: /auth/
+Disallow: /reset-password/
+
+# Development & build artifacts
+Disallow: /node_modules/
+Disallow: /src/
+Disallow: /tests/
+Disallow: /__tests__/
+Disallow: /dist/
+Disallow: /build/
+
+
+# ------------------------------------------------------------------------------
+# QUERY STRING LEAK PREVENTION
+# ------------------------------------------------------------------------------
+# Prevent crawling of URLs containing sensitive tokens or sessions
+Disallow: /*?*token=
+Disallow: /*?*auth=
+Disallow: /*?*session=
+Disallow: /*?*key=
+Disallow: /*?*secret=
+Disallow: /*?*access=
+
+
+# ------------------------------------------------------------------------------
+# CRAWL RATE CONTROL
+# ------------------------------------------------------------------------------
+# Respected by Bing, Yandex, Baidu, DuckDuckGo (ignored by Google)
 Crawl-delay: 1
 
+
 # ------------------------------------------------------------------------------
-# Social Media Crawlers (Preview Cards / Rich Embeds)
+# AI & LLM CRAWLERS — EXPLICITLY ALLOWED (DISCOVERY-FRIENDLY)
+# ------------------------------------------------------------------------------
+# OpenAI
+User-agent: GPTBot
+Allow: /
+
+# Anthropic
+User-agent: ClaudeBot
+Allow: /
+
+# Google AI
+User-agent: Google-Extended
+Allow: /
+
+# CommonCrawl (used by many AI models)
+User-agent: CCBot
+Allow: /
+
+
+# ------------------------------------------------------------------------------
+# SOCIAL MEDIA & PREVIEW BOTS (CARDS / EMBEDS)
 # ------------------------------------------------------------------------------
 User-agent: Twitterbot
 Allow: /
@@ -36,45 +109,30 @@ Allow: /
 User-agent: LinkedInBot
 Allow: /
 
+User-agent: Slackbot
+Allow: /
+
+User-agent: Discordbot
+Allow: /
+
+
 # ------------------------------------------------------------------------------
-# Other Major Search Engines
+# SEARCH ENGINE SPECIFIC (OPTIONAL CLARITY)
 # ------------------------------------------------------------------------------
+User-agent: Bingbot
+Allow: /
+
 User-agent: DuckDuckBot
 Allow: /
 
-User-agent: Slurp
+User-agent: YandexBot
 Allow: /
-Crawl-delay: 2
 
 User-agent: Baiduspider
 Allow: /
-Crawl-delay: 2
 
-User-agent: YandexBot
-Allow: /
-Crawl-delay: 2
 
 # ------------------------------------------------------------------------------
-# Default Rule (All Other Crawlers)
-# ------------------------------------------------------------------------------
-User-agent: *
-Allow: /
-Crawl-delay: 1
-
-# ------------------------------------------------------------------------------
-# Sensitive / Non-Public Paths (Security + SEO Hygiene)
-# ------------------------------------------------------------------------------
-Disallow: /admin/
-Disallow: /api/
-Disallow: /_internal/
-Disallow: /private/
-
-# Block auth-related query leaks
-Disallow: /*?*token=
-Disallow: /*?*auth=
-Disallow: /*?*session=
-
-# ------------------------------------------------------------------------------
-# Sitemap
+# SITEMAP DECLARATION
 # ------------------------------------------------------------------------------
 Sitemap: https://inphrone.com/sitemap.xml
