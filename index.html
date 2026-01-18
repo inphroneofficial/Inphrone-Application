@@ -17,42 +17,27 @@ For licensing inquiries: inphrone@gmail.com
 <!doctype html>
 <html lang="en">
 <head>
-  <!-- ===================================================== -->
-  <!-- CORE DOCUMENT -->
-  <!-- ===================================================== -->
+
+  <!-- CORE META -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
   <meta name="color-scheme" content="dark light" />
-
-  <!-- ===================================================== -->
-  <!-- PRIMARY META -->
-  <!-- ===================================================== -->
-  <title>Inphrone™ | Audience Intelligence Before Content Exists</title>
-  <meta name="description" content="Inphrone is the world's first people-powered audience intelligence platform. It captures explicit audience demand before films, music, games, or platforms are built—helping creators and studios reduce risk and build with confidence." />
+  <meta name="description" content="Inphrone is the world’s first people-powered audience intelligence platform. It captures explicit audience demand before films, music, games, or platforms are built—helping creators and studios reduce risk and build with confidence." />
   <meta name="keywords" content="Inphrone, audience intelligence, demand prediction, entertainment intelligence, pre-demand validation, creator insights, film audience data, OTT audience signals, gaming feedback, content risk reduction" />
   <meta name="author" content="Inphrone — Founded by Thangella Gadidamalla" />
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-  <meta name="googlebot" content="index, follow" />
   <link rel="canonical" href="https://inphrone.com" />
-
-  <!-- ===================================================== -->
-  <!-- GLOBAL LANGUAGE TARGETING -->
-  <!-- ===================================================== -->
   <link rel="alternate" hreflang="en" href="https://inphrone.com" />
   <link rel="alternate" hreflang="x-default" href="https://inphrone.com" />
 
-  <!-- ===================================================== -->
-  <!-- SECURITY & HARDENING -->
-  <!-- ===================================================== -->
+  <!-- SECURITY HEADERS -->
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
   <meta http-equiv="X-Frame-Options" content="DENY" />
   <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
   <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=(), accelerometer=(), gyroscope=()" />
 
-  <!-- ===================================================== -->
-  <!-- CONTENT SECURITY POLICY -->
-  <!-- ===================================================== -->
+  <!-- CONTENT SECURITY POLICY (Safe for React & GA) -->
   <meta http-equiv="Content-Security-Policy"
         content="
           default-src 'self';
@@ -65,26 +50,20 @@ For licensing inquiries: inphrone@gmail.com
           form-action 'self';
         " />
 
-  <!-- ===================================================== -->
   <!-- THEME / PWA -->
-  <!-- ===================================================== -->
   <meta name="theme-color" content="#b91c1c" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="format-detection" content="telephone=no" />
 
-  <!-- ===================================================== -->
-  <!-- ICONS -->
-  <!-- ===================================================== -->
+  <!-- FAVICONS / MANIFEST -->
   <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="shortcut icon" href="/favicon.ico" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-  <link rel="manifest" href="/site.webmanifest" />
+  <link rel="manifest" href="/manifest.json" />
 
-  <!-- ===================================================== -->
   <!-- OPEN GRAPH -->
-  <!-- ===================================================== -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://inphrone.com" />
   <meta property="og:title" content="Inphrone™ — Audience Intelligence Before Content Exists" />
@@ -94,26 +73,20 @@ For licensing inquiries: inphrone@gmail.com
   <meta property="og:image:height" content="630" />
   <meta property="og:site_name" content="Inphrone" />
 
-  <!-- ===================================================== -->
   <!-- TWITTER -->
-  <!-- ===================================================== -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Inphrone™ — Audience Intelligence Before Content Exists" />
   <meta name="twitter:description" content="Creators don’t need guesses. Inphrone captures real audience intent before content is made." />
   <meta name="twitter:image" content="https://inphrone.com/inphrone-logo.jpg" />
 
-  <!-- ===================================================== -->
-  <!-- PERFORMANCE -->
-  <!-- ===================================================== -->
+  <!-- PRECONNECT / PERFORMANCE -->
   <link rel="preconnect" href="https://www.googletagmanager.com" />
   <link rel="preconnect" href="https://www.google-analytics.com" />
 
-  <!-- ===================================================== -->
-  <!-- ANALYTICS -->
-  <!-- ===================================================== -->
+  <!-- GOOGLE ANALYTICS -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-VYM9KY8V1E"></script>
   <script>
-    window.addEventListener('load', () => {
+    window.addEventListener('load', function() {
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
@@ -121,9 +94,7 @@ For licensing inquiries: inphrone@gmail.com
     });
   </script>
 
-  <!-- ===================================================== -->
-  <!-- STRUCTURED DATA -->
-  <!-- ===================================================== -->
+  <!-- STRUCTURED DATA: ORGANIZATION -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -145,6 +116,7 @@ For licensing inquiries: inphrone@gmail.com
   }
   </script>
 
+  <!-- STRUCTURED DATA: SOFTWARE APPLICATION -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -168,22 +140,30 @@ For licensing inquiries: inphrone@gmail.com
   }
   </script>
 
+  <!-- STRUCTURED DATA: WEBSITE -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Inphrone",
+    "url": "https://inphrone.com",
+    "publisher": { "@type": "Organization", "name": "Inphrone" }
+  }
+  </script>
+
+  <title>Inphrone™ — Audience Intelligence Before Content Exists</title>
 </head>
 
 <body>
 
-  <!-- ===================================================== -->
   <!-- NO-JS FALLBACK -->
-  <!-- ===================================================== -->
   <noscript>
     <p style="background:#000;color:#fff;padding:16px;text-align:center">
       Inphrone requires JavaScript to deliver real-time audience intelligence.
     </p>
   </noscript>
 
-  <!-- ===================================================== -->
-  <!-- REACT ROOT WITH LOADER -->
-  <!-- ===================================================== -->
+  <!-- REACT ROOT + LOADER -->
   <div id="root">
     <style>
       #inphrone-loader {
@@ -205,15 +185,12 @@ For licensing inquiries: inphrone@gmail.com
       }
       @keyframes spin { to { transform: rotate(360deg); } }
     </style>
-
     <div id="inphrone-loader" role="status" aria-live="polite" aria-label="Loading Inphrone">
       <div class="inphrone-spinner"></div>
     </div>
   </div>
 
-  <!-- ===================================================== -->
-  <!-- SOCIAL NAVIGATION (HIDDEN) -->
-  <!-- ===================================================== -->
+  <!-- HIDDEN NAV FOR SEO / SOCIAL LINKS -->
   <nav aria-label="Inphrone social links" style="display:none">
     <a href="https://instagram.com/inphrone">Instagram</a>
     <a href="https://x.com/inphrone">X</a>
@@ -222,9 +199,7 @@ For licensing inquiries: inphrone@gmail.com
     <a href="https://medium.com/@inphrone">Medium</a>
   </nav>
 
-  <!-- ===================================================== -->
-  <!-- REACT ENTRY -->
-  <!-- ===================================================== -->
+  <!-- REACT ENTRYPOINT -->
   <script type="module" src="/src/main.tsx"></script>
 
 </body>
