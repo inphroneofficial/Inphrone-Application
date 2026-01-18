@@ -2,10 +2,10 @@
 ================================================================================
 ⚠️ LEGAL NOTICE - INPHRONE™ PROPRIETARY CODE
 
-This codebase, including all associated intellectual property, algorithms, 
-data structures, and brand assets, is the exclusive property of Inphrone™ 
-and its founder. Unauthorized copying, modification, distribution, reverse 
-engineering, or scraping of this code or its outputs is strictly prohibited 
+This codebase, including all associated intellectual property, algorithms,
+data structures, and brand assets, is the exclusive property of Inphrone™
+and its founder. Unauthorized copying, modification, distribution, reverse
+engineering, or scraping of this code or its outputs is strictly prohibited
 and may result in legal action.
 
 © 2026 Inphrone. All Rights Reserved.
@@ -16,202 +16,216 @@ For licensing inquiries: inphrone@gmail.com
 -->
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
-    
-    <!-- Google Analytics (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VYM9KY8V1E"></script>
-    <script>
+<head>
+  <!-- ===================================================== -->
+  <!-- CORE DOCUMENT -->
+  <!-- ===================================================== -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+  <meta name="color-scheme" content="dark light" />
+
+  <!-- ===================================================== -->
+  <!-- PRIMARY META -->
+  <!-- ===================================================== -->
+  <title>Inphrone™ | Audience Intelligence Before Content Exists</title>
+  <meta name="description" content="Inphrone is the world's first people-powered audience intelligence platform. It captures explicit audience demand before films, music, games, or platforms are built—helping creators and studios reduce risk and build with confidence." />
+  <meta name="keywords" content="Inphrone, audience intelligence, demand prediction, entertainment intelligence, pre-demand validation, creator insights, film audience data, OTT audience signals, gaming feedback, content risk reduction" />
+  <meta name="author" content="Inphrone — Founded by Thangella Gadidamalla" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="googlebot" content="index, follow" />
+  <link rel="canonical" href="https://inphrone.com" />
+
+  <!-- ===================================================== -->
+  <!-- GLOBAL LANGUAGE TARGETING -->
+  <!-- ===================================================== -->
+  <link rel="alternate" hreflang="en" href="https://inphrone.com" />
+  <link rel="alternate" hreflang="x-default" href="https://inphrone.com" />
+
+  <!-- ===================================================== -->
+  <!-- SECURITY & HARDENING -->
+  <!-- ===================================================== -->
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="DENY" />
+  <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
+  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=(), accelerometer=(), gyroscope=()" />
+
+  <!-- ===================================================== -->
+  <!-- CONTENT SECURITY POLICY -->
+  <!-- ===================================================== -->
+  <meta http-equiv="Content-Security-Policy"
+        content="
+          default-src 'self';
+          script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com;
+          style-src 'self' 'unsafe-inline';
+          img-src 'self' https://inphrone.com data:;
+          connect-src 'self' https://www.google-analytics.com;
+          frame-ancestors 'none';
+          base-uri 'self';
+          form-action 'self';
+        " />
+
+  <!-- ===================================================== -->
+  <!-- THEME / PWA -->
+  <!-- ===================================================== -->
+  <meta name="theme-color" content="#b91c1c" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="format-detection" content="telephone=no" />
+
+  <!-- ===================================================== -->
+  <!-- ICONS -->
+  <!-- ===================================================== -->
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+
+  <!-- ===================================================== -->
+  <!-- OPEN GRAPH -->
+  <!-- ===================================================== -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://inphrone.com" />
+  <meta property="og:title" content="Inphrone™ — Audience Intelligence Before Content Exists" />
+  <meta property="og:description" content="A people-powered intelligence layer where audiences explicitly state what they want—before content is created." />
+  <meta property="og:image" content="https://inphrone.com/inphrone-logo.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content="Inphrone" />
+
+  <!-- ===================================================== -->
+  <!-- TWITTER -->
+  <!-- ===================================================== -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Inphrone™ — Audience Intelligence Before Content Exists" />
+  <meta name="twitter:description" content="Creators don’t need guesses. Inphrone captures real audience intent before content is made." />
+  <meta name="twitter:image" content="https://inphrone.com/inphrone-logo.jpg" />
+
+  <!-- ===================================================== -->
+  <!-- PERFORMANCE -->
+  <!-- ===================================================== -->
+  <link rel="preconnect" href="https://www.googletagmanager.com" />
+  <link rel="preconnect" href="https://www.google-analytics.com" />
+
+  <!-- ===================================================== -->
+  <!-- ANALYTICS -->
+  <!-- ===================================================== -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VYM9KY8V1E"></script>
+  <script>
+    window.addEventListener('load', () => {
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-VYM9KY8V1E');
-    </script>
-    <title>Inphrone™ | People-Powered Entertainment Intelligence</title>
-    <meta name="description" content="Inphrone is the world's first people-powered entertainment intelligence platform. Share opinions on Film, Music, OTT, TV, YouTube, Gaming, Social Media & App Development. Founded by Thangella Gadidamalla." />
-    <meta name="keywords" content="Inphrone, entertainment insights, audience intelligence, creator platform, film insights, music trends, TV analytics, gaming feedback, OTT analytics, YouTube trends, social media insights, app development feedback, Thangella Gadidamalla, entertainment data, content creation, InphroSync, Your Turn, audience opinions" />
-    <meta name="author" content="Inphrone - Founded by Thangella Gadidamalla" />
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-    <meta name="googlebot" content="index, follow" />
-    <meta name="bingbot" content="index, follow" />
-    <link rel="canonical" href="https://inphrone.com" />
-    
-    <!-- Theme -->
-    <meta name="theme-color" content="#b91c1c" />
-    <meta name="msapplication-TileColor" content="#b91c1c" />
-    <meta name="msapplication-navbutton-color" content="#b91c1c" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+      gtag('config', 'G-VYM9KY8V1E', { anonymize_ip: true });
+    });
+  </script>
 
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://inphrone.com" />
-    <meta property="og:title" content="INPHRONE - World's First Audience-Intelligence Platform" />
-    <meta property="og:description" content="Where audience emotion meets creative vision. Share your entertainment opinions across 8 categories: Film, Music, OTT, TV, YouTube, Gaming, Social Media & App Development. Founded by Thangella Gadidamalla." />
-    <meta property="og:image" content="https://inphrone.com/inphrone-logo.jpg" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Inphrone - People-Powered Entertainment Intelligence Platform" />
-    <meta property="og:site_name" content="Inphrone" />
-    <meta property="og:locale" content="en_US" />
+  <!-- ===================================================== -->
+  <!-- STRUCTURED DATA -->
+  <!-- ===================================================== -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Inphrone",
+    "url": "https://inphrone.com",
+    "logo": "https://inphrone.com/inphrone-logo.jpg",
+    "description": "A people-powered audience intelligence platform capturing explicit demand signals before entertainment content is created.",
+    "foundingDate": "2025",
+    "founder": { "@type": "Person", "name": "Thangella Gadidamalla" },
+    "sameAs": [
+      "https://instagram.com/inphrone",
+      "https://x.com/inphrone",
+      "https://youtube.com/@inphrone",
+      "https://www.linkedin.com/company/inphrone",
+      "https://medium.com/@inphrone",
+      "https://www.producthunt.com/@inphrone"
+    ]
+  }
+  </script>
 
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content="https://inphrone.com" />
-    <meta name="twitter:site" content="@inphrone" />
-    <meta name="twitter:creator" content="@inphrone" />
-    <meta name="twitter:title" content="INPHRONE - People-Powered Entertainment Intelligence" />
-    <meta name="twitter:description" content="Join the platform connecting audiences and creators. Share what you want to see in Film, Music, OTT, TV, YouTube, Gaming, Social Media & App Development. Founded by Thangella Gadidamalla." />
-    <meta name="twitter:image" content="https://inphrone.com/inphrone-logo.jpg" />
-    <meta name="twitter:image:alt" content="Inphrone - Entertainment Intelligence Platform" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Inphrone",
+    "applicationCategory": "BusinessApplication",
+    "applicationSubCategory": "Audience Intelligence",
+    "operatingSystem": "Web",
+    "description": "An audience intelligence system that captures explicit human intent to help creators, studios, and platforms make decisions before production.",
+    "featureList": [
+      "Audience intent signals",
+      "Pre-demand validation",
+      "Content risk reduction",
+      "Opinion-based intelligence",
+      "Creator–audience alignment",
+      "Entertainment decision insights"
+    ],
+    "softwareHelp": "https://inphrone.com/support",
+    "creator": { "@type": "Organization", "name": "Inphrone" },
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
 
-    <!-- Additional SEO -->
-    <meta name="application-name" content="Inphrone" />
-    <meta name="apple-mobile-web-app-title" content="Inphrone" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="format-detection" content="telephone=no" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    
-    <!-- Favicon and Icons -->
-    <link rel="icon" type="image/jpeg" href="/inphrone-logo.jpg" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/inphrone-logo.jpg" />
-    <link rel="manifest" href="/manifest.json" />
+</head>
 
-    <!-- Structured Data - Organization -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "Inphrone",
-        "alternateName": "INPHRONE",
-        "url": "https://inphrone.com",
-        "logo": "https://inphrone.com/inphrone-logo.jpg",
-        "description": "World's first people-powered entertainment intelligence platform connecting audiences and creators across Film, Music, OTT, TV, YouTube, Gaming, Social Media, and App Development.",
-        "founder": {
-          "@type": "Person",
-          "name": "Thangella Gadidamalla",
-          "jobTitle": "Founder"
-        },
-        "foundingDate": "2025",
-        "contactPoint": {
-          "@type": "ContactPoint",
-          "email": "inphrone@gmail.com",
-          "contactType": "customer support"
-        },
-        "sameAs": [
-          "https://instagram.com/inphrone",
-          "https://x.com/inphrone",
-          "https://youtube.com/@inphrone",
-          "https://www.reddit.com/user/officialinphrone/",
-          "https://www.facebook.com/inphrone/",
-          "https://t.me/inphroneofficial"
-        ]
+<body>
+
+  <!-- ===================================================== -->
+  <!-- NO-JS FALLBACK -->
+  <!-- ===================================================== -->
+  <noscript>
+    <p style="background:#000;color:#fff;padding:16px;text-align:center">
+      Inphrone requires JavaScript to deliver real-time audience intelligence.
+    </p>
+  </noscript>
+
+  <!-- ===================================================== -->
+  <!-- REACT ROOT WITH LOADER -->
+  <!-- ===================================================== -->
+  <div id="root">
+    <style>
+      #inphrone-loader {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #0b0b0b;
+        color: #ffffff;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       }
-    </script>
-    
-    <!-- Structured Data - WebSite with SearchAction -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "Inphrone",
-        "alternateName": "INPHRONE - Audience Intelligence Platform",
-        "url": "https://inphrone.com",
-        "description": "World's first people-powered entertainment intelligence platform",
-        "publisher": {
-          "@type": "Organization",
-          "name": "Inphrone",
-          "founder": {
-            "@type": "Person",
-            "name": "Thangella Gadidamalla"
-          }
-        },
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": {
-            "@type": "EntryPoint",
-            "urlTemplate": "https://inphrone.com/insights?q={search_term_string}"
-          },
-          "query-input": "required name=search_term_string"
-        }
+      .inphrone-spinner {
+        width: 42px;
+        height: 42px;
+        border: 3px solid rgba(255,255,255,0.15);
+        border-top-color: #b91c1c;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
       }
-    </script>
-    
-    <!-- Structured Data - SoftwareApplication -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        "name": "Inphrone",
-        "applicationCategory": "EntertainmentApplication",
-        "operatingSystem": "Web Browser",
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD"
-        },
-        "description": "People-powered entertainment intelligence platform with 8 categories: Film, Music, OTT, TV, YouTube, Gaming, Social Media, App Development. Features include InphroSync daily pulse, Your Turn competitions, and real-time insights.",
-        "author": {
-          "@type": "Person",
-          "name": "Thangella Gadidamalla"
-        },
-        "featureList": [
-          "Share weekly entertainment opinions",
-          "8 entertainment categories",
-          "InphroSync daily entertainment pulse",
-          "Your Turn slot competitions",
-          "Real-time audience insights",
-          "Wisdom badges and streaks",
-          "Location-based analytics"
-        ]
-      }
-    </script>
-    
-    <!-- Structured Data - FAQPage -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "What is Inphrone?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Inphrone is the world's first people-powered entertainment intelligence platform that bridges audiences and creators. It allows users to share opinions across 8 entertainment categories: Film, Music, OTT, TV, YouTube, Gaming, Social Media, and App Development."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Who founded Inphrone?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Inphrone was founded by Thangella Gadidamalla with the vision of creating a platform where audience emotion meets creative vision."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "What are the main features of Inphrone?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Inphrone features include: Weekly opinion sharing across 8 categories, InphroSync daily entertainment pulse, Your Turn slot competitions (9 AM, 2 PM, 7 PM IST), Wisdom badges and streaks, location-based analytics, and real-time audience insights for creators and studios."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Is Inphrone free to use?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes, Inphrone is completely free for all users including Audiences, Creators, Studios, OTT Platforms, TV Networks, Gaming Companies, Music Labels, and App Developers."
-            }
-          }
-        ]
-      }
-    </script>
-  </head>
+      @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
 
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+    <div id="inphrone-loader" role="status" aria-live="polite" aria-label="Loading Inphrone">
+      <div class="inphrone-spinner"></div>
+    </div>
+  </div>
+
+  <!-- ===================================================== -->
+  <!-- SOCIAL NAVIGATION (HIDDEN) -->
+  <!-- ===================================================== -->
+  <nav aria-label="Inphrone social links" style="display:none">
+    <a href="https://instagram.com/inphrone">Instagram</a>
+    <a href="https://x.com/inphrone">X</a>
+    <a href="https://youtube.com/@inphrone">YouTube</a>
+    <a href="https://www.linkedin.com/company/inphrone">LinkedIn</a>
+    <a href="https://medium.com/@inphrone">Medium</a>
+  </nav>
+
+  <!-- ===================================================== -->
+  <!-- REACT ENTRY -->
+  <!-- ===================================================== -->
+  <script type="module" src="/src/main.tsx"></script>
+
+</body>
 </html>
