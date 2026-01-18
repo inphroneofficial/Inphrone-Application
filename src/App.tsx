@@ -42,7 +42,7 @@ import { useComprehensiveNotifications } from "./hooks/useComprehensiveNotificat
 import { PageTransition } from "./components/PageTransition";
 import { useThemePersistence } from "./hooks/useThemePersistence";
 import { LanguageProvider } from "./components/SettingsDialog";
-import { GlobalTourWrapper } from "./components/onboarding/GlobalTourWrapper";
+import { SpotlightTourProvider } from "./components/onboarding/SpotlightTourProvider";
 import { PushNotificationPrompt } from "./components/notifications/PushNotificationPrompt";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { OfflineIndicator } from "./components/common/OfflineIndicator";
@@ -163,7 +163,7 @@ const App = () => {
             <OfflineIndicator />
             <BrowserRouter>
               <AnimatedRoutes />
-              <GlobalTourWrapper />
+              <SpotlightTourProvider />
               <ChatBot />
               <CookieConsent />
               <PushNotificationPrompt />

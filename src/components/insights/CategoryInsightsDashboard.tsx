@@ -134,14 +134,14 @@ export function CategoryInsightsDashboard({ insights, categoryName, theme, userT
         </div>
       </motion.div>
 
-      {/* Genre Distribution - Enhanced */}
+      {/* Genre/App Type Distribution - Enhanced */}
       {genreData.length > 0 && (
         <div className="grid md:grid-cols-2 gap-6">
           <Card className="glass-card border-2">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-primary" />
-                Genre Distribution
+                {categoryName === 'App Development' ? 'App Type Distribution' : 'Genre Distribution'}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -190,7 +190,7 @@ export function CategoryInsightsDashboard({ insights, categoryName, theme, userT
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <TrendingUp className="w-5 h-5 text-primary" />
-                Genre Breakdown
+                {categoryName === 'App Development' ? 'App Type Breakdown' : 'Genre Breakdown'}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -245,7 +245,7 @@ export function CategoryInsightsDashboard({ insights, categoryName, theme, userT
         </div>
       )}
 
-      {/* Top Genre Highlight */}
+      {/* Top Genre/App Type Highlight */}
       {topGenre && (
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
@@ -257,7 +257,9 @@ export function CategoryInsightsDashboard({ insights, categoryName, theme, userT
               <TrendingUp className="w-8 h-8 text-white" />
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Top Genre in {categoryName}</p>
+              <p className="text-sm text-muted-foreground">
+                {categoryName === 'App Development' ? `Top App Type in ${categoryName}` : `Top Genre in ${categoryName}`}
+              </p>
               <p className="text-2xl font-bold">{topGenre.name}</p>
               <p className="text-sm text-primary">{topGenre.value}% of all opinions • {topGenre.count} submissions</p>
             </div>

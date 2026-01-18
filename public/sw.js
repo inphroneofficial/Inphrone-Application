@@ -1,99 +1,33 @@
-// INPHRONE Service Worker - Fully Optimized
-
+// INPHRONE Service Worker for Push Notifications
 const CACHE_NAME = 'inphrone-v1';
-const OFFLINE_URL = '/offline.html';
 
-// Files to cache for offline support
-const ASSETS_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/offline.html',
-  '/manifest.json',
-  '/inphrone-logo-192.png',
-  '/inphrone-logo-512.png',
-  '/screenshot-wide.png',
-  '/screenshot-narrow.png',
-  '/screenshot-tablet.png',
-  '/src/main.tsx'
-];
-
-// ------------------------
-// Install Event
-// ------------------------
+// Install event
 self.addEventListener('install', (event) => {
-  console.log('[SW] Installing service worker...');
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(ASSETS_TO_CACHE))
-      .then(() => self.skipWaiting())
-  );
+  console.log('[SW] Service Worker installing...');
+  self.skipWaiting();
 });
 
-// ------------------------
-// Activate Event
-// ------------------------
+// Activate event
 self.addEventListener('activate', (event) => {
-  console.log('[SW] Activating service worker...');
-  event.waitUntil(
-    caches.keys().then((keys) => 
-      Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE_NAME) {
-            console.log('[SW] Removing old cache:', key);
-            return caches.delete(key);
-          }
-        })
-      )
-    ).then(() => self.clients.claim())
-  );
+  console.log('[SW] Service Worker activated');
+  event.waitUntil(clients.claim());
 });
 
-// ------------------------
-// Fetch Event (Offline Support)
-// ------------------------
-self.addEventListener('fetch', (event) => {
-  if (event.request.method !== 'GET') return;
-
-  event.respondWith(
-    caches.match(event.request)
-      .then((cachedResponse) => {
-        if (cachedResponse) return cachedResponse;
-
-        return fetch(event.request)
-          .then((networkResponse) => {
-            // Cache the response for future offline use
-            return caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, networkResponse.clone());
-              return networkResponse;
-            });
-          })
-          .catch(() => {
-            // Fallback offline page for navigation requests
-            if (event.request.mode === 'navigate') {
-              return caches.match(OFFLINE_URL);
-            }
-          });
-      })
-  );
-});
-
-// ------------------------
-// Push Notifications
-// ------------------------
+// Push event - handle incoming push notifications
 self.addEventListener('push', (event) => {
-  console.log('[SW] Push received:', event);
-
+  console.log('[SW] Push notification received:', event);
+  
   let data = {
     title: 'Inphrone',
     body: 'You have a new notification',
-    icon: '/inphrone-logo-192.png',
-    badge: '/inphrone-logo-192.png',
+    icon: '/favicon.ico',
+    badge: '/favicon.ico',
     url: '/dashboard',
-    tag: `inphrone-${Date.now()}`
+    tag: 'inphrone-notification'
   };
 
-  if (event.data) {
-    try {
+  try {
+    if (event.data) {
       const payload = event.data.json();
       data = {
         title: payload.title || data.title,
@@ -101,10 +35,13 @@ self.addEventListener('push', (event) => {
         icon: payload.icon || data.icon,
         badge: payload.badge || data.badge,
         url: payload.url || payload.action_url || data.url,
-        tag: payload.tag || data.tag,
+        tag: payload.tag || `inphrone-${Date.now()}`,
         data: payload.data || {}
       };
-    } catch {
+    }
+  } catch (e) {
+    console.error('[SW] Error parsing push data:', e);
+    if (event.data) {
       data.body = event.data.text();
     }
   }
@@ -116,57 +53,72 @@ self.addEventListener('push', (event) => {
     tag: data.tag,
     requireInteraction: true,
     vibrate: [200, 100, 200],
-    data: { url: data.url, ...data.data },
+    data: {
+      url: data.url,
+      ...data.data
+    },
     actions: [
-      { action: 'open', title: 'View' },
-      { action: 'dismiss', title: 'Dismiss' }
+      {
+        action: 'open',
+        title: 'View'
+      },
+      {
+        action: 'dismiss',
+        title: 'Dismiss'
+      }
     ]
   };
 
-  event.waitUntil(self.registration.showNotification(data.title, options));
+  event.waitUntil(
+    self.registration.showNotification(data.title, options)
+  );
 });
 
-// ------------------------
-// Notification Click
-// ------------------------
+// Notification click event - handle deep linking
 self.addEventListener('notificationclick', (event) => {
   console.log('[SW] Notification clicked:', event);
+  
   event.notification.close();
 
-  if (event.action === 'dismiss') return;
+  if (event.action === 'dismiss') {
+    return;
+  }
 
   const url = event.notification.data?.url || '/dashboard';
   const fullUrl = new URL(url, self.location.origin).href;
 
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      // Check if there's already a window open
       for (const client of clientList) {
-        if (client.url === fullUrl && 'focus' in client) return client.focus();
+        if (client.url === fullUrl && 'focus' in client) {
+          return client.focus();
+        }
       }
-      if (clients.openWindow) return clients.openWindow(fullUrl);
+      
+      // If no window is open, open a new one
+      if (clients.openWindow) {
+        return clients.openWindow(fullUrl);
+      }
     })
   );
 });
 
-// ------------------------
-// Notification Close
-// ------------------------
+// Handle notification close
 self.addEventListener('notificationclose', (event) => {
   console.log('[SW] Notification closed:', event);
 });
 
-// ------------------------
-// Background Sync
-// ------------------------
+// Background sync for offline notifications
 self.addEventListener('sync', (event) => {
   console.log('[SW] Background sync:', event.tag);
-  // Implement syncing logic if needed
 });
 
-// ------------------------
-// Messages from Main Thread
-// ------------------------
+// Message from main thread
 self.addEventListener('message', (event) => {
   console.log('[SW] Message received:', event.data);
-  if (event.data?.type === 'SKIP_WAITING') self.skipWaiting();
+  
+  if (event.data?.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });

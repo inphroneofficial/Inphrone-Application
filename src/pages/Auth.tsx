@@ -71,11 +71,17 @@ const Auth = () => {
       if (session) {
         const { data: profile } = await supabase
           .from("profiles")
-          .select("onboarding_completed")
+          .select("onboarding_completed, settings")
           .eq("id", session.user.id)
           .single();
 
         if (profile?.onboarding_completed) {
+          // Check if tour should be shown for returning users
+          const settings = profile.settings as { tour_completed?: boolean } | null;
+          if (!settings?.tour_completed) {
+            // First login - clear any stale tour flags
+            localStorage.removeItem('inphrone_tour_completed');
+          }
           navigate("/dashboard");
         } else {
           navigate("/onboarding");
@@ -87,11 +93,17 @@ const Auth = () => {
       if (session) {
         const { data: profile } = await supabase
           .from("profiles")
-          .select("onboarding_completed")
+          .select("onboarding_completed, settings")
           .eq("id", session.user.id)
           .single();
 
         if (profile?.onboarding_completed) {
+          // Check if tour should be shown for this login
+          const settings = profile.settings as { tour_completed?: boolean } | null;
+          if (!settings?.tour_completed) {
+            // First login after signup - clear tour flags to trigger tour
+            localStorage.removeItem('inphrone_tour_completed');
+          }
           navigate("/dashboard");
         } else {
           navigate("/onboarding");

@@ -825,41 +825,6 @@ export const LiveDataHero = () => {
               </p>
             </motion.div>
             
-            {/* Live stats row - always show basic stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="flex flex-wrap gap-6"
-            >
-              <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <Users className="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <p className="text-2xl font-black text-foreground">{stats.totalUsers.toLocaleString()}</p>
-                  <p className="text-xs text-muted-foreground">Users</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-xl bg-violet-500/10 flex items-center justify-center">
-                  <MessageSquare className="w-5 h-5 text-violet-500" />
-                </div>
-                <div>
-                  <p className="text-2xl font-black text-foreground">{stats.totalOpinions}+</p>
-                  <p className="text-xs text-muted-foreground">Opinions</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
-                  <Globe className="w-5 h-5 text-emerald-500" />
-                </div>
-                <div>
-                  <p className="text-2xl font-black text-foreground">{stats.countriesCount.toLocaleString()}</p>
-                  <p className="text-xs text-muted-foreground">Countries</p>
-                </div>
-              </div>
-            </motion.div>
             
             {/* CTA buttons */}
             <motion.div
@@ -929,7 +894,7 @@ export const LiveDataHero = () => {
               <div className="absolute -inset-2 bg-gradient-to-br from-primary/10 to-accent/10 rounded-[1.5rem] blur-xl" />
               
               {/* Dashboard container */}
-              <div className="relative bg-card/95 backdrop-blur-2xl border border-border/50 rounded-2xl shadow-2xl overflow-hidden">
+              <div id="live-dashboard" className="relative bg-card/95 backdrop-blur-2xl border border-border/50 rounded-2xl shadow-2xl overflow-hidden">
                 {/* Sign in prompt overlay for unauthenticated users */}
                 <AnimatePresence>
                   {showSignInPrompt && !isAuthenticated && (

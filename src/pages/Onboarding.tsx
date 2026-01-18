@@ -79,14 +79,20 @@ const Onboarding = () => {
 
   const handleStepTwoComplete = async () => {
     try {
-      // Mark onboarding as completed
+      // Mark onboarding as completed (tour_completed is NOT set - tour will show)
       const { error } = await supabase
         .from("profiles")
-        .update({ onboarding_completed: true })
+        .update({ 
+          onboarding_completed: true,
+          settings: { tour_completed: false } // Ensure tour shows for new users
+        })
         .eq("id", user?.id);
 
       if (error) throw error;
 
+      // Clear any existing tour completion flags for fresh start
+      localStorage.removeItem('inphrone_tour_completed');
+      
       toast.success("Welcome to INPHRONE! 🎉");
       navigate("/dashboard");
     } catch (error: any) {

@@ -1,32 +1,14 @@
-# ==============================================================================
-# robots.txt for Inphrone™ — Audience Intelligence Before Content Exists
-# Website: https://inphrone.com
-# Company: Inphrone
-# Last Updated: January 16, 2026
-# ==============================================================================
-# Purpose:
-# - Allow full crawling of public content
-# - Protect sensitive and private endpoints
-# - Support search engines, social previews, and AI discovery
-# - Maintain crawl efficiency at scale
-# ==============================================================================
+# Robots.txt for Inphrone - Entertainment Intelligence Platform
+# https://inphrone.com
 
-# ------------------------------------------------------------------------------
-# Google (no crawl-delay; managed via Search Console)
-# ------------------------------------------------------------------------------
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 1
 
-# ------------------------------------------------------------------------------
-# Bing / Microsoft
-# ------------------------------------------------------------------------------
 User-agent: Bingbot
 Allow: /
 Crawl-delay: 1
 
-# ------------------------------------------------------------------------------
-# Social Media Crawlers (Preview Cards / Rich Embeds)
-# ------------------------------------------------------------------------------
 User-agent: Twitterbot
 Allow: /
 
@@ -36,15 +18,12 @@ Allow: /
 User-agent: LinkedInBot
 Allow: /
 
-# ------------------------------------------------------------------------------
-# Other Major Search Engines
-# ------------------------------------------------------------------------------
-User-agent: DuckDuckBot
-Allow: /
-
 User-agent: Slurp
 Allow: /
 Crawl-delay: 2
+
+User-agent: DuckDuckBot
+Allow: /
 
 User-agent: Baiduspider
 Allow: /
@@ -54,27 +33,15 @@ User-agent: YandexBot
 Allow: /
 Crawl-delay: 2
 
-# ------------------------------------------------------------------------------
-# Default Rule (All Other Crawlers)
-# ------------------------------------------------------------------------------
 User-agent: *
 Allow: /
 Crawl-delay: 1
 
-# ------------------------------------------------------------------------------
-# Sensitive / Non-Public Paths (Security + SEO Hygiene)
-# ------------------------------------------------------------------------------
-Disallow: /admin/
-Disallow: /api/
-Disallow: /_internal/
-Disallow: /private/
-
-# Block auth-related query leaks
-Disallow: /*?*token=
-Disallow: /*?*auth=
-Disallow: /*?*session=
-
-# ------------------------------------------------------------------------------
-# Sitemap
-# ------------------------------------------------------------------------------
+# Sitemaps
 Sitemap: https://inphrone.com/sitemap.xml
+
+# Disallow admin and private paths
+User-agent: *
+Disallow: /admin
+Disallow: /api/
+Disallow: /*.json$

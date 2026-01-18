@@ -241,8 +241,23 @@ export function SettingsDialog() {
       document.body.style.overflow = '';
       document.body.style.pointerEvents = '';
       
-      // Dispatch event to trigger tour
+      // Dispatch event to trigger full guided tour
       window.dispatchEvent(new CustomEvent('start-guided-tour'));
+    }, 400);
+  };
+
+  const handleStartQuickTour = async () => {
+    // Close dialog first
+    setOpen(false);
+    
+    // Longer delay to ensure dialog is fully closed and DOM is clean
+    setTimeout(() => {
+      // Reset any body styles that might be left from dialog
+      document.body.style.overflow = '';
+      document.body.style.pointerEvents = '';
+      
+      // Dispatch event to trigger quick overview tour
+      window.dispatchEvent(new CustomEvent('start-quick-tour'));
     }, 400);
   };
 
@@ -473,6 +488,8 @@ export function SettingsDialog() {
               <Compass className="w-4 h-4" />
               <h3 className="font-semibold">{t('applicationTour')}</h3>
             </div>
+            
+            {/* Full Guided Tour */}
             <motion.div
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
@@ -481,12 +498,39 @@ export function SettingsDialog() {
                 variant="outline"
                 onClick={handleStartTour}
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-primary/10 to-accent/10 border-primary/30 hover:border-primary hover:bg-gradient-to-r hover:from-primary/20 hover:to-accent/20 transition-all"
+                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-primary/10 via-accent/5 to-primary/10 border-primary/40 hover:border-primary hover:bg-gradient-to-r hover:from-primary/20 hover:via-accent/10 hover:to-primary/20 transition-all h-auto py-3"
               >
-                <Compass className="w-4 h-4 animate-pulse" />
-                {t('exploreTour')}
+                <div className="flex flex-col items-center gap-1">
+                  <div className="flex items-center gap-2">
+                    <Compass className="w-5 h-5 text-primary animate-pulse" />
+                    <span className="font-semibold">Full Guided Tour</span>
+                  </div>
+                  <span className="text-xs text-muted-foreground">Navigate through all sections • 9 phases</span>
+                </div>
               </Button>
             </motion.div>
+            
+            {/* Quick Overview Tour */}
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <Button
+                variant="outline"
+                onClick={handleStartQuickTour}
+                disabled={loading}
+                className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-accent/10 via-primary/5 to-accent/10 border-accent/40 hover:border-accent hover:bg-gradient-to-r hover:from-accent/20 hover:via-primary/10 hover:to-accent/20 transition-all h-auto py-3"
+              >
+                <div className="flex flex-col items-center gap-1">
+                  <div className="flex items-center gap-2">
+                    <Globe className="w-5 h-5 text-accent" />
+                    <span className="font-semibold">Quick Overview</span>
+                  </div>
+                  <span className="text-xs text-muted-foreground">Learn all features in one place • 14 steps</span>
+                </div>
+              </Button>
+            </motion.div>
+            
             <p className="text-xs text-muted-foreground text-center">
               {t('tourDescription')}
             </p>

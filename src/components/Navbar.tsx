@@ -55,7 +55,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 w-full border-b border-border/50 bg-background/95 dark:bg-black/90 backdrop-blur-xl shadow-sm">
+    <nav id="main-navigation" className="fixed top-0 left-0 right-0 z-50 w-full border-b border-border/50 bg-background/95 dark:bg-black/90 backdrop-blur-xl shadow-sm">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Mobile Navigation Controls + Logo */}
@@ -110,12 +110,17 @@ const Navbar = () => {
             {isAuthenticated && (
               <>
                 <NotificationBell />
-                <SettingsDialog />
+                <div id="settings-button">
+                  <SettingsDialog />
+                </div>
               </>
             )}
-            <ThemeToggle />
+            <div id="theme-toggle">
+              <ThemeToggle />
+            </div>
             {!isAuthenticated && (
               <Button
+                id="primary-cta-button"
                 onClick={() => navigate("/auth")}
                 className="bg-white text-gray-900 hover:bg-white/90 border-0 shadow-elegant hover:shadow-xl transition-all duration-300"
               >

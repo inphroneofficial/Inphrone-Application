@@ -33,9 +33,10 @@ import {
   Activity,
   Radio,
   Cpu,
-  Wifi
+  Wifi,
+  Lock
 } from "lucide-react";
-import { motion, useScroll, useTransform, useSpring, useInView } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring, useInView, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
 // Animated counter component
@@ -120,6 +121,29 @@ const HexNode = ({ x, y, size, delay, pulse }: { x: number; y: number; size: num
   </motion.div>
 );
 
+// Sign-in prompt overlay for About page
+const AboutSignInPrompt = ({ onSignIn }: { onSignIn: () => void }) => (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    className="absolute inset-0 z-20 flex items-center justify-center bg-background/90 backdrop-blur-md rounded-xl"
+  >
+    <div className="text-center p-6 max-w-xs">
+      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mx-auto mb-4 shadow-xl">
+        <Lock className="w-8 h-8 text-white" />
+      </div>
+      <h3 className="text-lg font-bold mb-2">Sign in for Full Access</h3>
+      <p className="text-sm text-muted-foreground mb-4">
+        Get detailed live analytics, real-time updates, and platform insights.
+      </p>
+      <Button onClick={onSignIn} className="w-full bg-gradient-to-r from-primary to-accent">
+        Sign In / Sign Up
+        <ArrowRight className="w-4 h-4 ml-2" />
+      </Button>
+    </div>
+  </motion.div>
+);
+
 const About = () => {
   const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -132,10 +156,39 @@ const About = () => {
     countries: 0,
   });
 
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [showSignInPrompt, setShowSignInPrompt] = useState(false);
+
   // Parallax transforms
   const heroY = useTransform(smoothProgress, [0, 0.3], [0, -100]);
   const heroOpacity = useTransform(smoothProgress, [0, 0.2], [1, 0]);
   const scaleProgress = useTransform(smoothProgress, [0, 0.5], [1, 0.95]);
+
+  // Check authentication status
+  useEffect(() => {
+    const checkAuth = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setIsAuthenticated(!!session);
+
+      // If not authenticated, show sign-in prompt after 10 seconds
+      if (!session) {
+        const timer = setTimeout(() => {
+          setShowSignInPrompt(true);
+        }, 10000);
+        return () => clearTimeout(timer);
+      }
+    };
+    checkAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setIsAuthenticated(!!session);
+      if (session) {
+        setShowSignInPrompt(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     document.title = "About Inphrone — The World's First Audience Intelligence Platform";
@@ -328,6 +381,13 @@ const About = () => {
                 {/* Grid overlay */}
                 <div className="absolute inset-0 bg-grid-pattern opacity-5" />
                 
+                {/* Sign-in prompt overlay for non-authenticated users */}
+                <AnimatePresence>
+                  {showSignInPrompt && !isAuthenticated && (
+                    <AboutSignInPrompt onSignIn={() => navigate('/auth')} />
+                  )}
+                </AnimatePresence>
+                
                 {/* Header bar */}
                 <div className="flex items-center justify-between mb-8 relative">
                   <div className="flex items-center gap-3">
@@ -345,7 +405,7 @@ const About = () => {
                 </div>
                 
                 {/* Stats grid */}
-                <div className="grid md:grid-cols-3 gap-8">
+                <div className={`grid md:grid-cols-3 gap-8 transition-all duration-500 ${showSignInPrompt && !isAuthenticated ? 'blur-md pointer-events-none' : ''}`}>
                   {[
                     { value: milestones.users, label: "Active Users", icon: Users, trend: "+12%" },
                     { value: milestones.opinions, label: "Opinions Captured", icon: Radio, trend: "+8%" },
@@ -374,7 +434,7 @@ const About = () => {
                 </div>
                 
                 {/* Animated progress bars */}
-                <div className="mt-8 space-y-3">
+                <div className={`mt-8 space-y-3 transition-all duration-500 ${showSignInPrompt && !isAuthenticated ? 'blur-md pointer-events-none' : ''}`}>
                   {['Film & Cinema', 'Music & Audio', 'Gaming'].map((category, i) => (
                     <motion.div
                       key={category}

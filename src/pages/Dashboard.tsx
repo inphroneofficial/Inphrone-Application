@@ -35,7 +35,7 @@ import { useKeepAlive } from "@/hooks/useKeepAlive";
 import { useEnhancedNotifications } from "@/hooks/useEnhancedNotifications";
 import { AIInsightsCard } from "@/components/insights/AIInsightsCard";
 import { SectionTransition } from "@/components/PageTransition";
-import GuidedTour from "@/components/onboarding/GuidedTour";
+// Tour is now handled globally by SpotlightTourProvider
 import { ActivityFeed } from "@/components/dashboard/ActivityFeed";
 import { UserLeaderboard } from "@/components/dashboard/UserLeaderboard";
 import { TrendingTopics } from "@/components/dashboard/TrendingTopics";

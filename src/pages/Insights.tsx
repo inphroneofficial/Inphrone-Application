@@ -557,15 +557,35 @@ const Insights = () => {
 
       console.log(`After filters: ${filteredOpinionsWithProfiles.length} opinions`);
 
-      // Genres based on FILTERED opinions
+      // Genres based on FILTERED opinions - including appTypes for App Development
       const genreCount: Record<string, number> = {};
       filteredOpinionsWithProfiles.forEach(o => {
         const prefs = (o.preferences as any) || {};
+        
+        // Direct genre field
         const direct = (Array.isArray(o.genre) ? o.genre : [o.genre]).filter(Boolean) as string[];
         direct.forEach(g => { genreCount[g] = (genreCount[g] || 0) + 1; });
+        
+        // Genre from preferences
         if (prefs?.genre) {
           const genres = Array.isArray(prefs.genre) ? prefs.genre : [prefs.genre];
           genres.forEach((g: string) => { if (g) genreCount[g] = (genreCount[g] || 0) + 1; });
+        }
+        
+        // App Types for App Development category (treated as genres)
+        if (prefs?.appTypes) {
+          const appTypes = Array.isArray(prefs.appTypes) ? prefs.appTypes : [prefs.appTypes];
+          appTypes.forEach((appType: string) => { 
+            if (appType) genreCount[appType] = (genreCount[appType] || 0) + 1; 
+          });
+        }
+        
+        // Also check for appType singular
+        if (prefs?.appType) {
+          const appTypes = Array.isArray(prefs.appType) ? prefs.appType : [prefs.appType];
+          appTypes.forEach((appType: string) => { 
+            if (appType) genreCount[appType] = (genreCount[appType] || 0) + 1; 
+          });
         }
       });
 
