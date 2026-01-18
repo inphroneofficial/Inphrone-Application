@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset
-  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 
-  <!-- Home -->
   <url>
     <loc>https://inphrone.com/</loc>
     <lastmod>2026-01-16</lastmod>
@@ -14,7 +12,6 @@
     </image:image>
   </url>
 
-  <!-- Core Application -->
   <url>
     <loc>https://inphrone.com/insights</loc>
     <lastmod>2026-01-16</lastmod>
@@ -39,7 +36,6 @@
     <priority>0.9</priority>
   </url>
 
-  <!-- Company -->
   <url>
     <loc>https://inphrone.com/about</loc>
     <lastmod>2026-01-16</lastmod>
@@ -47,7 +43,6 @@
     <priority>0.8</priority>
   </url>
 
-  <!-- Content -->
   <url>
     <loc>https://inphrone.com/blog</loc>
     <lastmod>2026-01-16</lastmod>
@@ -62,7 +57,6 @@
     <priority>0.7</priority>
   </url>
 
-  <!-- Support -->
   <url>
     <loc>https://inphrone.com/contact</loc>
     <lastmod>2026-01-16</lastmod>
@@ -70,7 +64,6 @@
     <priority>0.5</priority>
   </url>
 
-  <!-- Legal -->
   <url>
     <loc>https://inphrone.com/privacy-policy</loc>
     <lastmod>2026-01-16</lastmod>
