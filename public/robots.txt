@@ -1,37 +1,41 @@
 # ========================================================
 # INPHRONE™ ROBOTS.TXT
-# Version: 1.0
+# Purpose: SEO optimization + protection of intelligence surfaces
 # Last Updated: 2026-01-18
-# Purpose: Optimize crawl budget and protect sensitive data
 # ========================================================
 
+# -------------------------
+# DEFAULT RULES
+# -------------------------
 User-agent: *
-# Allow indexing of public assets
-Allow: /src/
-Allow: /favicon.ico
-Allow: /favicon-*.png
-Allow: /favicon.svg
-Allow: /apple-touch-icon.png
-Allow: /insights/      # Allow search indexing for SEO
+Allow: /
 
-# Block sensitive paths
+# -------------------------
+# BLOCK PRIVATE / SENSITIVE AREAS
+# -------------------------
+Disallow: /dashboard/
+Disallow: /auth/
 Disallow: /admin/
 Disallow: /api/
 Disallow: /config/
-Disallow: /temp/
 Disallow: /private/
-Disallow: /*.env$
-Disallow: /*.config$
-Disallow: /*.json$   # Sensitive JSON files
-Disallow: /*?*        # Optional: block query string URLs
+Disallow: /temp/
 
-# AI & Scraper Protection
-User-agent: GPTBot
-Disallow: /insights/
-User-agent: CCBot
-Disallow: /
+# -------------------------
+# ALLOW PUBLIC DISCOVERY PAGES
+# -------------------------
+Allow: /insights/
+Allow: /blog/
+Allow: /faq/
+Allow: /about/
+Allow: /contact/
+Allow: /careers/
+Allow: /help-center/
+Allow: /reviews/
 
-# Search engine bots (optimized)
+# -------------------------
+# SEARCH ENGINE BOTS
+# -------------------------
 User-agent: Googlebot
 Allow: /
 Crawl-delay: 1
@@ -40,14 +44,26 @@ User-agent: Bingbot
 Allow: /
 Crawl-delay: 1
 
-# Social Media Bots (for OG tags rendering)
+# -------------------------
+# SOCIAL MEDIA PREVIEW BOTS
+# -------------------------
 User-agent: Twitterbot
 Allow: /
+
 User-agent: facebookexternalhit
 Allow: /
 
-# Preferred host
-Host: https://inphrone.com
+# -------------------------
+# AI / AGGRESSIVE SCRAPERS
+# -------------------------
+User-agent: GPTBot
+Disallow: /
 
-# Sitemap
+User-agent: CCBot
+Disallow: /
+
+# -------------------------
+# PREFERRED HOST & SITEMAP
+# -------------------------
+Host: https://inphrone.com
 Sitemap: https://inphrone.com/sitemap.xml
