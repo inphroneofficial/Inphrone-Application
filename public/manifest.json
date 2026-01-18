@@ -6,34 +6,41 @@
   "display": "standalone",
   "background_color": "#1F0021",
   "theme_color": "#b91c1c",
-  "orientation": "portrait-primary",
+  "orientation": "any",
   "scope": "/",
   "lang": "en",
+  "dir": "ltr",
   "categories": ["entertainment", "social", "productivity"],
   "icons": [
     {
-      "src": "/inphrone-logo.jpg",
+      "src": "/icons/inphrone-192.png",
       "sizes": "192x192",
-      "type": "image/jpeg",
+      "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/inphrone-logo.jpg",
+      "src": "/icons/inphrone-512.png",
       "sizes": "512x512",
-      "type": "image/jpeg",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ],
   "screenshots": [
     {
-      "src": "/screenshot-wide.png",
+      "src": "/screenshots/screenshot-wide.png",
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
       "label": "Inphrone Dashboard"
     },
     {
-      "src": "/screenshot-narrow.png",
+      "src": "/screenshots/screenshot-narrow.png",
       "sizes": "720x1280",
       "type": "image/png",
       "form_factor": "narrow",

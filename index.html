@@ -33,18 +33,20 @@ For licensing inquiries: inphrone@gmail.com
   <link rel="canonical" href="https://inphrone.com" />
   <link rel="alternate" hreflang="en" href="https://inphrone.com" />
 
-  <!-- Theme & PWA -->
+  <!-- Favicon & Touch Icons -->
+  <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" type="image/x-icon">
+  <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="/favicon-96x96.png" sizes="96x96" type="image/png">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
+  <meta name="apple-mobile-web-app-title" content="Inphrone">
+
+  <!-- Theme -->
   <meta name="theme-color" content="#b91c1c" />
   <meta name="msapplication-TileColor" content="#b91c1c" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <link rel="manifest" href="/site.webmanifest" />
 
-  <!-- Favicons -->
-  <link rel="icon" href="/favicon.ico" sizes="32x32" />
-  <link rel="icon" href="/favicon-96x96.png" sizes="96x96" />
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+  <!-- Web Manifest -->
+  <link rel="manifest" href="/site.webmanifest">
 
   <!-- Preconnect & Preload -->
   <link rel="preconnect" href="https://www.googletagmanager.com" />
@@ -77,6 +79,10 @@ For licensing inquiries: inphrone@gmail.com
   <meta name="twitter:description" content="Join Inphrone to share opinions across 8 entertainment categories. Founded by Thangella Gadidamalla." />
   <meta name="twitter:image" content="https://inphrone.com/inphrone-logo.jpg" />
   <meta name="twitter:image:alt" content="Inphrone - Entertainment Intelligence Platform" />
+
+  <!-- Preload & CSS -->
+  <link rel="preload" as="style" href="/src/styles.css" />
+  <link rel="stylesheet" href="/src/styles.css" />
 
   <!-- Structured Data: Organization, WebSite, SoftwareApplication, FAQPage -->
   <script type="application/ld+json">
@@ -150,54 +156,11 @@ For licensing inquiries: inphrone@gmail.com
     ]
   }
   </script>
-
-  <!-- Preload & CSS -->
-  <link rel="preload" as="style" href="/src/styles.css" />
-  <link rel="stylesheet" href="/src/styles.css" />
-
 </head>
 <body>
-  <!-- Skip Link for Accessibility -->
-  <a href="#root" class="skip-link">Skip to main content</a>
-
+  <!-- SPA Root + Hydration H1 for SEO -->
   <main id="root" role="main">
-    <header>
-      <h1>Welcome to Inphrone™</h1>
-      <p>People-Powered Entertainment Intelligence Platform</p>
-    </header>
-
-    <section aria-labelledby="about-inphrone">
-      <h2 id="about-inphrone">About Us</h2>
-      <p>Inphrone bridges audiences and creators. Founded by <strong>Thangella Gadidamalla</strong> in Hyderabad, Telangana, India. Share your opinions on Film, Music, OTT, TV, YouTube, Gaming, Social Media & App Development.</p>
-    </section>
-
-    <section aria-labelledby="features">
-      <h2 id="features">Main Features</h2>
-      <ul>
-        <li>Share weekly entertainment opinions</li>
-        <li>8 entertainment categories</li>
-        <li>InphroSync daily entertainment pulse</li>
-        <li>Your Turn slot competitions</li>
-        <li>Real-time audience insights</li>
-        <li>Wisdom badges and streaks</li>
-        <li>Location-based analytics</li>
-      </ul>
-    </section>
-
-    <section aria-labelledby="contact">
-      <h2 id="contact">Contact Us</h2>
-      <p>Email: <a href="mailto:inphrone@gmail.com">inphrone@gmail.com</a></p>
-      <p>Location: Hyderabad, Telangana, India</p>
-    </section>
-
-    <footer>
-      <p>&copy; 2026 Inphrone™. All Rights Reserved.</p>
-      <p>Follow us on 
-        <a href="https://instagram.com/inphrone" target="_blank" rel="noopener noreferrer">Instagram</a>, 
-        <a href="https://x.com/inphrone" target="_blank" rel="noopener noreferrer">X/Twitter</a>, 
-        <a href="https://youtube.com/@inphrone" target="_blank" rel="noopener noreferrer">YouTube</a>
-      </p>
-    </footer>
+    <h1 style="display:none">Inphrone - Entertainment Intelligence</h1>
   </main>
 
   <noscript>
