@@ -1,45 +1,162 @@
 {
-  "name": "Inphrone - Audience Intelligence Platform",
+  "name": "Inphrone — Audience Intelligence Before Content Exists",
   "short_name": "Inphrone",
-  "description": "World's first people-powered entertainment intelligence platform. Share opinions on Film, Music, OTT, TV, YouTube, Gaming, Social Media & App Development.",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#1F0021",
-  "theme_color": "#b91c1c",
-  "orientation": "portrait-primary",
+
+  "description": "The world’s first people-powered audience intelligence platform. Capture explicit audience demand before films, music, games, or platforms are built.",
+
+  "id": "com.inphrone.web",
+  "start_url": "/?source=pwa",
   "scope": "/",
+
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+
+  "orientation": "any",
+
+  "background_color": "#0b0b0b",
+  "theme_color": "#b91c1c",
+
   "lang": "en",
-  "categories": ["entertainment", "social", "productivity"],
+  "dir": "ltr",
+
+  "categories": [
+    "entertainment",
+    "technology",
+    "analytics",
+    "business",
+    "productivity"
+  ],
+
   "icons": [
     {
-      "src": "/inphrone-logo.jpg",
+      "src": "/icons/inphrone-logo-192.png",
       "sizes": "192x192",
-      "type": "image/jpeg",
-      "purpose": "any maskable"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "/inphrone-logo.jpg",
+      "src": "/icons/inphrone-logo-512.png",
       "sizes": "512x512",
-      "type": "image/jpeg",
-      "purpose": "any maskable"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/inphrone-logo-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/inphrone-logo-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/inphrone-logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
     }
   ],
+
   "screenshots": [
     {
-      "src": "/screenshot-wide.png",
+      "src": "/screenshots/inphrone-dashboard-wide.png",
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "Inphrone Dashboard"
+      "label": "Inphrone Audience Intelligence Dashboard"
     },
     {
-      "src": "/screenshot-narrow.png",
+      "src": "/screenshots/inphrone-mobile.png",
       "sizes": "720x1280",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Inphrone Mobile"
+      "label": "Inphrone Mobile Experience"
     }
   ],
-  "related_applications": [],
-  "prefer_related_applications": false
+
+  "shortcuts": [
+    {
+      "name": "InphroSync Daily Pulse",
+      "short_name": "InphroSync",
+      "description": "Check today’s audience pulse across entertainment categories",
+      "url": "/inphrosync",
+      "icons": [
+        {
+          "src": "/icons/inphrosync-96.png",
+          "sizes": "96x96",
+          "type": "image/png",
+          "purpose": "any"
+        }
+      ]
+    },
+    {
+      "name": "Your Turn Competitions",
+      "short_name": "Your Turn",
+      "description": "Join opinion-based competitions and influence content direction",
+      "url": "/yourturn",
+      "icons": [
+        {
+          "src": "/icons/yourturn-96.png",
+          "sizes": "96x96",
+          "type": "image/png",
+          "purpose": "any"
+        }
+      ]
+    },
+    {
+      "name": "Audience Insights",
+      "short_name": "Insights",
+      "description": "View real-time audience intelligence and demand signals",
+      "url": "/insights",
+      "icons": [
+        {
+          "src": "/icons/insights-96.png",
+          "sizes": "96x96",
+          "type": "image/png",
+          "purpose": "any"
+        }
+      ]
+    }
+  ],
+
+  "launch_handler": {
+    "client_mode": ["navigate-existing", "auto"]
+  },
+
+  "handle_links": "preferred",
+
+  "share_target": {
+    "action": "/share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+
+  "protocol_handlers": [
+    {
+      "protocol": "web+inphrone",
+      "url": "/link?data=%s"
+    }
+  ],
+
+  "edge_side_panel": {
+    "preferred_width": 420
+  },
+
+  "prefer_related_applications": false,
+
+  "iarc_rating_id": "e10+",
+
+  "scope_extensions": [
+    {
+      "origin": "https://inphrone.com"
+    }
+  ]
 }
