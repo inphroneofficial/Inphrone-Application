@@ -35,7 +35,7 @@ export function DeveloperModal({ open, onOpenChange }: DeveloperModalProps) {
     { icon: <Github className="w-5 h-5" />, label: "GitHub", url: "https://github.com" },
     { icon: <Linkedin className="w-5 h-5 text-blue-600" />, label: "LinkedIn", url: "https://www.linkedin.com/in/gthangella/" },
     { icon: <Twitter className="w-5 h-5 text-blue-400" />, label: "Twitter", url: "https://twitter.com/g_thangella" },
-    { icon: <Mail className="w-5 h-5 text-red-500" />, label: "Email", url: "mailto:imgtk17@gmail.com" },
+    { icon: <Mail className="w-5 h-5 text-red-500" />, label: "Email", url: "mailto:thangella@inphrone.com" },
     { icon: <Globe className="w-5 h-5 text-green-500" />, label: "Portfolio", url: "https://thangella-creaftech-solutions.vercel.app/" },
   ];
 
@@ -170,7 +170,7 @@ export function DeveloperModal({ open, onOpenChange }: DeveloperModalProps) {
                 Close
               </Button>
               <Button asChild>
-                <a href="mailto:imgtk17@gmail.com" target="_blank" rel="noopener noreferrer">
+                <a href="mailto:thangella@inphrone.com" target="_blank" rel="noopener noreferrer">
                   Contact Founder
                 </a>
               </Button>
