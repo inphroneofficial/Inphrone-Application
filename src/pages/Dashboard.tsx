@@ -40,6 +40,7 @@ import { ActivityFeed } from "@/components/dashboard/ActivityFeed";
 import { UserLeaderboard } from "@/components/dashboard/UserLeaderboard";
 import { TrendingTopics } from "@/components/dashboard/TrendingTopics";
 import { EmailVerificationBanner } from "@/components/common/EmailVerificationBanner";
+import { NonAudienceDashboard } from "@/components/dashboard/NonAudienceDashboard";
 
 interface Category {
   id: string;
@@ -541,19 +542,25 @@ const Dashboard = () => {
                   Welcome back! 👋
                 </h2>
                 <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl">
-                  {userType === "creator" 
-                    ? "✨ Explore deep audience insights and discover what your audience craves next"
-                    : "🎬 Share your voice and help shape the future of entertainment globally"}
+                  {userType === "audience" 
+                    ? "🎬 Share your voice and help shape the future of entertainment globally"
+                    : "✨ Explore deep audience insights and discover what your audience craves next"}
                 </p>
               </div>
             </div>
           </SectionTransition>
 
-          {/* Stats Cards - Role Specific */}
-          <SectionTransition delay={0.1}>
+          {/* Non-Audience Dashboard - Show analytics for creators/studios/etc */}
+          {userType !== "audience" && user && (
+            <SectionTransition delay={0.1}>
+              <NonAudienceDashboard userType={userType} userId={user.id} />
+            </SectionTransition>
+          )}
+
+          {/* Stats Cards - Audience Only */}
+          {userType === "audience" && (
+          <SectionTransition delay={0.15}>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {userType === "audience" ? (
-              <>
                 {/* Audience Stats with Enhanced Design */}
                 <Card className="group relative overflow-hidden bg-gradient-to-br from-primary/10 to-primary/5 border-2 border-primary/20 p-4 md:p-6 animate-bounce-in hover-scale-105 hover-lift transition-all duration-300 shadow-elegant" style={{ animationDelay: '0.1s' }}>
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -610,63 +617,9 @@ const Dashboard = () => {
                     <p className="text-xs font-medium text-white/90">👥 Registered</p>
                   </div>
                 </Card>
-              </>
-            ) : (
-              <>
-                {/* Creator/Studio Stats */}
-                <Card className="premium-card p-4 md:p-6 animate-bounce-in" style={{ animationDelay: '0.1s' }}>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs md:text-sm text-muted-foreground">💡 Total Insights</span>
-                      <TrendingUp className="w-4 h-4 md:w-5 md:h-5 text-primary animate-pulse-glow" />
-                    </div>
-                    <p className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                      {stats.opinions}
-                    </p>
-                    <p className="text-xs text-muted-foreground">📊 Available opinions</p>
-                  </div>
-                </Card>
-
-                <Card className="premium-card p-4 md:p-6 animate-bounce-in" style={{ animationDelay: '0.2s' }}>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs md:text-sm text-muted-foreground">⚡ Active Contributors</span>
-                      <Award className="w-4 h-4 md:w-5 md:h-5 text-accent animate-pulse-glow" />
-                    </div>
-                    <p className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent">
-                      {stats.activeContributors}
-                    </p>
-                    <p className="text-xs text-muted-foreground">🎯 Engaged users</p>
-                  </div>
-                </Card>
-
-                <Card className="premium-card p-4 md:p-6 animate-bounce-in" style={{ animationDelay: '0.3s' }}>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs md:text-sm text-muted-foreground">🌍 Total Users</span>
-                      <UserIcon className="w-4 h-4 md:w-5 md:h-5 text-primary animate-pulse-glow" />
-                    </div>
-                    <p className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                      {totalUsers.toLocaleString()}
-                    </p>
-                    <p className="text-xs text-muted-foreground">👥 Registered</p>
-                  </div>
-                </Card>
-
-                <Card className="premium-card p-4 md:p-6 gradient-hero border-2 border-primary/20 animate-bounce-in" style={{ animationDelay: '0.4s' }}>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs md:text-sm font-semibold">📈 Trending</span>
-                      <Sparkles className="w-4 h-4 md:w-5 md:h-5 animate-pulse-glow" />
-                    </div>
-                    <p className="text-2xl md:text-3xl font-bold">🔥 Live</p>
-                    <p className="text-xs">Real-time data</p>
-                  </div>
-                </Card>
-              </>
-            )}
             </div>
           </SectionTransition>
+          )}
 
           {/* Categories */}
           <SectionTransition delay={0.15}>

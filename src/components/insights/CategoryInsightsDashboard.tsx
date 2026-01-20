@@ -267,10 +267,10 @@ export function CategoryInsightsDashboard({ insights, categoryName, theme, userT
         </motion.div>
       )}
 
-      {/* Demographics Grid - Controlled by parent */}
-      {showDemographics && (
+      {/* Demographics Grid - Only show if there's current week data */}
+      {showDemographics && (ageData.length > 0 || genderData.length > 0 || locationData.length > 0) && (
         <div className="grid md:grid-cols-2 gap-6">
-          {/* Age Distribution */}
+          {/* Age Distribution - Only show if current week data exists */}
           {ageData.length > 0 && (
             <Card className="glass-card border-2">
               <CardHeader>
@@ -311,7 +311,7 @@ export function CategoryInsightsDashboard({ insights, categoryName, theme, userT
             </Card>
           )}
 
-          {/* Gender Distribution */}
+          {/* Gender Distribution - Only show if current week data exists */}
           {genderData.length > 0 && (
             <Card className="glass-card border-2">
               <CardHeader>
@@ -364,7 +364,7 @@ export function CategoryInsightsDashboard({ insights, categoryName, theme, userT
         </div>
       )}
 
-      {/* Regional Trends - Enhanced */}
+      {/* Regional Trends - Only show if current week data exists */}
       {showDemographics && locationData.length > 0 && (
         <Card className="glass-card border-2">
           <CardHeader>

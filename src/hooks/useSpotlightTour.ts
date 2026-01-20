@@ -17,7 +17,7 @@ interface TourPhase {
   delayMs?: number;
 }
 
-// Premium Full Tour - 9 phases with actual navigation
+// Premium Full Tour - 9 phases with actual navigation and SKIP button
 const getFullTourPhases = (): TourPhase[] => [
   // Phase 1: Home Page Welcome
   {
@@ -26,8 +26,8 @@ const getFullTourPhases = (): TourPhase[] => [
     steps: [
       {
         popover: {
-          title: '🌟 Welcome to INPHRONE',
-          description: 'The world\'s first Audience Intelligence Platform! Your voice shapes what entertainment gets created next. Let\'s explore every feature together.',
+          title: '<span class="tour-emoji">🌟</span> Welcome to INPHRONE',
+          description: '<p>The world\'s first Audience Intelligence Platform!</p><p class="tour-highlight">Your voice shapes what entertainment gets created next.</p><p class="tour-small">Let\'s explore every feature together.</p>',
           side: 'over',
           align: 'center',
         },
@@ -35,8 +35,8 @@ const getFullTourPhases = (): TourPhase[] => [
       {
         element: '#main-navigation',
         popover: {
-          title: '🧭 Command Center',
-          description: 'Your navigation hub to access Dashboard, Insights, InphroSync, YourTurn, Coupons, and more. Everything you need is just one click away.',
+          title: '<span class="tour-emoji">🧭</span> Command Center',
+          description: '<p>Your navigation hub to access all features:</p><ul class="tour-list"><li>📊 Dashboard - Your activity center</li><li>💡 Insights - Industry analytics</li><li>⚡ InphroSync - Daily engagement</li><li>🎯 YourTurn - Community polls</li><li>🎁 Coupons - Your rewards</li></ul>',
           side: 'bottom',
           align: 'start',
         },
@@ -44,8 +44,8 @@ const getFullTourPhases = (): TourPhase[] => [
       {
         element: '#theme-toggle',
         popover: {
-          title: '🎨 Theme Customization',
-          description: 'Personalize your experience with Light, Dark, or System themes. Your preference syncs across all devices automatically.',
+          title: '<span class="tour-emoji">🎨</span> Theme Customization',
+          description: '<p>Personalize your experience:</p><ul class="tour-list"><li>☀️ Light Mode</li><li>🌙 Dark Mode</li><li>💻 System Auto</li></ul><p class="tour-small">Syncs across all devices!</p>',
           side: 'bottom',
           align: 'center',
         },
@@ -53,8 +53,8 @@ const getFullTourPhases = (): TourPhase[] => [
       {
         element: '#settings-button',
         popover: {
-          title: '⚙️ Settings & Preferences',
-          description: 'Control notifications, choose your language from 20+ options, manage privacy, and restart this tour anytime.',
+          title: '<span class="tour-emoji">⚙️</span> Settings & Preferences',
+          description: '<p>Control your INPHRONE experience:</p><ul class="tour-list"><li>🔔 Notification preferences</li><li>🌐 20+ language options</li><li>🔒 Privacy settings</li><li>🔄 Restart this tour anytime</li></ul>',
           side: 'bottom',
           align: 'end',
         },
@@ -62,8 +62,8 @@ const getFullTourPhases = (): TourPhase[] => [
       {
         element: '#notification-bell',
         popover: {
-          title: '🔔 Smart Notifications',
-          description: 'Real-time alerts for likes, trending topics, earned rewards, and platform updates. Never miss important activity!',
+          title: '<span class="tour-emoji">🔔</span> Smart Notifications',
+          description: '<p>Never miss important updates:</p><ul class="tour-list"><li>❤️ When someone likes your opinion</li><li>🔥 Trending topics in your categories</li><li>🎁 New rewards earned</li><li>📢 Platform announcements</li></ul>',
           side: 'bottom',
           align: 'center',
         },
@@ -71,8 +71,8 @@ const getFullTourPhases = (): TourPhase[] => [
       {
         element: '#live-dashboard',
         popover: {
-          title: '📊 Live Intelligence Feed',
-          description: 'Watch real-time platform statistics: global users, opinions shared, trending categories, and live community engagement metrics.',
+          title: '<span class="tour-emoji">📊</span> Live Intelligence Feed',
+          description: '<p>Watch real-time platform activity:</p><ul class="tour-list"><li>👥 Global user count</li><li>💬 Opinions shared today</li><li>🔥 Trending categories</li><li>⚡ Live engagement metrics</li></ul>',
           side: 'top',
           align: 'center',
         },
@@ -86,8 +86,8 @@ const getFullTourPhases = (): TourPhase[] => [
     steps: [
       {
         popover: {
-          title: '📖 Our Mission & Story',
-          description: 'Discover how INPHRONE democratizes entertainment intelligence, connecting audiences with creators worldwide. We\'re building the future of content creation together.',
+          title: '<span class="tour-emoji">📖</span> Our Mission & Story',
+          description: '<p class="tour-highlight">Democratizing entertainment intelligence worldwide.</p><p>Discover how INPHRONE connects audiences with creators to build the future of content together.</p><ul class="tour-list"><li>🌍 Global reach</li><li>🤝 Creator partnerships</li><li>📈 Data-driven insights</li></ul>',
           side: 'over',
           align: 'center',
         },
@@ -101,8 +101,8 @@ const getFullTourPhases = (): TourPhase[] => [
     steps: [
       {
         popover: {
-          title: '📈 Your Personal Command Center',
-          description: 'Track your contributions, monitor reward points, view personalized insights, submit opinions, and see your impact on the entertainment industry!',
+          title: '<span class="tour-emoji">📈</span> Your Personal Command Center',
+          description: '<p class="tour-highlight">Everything you need in one place!</p><ul class="tour-list"><li>📝 Submit opinions across 8 categories</li><li>🏆 Track your level & XP progress</li><li>🎁 View earned rewards & coupons</li><li>📊 Personal analytics & insights</li><li>⏰ Weekly submission countdown</li></ul>',
           side: 'over',
           align: 'center',
         },
@@ -116,8 +116,8 @@ const getFullTourPhases = (): TourPhase[] => [
     steps: [
       {
         popover: {
-          title: '💡 Entertainment Intelligence Hub',
-          description: 'Explore aggregated insights from our global community. Deep-dive into Film, Music, Gaming, OTT, TV, YouTube, Social Media & App Development with demographics, trends, and sentiment analysis.',
+          title: '<span class="tour-emoji">💡</span> Entertainment Intelligence Hub',
+          description: '<p class="tour-highlight">Deep-dive into community trends!</p><p>Explore 8 entertainment categories:</p><ul class="tour-list"><li>🎬 Film & 📺 TV/OTT analytics</li><li>🎵 Music & 🎮 Gaming trends</li><li>▶️ YouTube & 📱 Social insights</li><li>💻 App Development data</li></ul><p class="tour-small">View demographics, sentiment, and regional trends!</p>',
           side: 'over',
           align: 'center',
         },
@@ -131,8 +131,8 @@ const getFullTourPhases = (): TourPhase[] => [
     steps: [
       {
         popover: {
-          title: '🔄 InphroSync Daily Pulse',
-          description: 'Answer fun daily entertainment questions! Build participation streaks, unlock exclusive badges, and discover how your opinions align with the global community.',
+          title: '<span class="tour-emoji">⚡</span> InphroSync Daily Pulse',
+          description: '<p class="tour-highlight">Your daily entertainment check-in!</p><ul class="tour-list"><li>❓ Quick, fun daily questions</li><li>🔥 Build participation streaks</li><li>🏅 Unlock exclusive streak badges</li><li>📊 Compare with global community</li></ul><p class="tour-small">Don\'t break your streak!</p>',
           side: 'over',
           align: 'center',
         },
@@ -146,8 +146,8 @@ const getFullTourPhases = (): TourPhase[] => [
     steps: [
       {
         popover: {
-          title: '🎯 YourTurn Community Arena',
-          description: 'Create and vote on community-driven polls! Win time slots to host your own questions, see real-time voting, and engage with fellow entertainment enthusiasts.',
+          title: '<span class="tour-emoji">🎯</span> YourTurn Community Arena',
+          description: '<p class="tour-highlight">Win the spotlight and ask your question!</p><ul class="tour-list"><li>⏰ 3 daily slots: 9 AM, 2 PM, 7 PM</li><li>⚡ 20-second countdown - fastest wins!</li><li>📊 Watch real-time votes roll in</li><li>🏆 See how many competed for your slot</li></ul>',
           side: 'over',
           align: 'center',
         },
@@ -161,8 +161,8 @@ const getFullTourPhases = (): TourPhase[] => [
     steps: [
       {
         popover: {
-          title: '🎁 Exclusive Reward Coupons',
-          description: 'Earn discount coupons from top brands as rewards for your valuable contributions! Track expiry dates, copy codes instantly, and save on purchases.',
+          title: '<span class="tour-emoji">🎁</span> Exclusive Reward Coupons',
+          description: '<p class="tour-highlight">Your contributions earn real rewards!</p><ul class="tour-list"><li>💰 Discount coupons from top brands</li><li>📋 One-click copy coupon codes</li><li>⏳ Track expiry dates</li><li>🛒 Save on your purchases</li></ul>',
           side: 'over',
           align: 'center',
         },
@@ -176,8 +176,8 @@ const getFullTourPhases = (): TourPhase[] => [
     steps: [
       {
         popover: {
-          title: '👤 Your INPHRONE Identity',
-          description: 'Manage your profile, view achievements, track earned badges and levels, see your complete contribution history, and showcase your entertainment expertise.',
+          title: '<span class="tour-emoji">👤</span> Your INPHRONE Identity',
+          description: '<p class="tour-highlight">Showcase your entertainment expertise!</p><ul class="tour-list"><li>🏆 View all earned badges</li><li>📈 Complete activity history</li><li>⭐ Level & XP progression</li><li>🔗 Share profile with friends</li></ul>',
           side: 'over',
           align: 'center',
         },
@@ -191,8 +191,8 @@ const getFullTourPhases = (): TourPhase[] => [
     steps: [
       {
         popover: {
-          title: '🎊 You\'re All Set!',
-          description: 'You\'ve explored all major features of INPHRONE! Start sharing your entertainment opinions to earn rewards, level up, and help shape what gets created next. Restart this tour anytime from Settings.',
+          title: '<span class="tour-emoji">🎊</span> You\'re All Set!',
+          description: '<p class="tour-highlight">You\'ve explored all major features!</p><p>Start your INPHRONE journey now:</p><ul class="tour-list"><li>✨ Share your first opinion</li><li>⚡ Complete today\'s InphroSync</li><li>🎯 Try winning a YourTurn slot</li><li>🏆 Earn your first badge</li></ul><p class="tour-small">Restart this tour anytime from Settings!</p>',
           side: 'over',
           align: 'center',
         },
@@ -201,130 +201,10 @@ const getFullTourPhases = (): TourPhase[] => [
   },
 ];
 
-// Quick Info Tour - 14 steps, single page overview
-const getQuickTourSteps = (): DriveStep[] => [
-  {
-    popover: {
-      title: '✨ Quick Overview',
-      description: 'Welcome to INPHRONE! This quick tour will introduce you to all features without navigating away. Perfect for a fast overview!',
-      side: 'over',
-      align: 'center',
-    },
-  },
-  {
-    element: '#main-navigation',
-    popover: {
-      title: '🧭 Navigation Menu',
-      description: 'Access all platform sections: Dashboard for your activity, Insights for analytics, InphroSync for daily questions, YourTurn for polls, and Coupons for rewards.',
-      side: 'bottom',
-      align: 'start',
-    },
-  },
-  {
-    element: '#theme-toggle',
-    popover: {
-      title: '🎨 Theme Toggle',
-      description: 'Switch between Light, Dark, or System themes. Your preference is saved automatically.',
-      side: 'bottom',
-      align: 'center',
-    },
-  },
-  {
-    element: '#notification-bell',
-    popover: {
-      title: '🔔 Notifications',
-      description: 'Get real-time alerts for likes on your opinions, trending content, and reward updates.',
-      side: 'bottom',
-      align: 'center',
-    },
-  },
-  {
-    element: '#settings-button',
-    popover: {
-      title: '⚙️ Settings',
-      description: 'Manage notifications, select language from 20+ options, and restart tours anytime.',
-      side: 'bottom',
-      align: 'end',
-    },
-  },
-  {
-    element: '#live-dashboard',
-    popover: {
-      title: '📊 Live Stats',
-      description: 'Real-time platform metrics: total users, opinions shared, and community activity across all categories.',
-      side: 'top',
-      align: 'center',
-    },
-  },
-  {
-    popover: {
-      title: '📈 Dashboard Features',
-      description: 'Your personal hub to submit opinions, track contributions, view rewards, and monitor your impact on entertainment decisions.',
-      side: 'over',
-      align: 'center',
-    },
-  },
-  {
-    popover: {
-      title: '💡 Insights Analytics',
-      description: 'Deep-dive into 8 entertainment categories: Film, Music, OTT, TV, YouTube, Gaming, Social Media & App Development. View demographics, trends, and sentiment.',
-      side: 'over',
-      align: 'center',
-    },
-  },
-  {
-    popover: {
-      title: '🔄 InphroSync Daily',
-      description: 'Answer fun daily questions to build streaks, earn badges, and see how your opinions compare with the global community.',
-      side: 'over',
-      align: 'center',
-    },
-  },
-  {
-    popover: {
-      title: '🎯 YourTurn Polls',
-      description: 'Create community polls, vote on questions, and win time slots to host your own entertainment surveys.',
-      side: 'over',
-      align: 'center',
-    },
-  },
-  {
-    popover: {
-      title: '🎁 Coupon Rewards',
-      description: 'Earn exclusive discount coupons from brands as you contribute opinions. Track and use your earned rewards.',
-      side: 'over',
-      align: 'center',
-    },
-  },
-  {
-    popover: {
-      title: '👤 Profile & Achievements',
-      description: 'View your profile, earned badges, achievement levels, and complete contribution history.',
-      side: 'over',
-      align: 'center',
-    },
-  },
-  {
-    popover: {
-      title: '📖 About & FAQ',
-      description: 'Learn about INPHRONE\'s mission, team, and get answers to common questions in the Help Center.',
-      side: 'over',
-      align: 'center',
-    },
-  },
-  {
-    popover: {
-      title: '🚀 Start Exploring!',
-      description: 'You now know all the key features! Start sharing opinions to earn rewards, level up, and shape entertainment. Access full guided tour from Settings anytime!',
-      side: 'over',
-      align: 'center',
-    },
-  },
-];
-
 export function useSpotlightTour() {
   const driverRef = useRef<Driver | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showQuickTour, setShowQuickTour] = useState(false);
   const isNavigatingRef = useRef(false);
   const currentPhaseRef = useRef(0);
   const tourTypeRef = useRef<TourType>('full');
@@ -373,6 +253,18 @@ export function useSpotlightTour() {
     }
   }, []);
 
+  const skipFullTour = useCallback(() => {
+    if (driverRef.current) {
+      try {
+        driverRef.current.destroy();
+      } catch (e) {
+        // Ignore cleanup errors
+      }
+    }
+    isNavigatingRef.current = false;
+    markTourCompleted();
+  }, [markTourCompleted]);
+
   const runFullTourPhase = useCallback((phaseIndex: number) => {
     const phases = getFullTourPhases();
     
@@ -415,14 +307,14 @@ export function useSpotlightTour() {
         showProgress: true,
         showButtons: ['next', 'previous', 'close'],
         steps: phase.steps,
-        nextBtnText: isLastPhase ? '🎉 Complete Tour' : 'Next →',
-        prevBtnText: '← Back',
-        doneBtnText: isLastPhase ? '✨ Finish Tour' : 'Continue →',
-        progressText: `Section ${phaseIndex + 1} of ${phases.length}`,
+        nextBtnText: isLastPhase ? 'Complete →' : 'Next →',
+        prevBtnText: '← Previous',
+        doneBtnText: isLastPhase ? '✨ Finish' : 'Continue →',
+        progressText: `${phaseIndex + 1} / ${phases.length}`,
         allowClose: true,
-        overlayColor: 'rgba(0, 0, 0, 0.88)',
+        overlayColor: 'rgba(0, 0, 0, 0.65)',
         stagePadding: 16,
-        stageRadius: 16,
+        stageRadius: 20,
         animate: true,
         smoothScroll: true,
         allowKeyboardControl: true,
@@ -431,6 +323,9 @@ export function useSpotlightTour() {
           if (el) {
             (el as HTMLElement).scrollIntoView?.({ behavior: 'smooth', block: 'center' });
           }
+        },
+        onCloseClick: () => {
+          skipFullTour();
         },
         onDestroyed: () => {
           if (!isNavigatingRef.current) {
@@ -446,52 +341,21 @@ export function useSpotlightTour() {
       driverRef.current = driver(config);
       driverRef.current.drive();
     }, phase.delayMs || 800);
-  }, [markTourCompleted]);
+  }, [markTourCompleted, skipFullTour]);
 
-  const runQuickTour = useCallback(() => {
-    tourTypeRef.current = 'quick';
-    
-    // Destroy any existing driver
-    if (driverRef.current) {
-      try {
-        driverRef.current.destroy();
-      } catch (e) {
-        // Ignore cleanup errors
-      }
+  const startQuickTour = useCallback(() => {
+    if (!isAuthenticated) {
+      console.log('Tour not available for unauthenticated users');
+      return;
     }
+    
+    tourTypeRef.current = 'quick';
+    setShowQuickTour(true);
+  }, [isAuthenticated]);
 
-    setTimeout(() => {
-      const steps = getQuickTourSteps();
-
-      const config: Config = {
-        showProgress: true,
-        showButtons: ['next', 'previous', 'close'],
-        steps: steps,
-        nextBtnText: 'Next →',
-        prevBtnText: '← Back',
-        doneBtnText: '✨ Got It!',
-        progressText: `Step {{current}} of {{total}}`,
-        allowClose: true,
-        overlayColor: 'rgba(0, 0, 0, 0.88)',
-        stagePadding: 16,
-        stageRadius: 16,
-        animate: true,
-        smoothScroll: true,
-        allowKeyboardControl: true,
-        popoverClass: 'inphrone-premium-tour',
-        onHighlightStarted: (el) => {
-          if (el) {
-            (el as HTMLElement).scrollIntoView?.({ behavior: 'smooth', block: 'center' });
-          }
-        },
-        onDestroyed: () => {
-          markTourCompleted();
-        },
-      };
-
-      driverRef.current = driver(config);
-      driverRef.current.drive();
-    }, 600);
+  const closeQuickTour = useCallback(() => {
+    setShowQuickTour(false);
+    markTourCompleted();
   }, [markTourCompleted]);
 
   const startTour = useCallback((type: TourType = 'full') => {
@@ -511,9 +375,9 @@ export function useSpotlightTour() {
     if (type === 'full') {
       runFullTourPhase(0);
     } else {
-      runQuickTour();
+      startQuickTour();
     }
-  }, [isAuthenticated, runFullTourPhase, runQuickTour]);
+  }, [isAuthenticated, runFullTourPhase, startQuickTour]);
 
   const shouldShowTour = useCallback(async (): Promise<boolean> => {
     // Must be authenticated
@@ -619,7 +483,9 @@ export function useSpotlightTour() {
   return {
     startTour,
     startFullTour: () => startTour('full'),
-    startQuickTour: () => startTour('quick'),
+    startQuickTourManual: startQuickTour,
     shouldShowTour,
+    showQuickTour,
+    closeQuickTour,
   };
 }

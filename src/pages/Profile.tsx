@@ -264,6 +264,13 @@ const Profile = () => {
           .eq("user_id", userId)
           .maybeSingle();
         setProfile({ ...profileData, specificProfile: musicData });
+      } else if (profileData.user_type === 'developer') {
+        const { data: developerData } = await supabase
+          .from("developer_profiles")
+          .select("*")
+          .eq("user_id", userId)
+          .maybeSingle();
+        setProfile({ ...profileData, specificProfile: developerData });
       } else {
         setProfile(profileData);
       }
@@ -400,6 +407,7 @@ const isOTT = profile?.user_type === "ott";
 const isTV = profile?.user_type === "tv";
 const isGaming = profile?.user_type === "gaming";
 const isMusic = profile?.user_type === "music";
+const isDeveloper = profile?.user_type === "developer";
 
 const userTypeLabel = (() => {
   switch ((profile?.user_type || '').toLowerCase()) {
@@ -411,6 +419,7 @@ const userTypeLabel = (() => {
     case 'studio': return 'Studio';
     case 'creator': return 'Creator';
     case 'audience': return 'Audience';
+    case 'developer': return 'App Developer';
     default: return profile?.user_type || 'User';
   }
 })();
@@ -718,8 +727,8 @@ const specificProfile = profile?.specificProfile;
                      </>
                    )}
 
-                   {/* Studio/OTT/TV/Gaming/Music-specific fields - Organization profiles */}
-                   {(isStudio || isOTT || isTV || isGaming || isMusic) && (
+                   {/* Studio/OTT/TV/Gaming/Music/Developer-specific fields - Organization profiles */}
+                   {(isStudio || isOTT || isTV || isGaming || isMusic || isDeveloper) && (
                       <>
                         {specificProfile?.organization_name && (
                           <div className="space-y-1">

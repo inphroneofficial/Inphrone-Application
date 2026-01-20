@@ -624,25 +624,17 @@ const Insights = () => {
       const cleanedGender = scrub(genderDist);
       const cleanedLocations = scrub(locations);
 
-      // Fetch accurate demographics from RPC function
-      let rpcDemographics = { age: {}, gender: {}, locations: {} };
-      if (categoryId) {
-        const { data: demoData } = await supabase.rpc('get_category_demographics', { 
-          _category_id: categoryId 
-        });
-        if (demoData) {
-          const demo = demoData as any;
-          rpcDemographics = {
-            age: demo.age_groups || {},
-            gender: demo.gender || {},
-            locations: { ...demo.countries || {}, ...demo.cities || {} }
-          };
-        }
-      }
+      // Use demographics calculated from current week's filtered opinions ONLY
+      // Don't use RPC function as it includes all-time data, not just current week
+      const currentWeekDemographics = {
+        age: Object.keys(cleanedAge).length > 0 ? cleanedAge : {},
+        gender: Object.keys(cleanedGender).length > 0 ? cleanedGender : {},
+        locations: Object.keys(cleanedLocations).length > 0 ? cleanedLocations : {}
+      };
 
       setCategoryInsights({
         genres,
-        demographics: rpcDemographics,
+        demographics: currentWeekDemographics,
         preferences: {},
         opinions: filteredOpinionsWithProfiles,
         totalOpinions: filteredOpinionsWithProfiles.length

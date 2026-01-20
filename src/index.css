@@ -820,6 +820,41 @@
   line-height: 1.7;
 }
 
+.driver-popover.inphrone-premium-tour .driver-popover-description p {
+  margin: 0 0 0.5rem;
+}
+
+.driver-popover.inphrone-premium-tour .driver-popover-description p.tour-highlight {
+  color: hsl(var(--primary));
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.driver-popover.inphrone-premium-tour .driver-popover-description p.tour-small {
+  font-size: 0.8125rem;
+  opacity: 0.75;
+  margin-top: 0.75rem;
+}
+
+.driver-popover.inphrone-premium-tour .driver-popover-description ul.tour-list {
+  margin: 0.75rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.driver-popover.inphrone-premium-tour .driver-popover-description ul.tour-list li {
+  padding: 0.375rem 0;
+  font-size: 0.875rem;
+  color: hsl(var(--foreground) / 0.85);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.driver-popover.inphrone-premium-tour .driver-popover-title .tour-emoji {
+  margin-right: 0.25rem;
+}
+
 .driver-popover.inphrone-premium-tour .driver-popover-progress-text {
   font-size: 0.75rem;
   font-weight: 600;
@@ -924,10 +959,10 @@
   border-bottom-color: hsl(var(--card));
 }
 
-/* Premium Overlay */
+/* Premium Overlay - Lighter blur for transparency */
 .driver-overlay {
-  background: rgba(0, 0, 0, 0.85) !important;
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(2px);
 }
 
 /* Premium Highlight Stage */

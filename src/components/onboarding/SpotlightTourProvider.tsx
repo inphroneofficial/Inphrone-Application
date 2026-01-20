@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSpotlightTour } from '@/hooks/useSpotlightTour';
+import GuidedTour from './GuidedTour';
 
 // This component initializes and manages the spotlight tour
 // It handles resuming the tour after navigation between pages
 export function SpotlightTourProvider() {
   const location = useLocation();
-  const { startTour, shouldShowTour } = useSpotlightTour();
+  const { startTour, shouldShowTour, showQuickTour, closeQuickTour } = useSpotlightTour();
 
   // Re-check tour status on route changes
   useEffect(() => {
@@ -22,6 +23,11 @@ export function SpotlightTourProvider() {
 
     checkPendingTour();
   }, [location.pathname]);
+
+  // Render the Quick Tour (GuidedTour component) when showQuickTour is true
+  if (showQuickTour) {
+    return <GuidedTour onComplete={closeQuickTour} />;
+  }
 
   return null;
 }
