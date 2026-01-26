@@ -56,7 +56,17 @@ export function DailyQuestionNew({
   useEffect(() => {
     checkIfAnswered();
     fetchCounts();
-    setupRealtimeSubscription();
+    const cleanup = setupRealtimeSubscription();
+    
+    // Also fetch on mount and refresh every 3 seconds for live feel
+    const interval = setInterval(() => {
+      fetchCounts();
+    }, 3000);
+    
+    return () => {
+      cleanup();
+      clearInterval(interval);
+    };
   }, [question.id]);
 
   useEffect(() => {
@@ -221,11 +231,20 @@ export function DailyQuestionNew({
       setSelectedOption(optionId);
       setHasAnswered(true);
       
+      // Context-aware emoji confetti based on selection
+      const selectedLabel = question.options.find(o => o.id === optionId)?.label || "";
+      const emoji = getOptionIcon(selectedLabel);
+      const colors = ['#19E3EC', '#C07CFF', '#6366f1', '#fbbf24', '#22c55e'];
+      
       confetti({
-        particleCount: 150,
-        spread: 100,
-        origin: { y: 0.6 },
-        colors: ["#19E3EC", "#C07CFF", "#6366f1", "#fbbf24"],
+        particleCount: 50,
+        spread: 60,
+        origin: { y: 0.5, x: 0.5 },
+        colors,
+        gravity: 1.2,
+        scalar: 0.8,
+        ticks: 100,
+        disableForReducedMotion: true,
       });
 
       toast.success("✨ Amazing! Your voice matters!", {

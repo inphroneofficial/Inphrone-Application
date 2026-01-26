@@ -438,15 +438,12 @@ const CategoryDetail = () => {
           .eq("user_id", user.id)
           .single();
         
-        // Remove upvote/like
+        // Remove upvote/like - trigger automatically decrements count
         await supabase
           .from("opinion_upvotes")
           .delete()
           .eq("opinion_id", opinionId)
           .eq("user_id", user.id);
-
-        // Decrement count for ALL likes (both audience and non-audience)
-        await supabase.rpc("decrement_opinion_upvotes", { opinion_id: opinionId });
 
         // Update in both lists
         setOpinions(opinions.map(o => 
@@ -458,7 +455,7 @@ const CategoryDetail = () => {
 
         toast.success("Like removed");
       } else {
-        // Add upvote/like - get user type for breakdown
+        // Add upvote/like - trigger automatically increments count
         const { data: profile } = await supabase
           .from("profiles")
           .select("user_type")
@@ -475,9 +472,6 @@ const CategoryDetail = () => {
             user_type: profile?.user_type || null,
             is_upvote: isAudience // Track type internally but ALL likes count the same
           });
-
-        // Increment count for ALL likes (both audience and non-audience)
-        await supabase.rpc("increment_opinion_upvotes", { opinion_id: opinionId });
 
         // Update in both lists
         setOpinions(opinions.map(o => 

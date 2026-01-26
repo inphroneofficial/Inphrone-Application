@@ -168,6 +168,156 @@
     --inphrosync-bg-end: 210 18% 10%;
     --inphrosync-glass: 0 0% 100% / 0.05;
   }
+
+  /* Inphrone Theme - Pure Black & White with enhanced visibility */
+  .inphrone-theme {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+
+    --card: 0 0% 6%;
+    --card-foreground: 0 0% 100%;
+
+    --popover: 0 0% 6%;
+    --popover-foreground: 0 0% 100%;
+
+    --primary: 0 0% 85%;
+    --primary-foreground: 0 0% 0%;
+    --primary-light: 0 0% 75%;
+    --primary-glow: 0 0% 100%;
+
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 75%;
+
+    --accent: 0 0% 75%;
+    --accent-foreground: 0 0% 0%;
+    --accent-glow: 0 0% 90%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 152 76% 46%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 55%;
+    --warning-foreground: 0 0% 0%;
+
+    --border: 0 0% 25%;
+    --input: 0 0% 18%;
+    --ring: 0 0% 100%;
+
+    --gradient-primary: linear-gradient(135deg, hsl(0 0% 70%) 0%, hsl(0 0% 50%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(0 0% 65%) 0%, hsl(0 0% 45%) 100%);
+    --gradient-hero: linear-gradient(180deg, hsl(0 0% 0%) 0%, hsl(0 0% 5%) 50%, hsl(0 0% 0%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 10% / 0.95) 0%, hsl(0 0% 5% / 0.9) 100%);
+    --gradient-glass: linear-gradient(135deg, hsl(0 0% 100% / 0.08) 0%, hsl(0 0% 100% / 0.03) 100%);
+    --gradient-mesh: none;
+
+    --shadow-xs: 0 1px 2px hsl(0 0% 0% / 0.4);
+    --shadow-sm: 0 2px 8px hsl(0 0% 0% / 0.5);
+    --shadow-md: 0 4px 16px hsl(0 0% 0% / 0.6);
+    --shadow-lg: 0 8px 32px hsl(0 0% 0% / 0.7);
+    --shadow-xl: 0 16px 48px hsl(0 0% 0% / 0.8);
+    --shadow-glow: 0 0 30px hsl(0 0% 100% / 0.15);
+    --shadow-glow-accent: 0 0 30px hsl(0 0% 100% / 0.2);
+
+    --glass-bg: hsl(0 0% 8% / 0.9);
+    --glass-border: hsl(0 0% 100% / 0.18);
+    --glass-blur: 20px;
+
+    --inphrosync-teal: 0 0% 100%;
+    --inphrosync-violet: 0 0% 90%;
+    --inphrosync-bg-start: 0 0% 0%;
+    --inphrosync-bg-end: 0 0% 5%;
+    --inphrosync-glass: 0 0% 100% / 0.08;
+
+    --dna-film: 0 0% 100%;
+    --dna-music: 0 0% 90%;
+    --dna-tv: 0 0% 85%;
+    --dna-gaming: 0 0% 95%;
+    --dna-youtube: 0 0% 100%;
+    --dna-social: 0 0% 90%;
+  }
+  
+  /* Inphrone Theme visibility overrides */
+  .inphrone-theme .gradient-primary,
+  .inphrone-theme .gradient-accent {
+    background: linear-gradient(135deg, hsl(0 0% 35%) 0%, hsl(0 0% 55%) 100%) !important;
+  }
+  
+  /* Fix Total Users card visibility */
+  .inphrone-theme .from-primary.via-accent.to-primary {
+    --tw-gradient-from: hsl(0 0% 25%) !important;
+    --tw-gradient-via: hsl(0 0% 35%) !important;
+    --tw-gradient-to: hsl(0 0% 25%) !important;
+  }
+  
+  /* Avatar fallbacks */
+  .inphrone-theme [data-slot="avatar-fallback"] {
+    background: linear-gradient(135deg, hsl(0 0% 30%) 0%, hsl(0 0% 45%) 100%) !important;
+    color: hsl(0 0% 100%) !important;
+  }
+  
+  /* Badge visibility for user type tags */
+  .inphrone-theme [class*="bg-primary"][class*="text-primary-foreground"] {
+    background: hsl(0 0% 85%) !important;
+    color: hsl(0 0% 0%) !important;
+  }
+  
+  .inphrone-theme [class*="bg-accent"][class*="text-accent-foreground"] {
+    background: hsl(0 0% 70%) !important;
+    color: hsl(0 0% 0%) !important;
+  }
+  
+  .inphrone-theme [class*="bg-success"] {
+    background: hsl(152 76% 40%) !important;
+  }
+  
+  .inphrone-theme [class*="bg-blue-600"] {
+    background: hsl(220 70% 50%) !important;
+  }
+  
+  .inphrone-theme [class*="bg-destructive"] {
+    background: hsl(0 72% 45%) !important;
+  }
+  
+  /* ChatBot visibility in inphrone theme */
+  .inphrone-theme .bg-card\/80,
+  .inphrone-theme [class*="bg-card"] {
+    background-color: hsl(0 0% 8%) !important;
+    color: hsl(0 0% 100%) !important;
+  }
+  
+  .inphrone-theme .bg-gradient-to-br.from-card\/90,
+  .inphrone-theme [class*="from-card"] {
+    --tw-gradient-from: hsl(0 0% 10%) !important;
+  }
+  
+  .inphrone-theme .bg-muted\/50,
+  .inphrone-theme [class*="bg-muted"] {
+    background-color: hsl(0 0% 15%) !important;
+  }
+  
+  /* Ensure text visibility in chatbot */
+  .inphrone-theme .text-muted-foreground {
+    color: hsl(0 0% 70%) !important;
+  }
+  
+  .inphrone-theme .text-foreground,
+  .inphrone-theme [class*="text-foreground"] {
+    color: hsl(0 0% 100%) !important;
+  }
+  
+  /* Suggested question buttons in chatbot */
+  .inphrone-theme button[class*="from-card"] {
+    background: linear-gradient(135deg, hsl(0 0% 12%) 0%, hsl(0 0% 8%) 100%) !important;
+    border-color: hsl(0 0% 25%) !important;
+  }
+  
+  .inphrone-theme button[class*="from-card"]:hover {
+    background: linear-gradient(135deg, hsl(0 0% 18%) 0%, hsl(0 0% 12%) 100%) !important;
+    border-color: hsl(0 0% 40%) !important;
+  }
 }
 
 @layer base {
@@ -1019,4 +1169,250 @@
   max-width: 320px;
   padding: 0;
   overflow: hidden;
+}
+
+/* ============================================
+   PREMIUM INTERACTION ANIMATIONS
+   ============================================ */
+
+/* Premium Card Hover Effects */
+.premium-card-hover {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.premium-card-hover:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 
+    0 20px 40px -15px hsl(var(--primary) / 0.25),
+    0 0 0 1px hsl(var(--primary) / 0.1);
+}
+
+/* Interactive Button Glow */
+.premium-button-glow {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.premium-button-glow::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(45deg, 
+    hsl(var(--primary)), 
+    hsl(var(--accent)), 
+    hsl(var(--primary))
+  );
+  background-size: 200% 200%;
+  z-index: -1;
+  opacity: 0;
+  border-radius: inherit;
+  transition: opacity 0.3s ease;
+  animation: gradient-shift 3s ease infinite;
+}
+
+.premium-button-glow:hover::before {
+  opacity: 0.7;
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Magnetic Hover Effect */
+.magnetic-hover {
+  transition: transform 0.2s ease-out;
+}
+
+/* Scroll Reveal Animation */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Premium Shine Effect on Cards */
+.premium-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.premium-shine::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 40%,
+    hsl(var(--primary) / 0.08) 50%,
+    transparent 60%
+  );
+  transform: translateX(-100%) rotate(25deg);
+  transition: transform 0.6s ease;
+}
+
+.premium-shine:hover::after {
+  transform: translateX(100%) rotate(25deg);
+}
+
+/* Float Animation */
+.premium-float {
+  animation: premium-float 4s ease-in-out infinite;
+}
+
+@keyframes premium-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Pulse Glow for Active Elements */
+.pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { 
+    box-shadow: 0 0 5px hsl(var(--primary) / 0.3);
+  }
+  50% { 
+    box-shadow: 
+      0 0 20px hsl(var(--primary) / 0.5),
+      0 0 40px hsl(var(--primary) / 0.3);
+  }
+}
+
+/* Interactive Scale on Press */
+.press-scale {
+  transition: transform 0.15s ease;
+}
+
+.press-scale:active {
+  transform: scale(0.96);
+}
+
+/* Subtle Bounce on Hover */
+.hover-bounce {
+  transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.hover-bounce:hover {
+  transform: scale(1.05);
+}
+
+/* Text Shimmer Effect */
+.text-shimmer {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--foreground)) 0%,
+    hsl(var(--primary)) 50%,
+    hsl(var(--foreground)) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: text-shimmer 3s linear infinite;
+}
+
+@keyframes text-shimmer {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Icon Spin on Hover */
+.icon-spin-hover:hover svg {
+  animation: icon-spin 0.5s ease-in-out;
+}
+
+@keyframes icon-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Staggered Fade In for Lists */
+.stagger-fade > * {
+  opacity: 0;
+  animation: stagger-fade-in 0.4s ease forwards;
+}
+
+.stagger-fade > *:nth-child(1) { animation-delay: 0.1s; }
+.stagger-fade > *:nth-child(2) { animation-delay: 0.2s; }
+.stagger-fade > *:nth-child(3) { animation-delay: 0.3s; }
+.stagger-fade > *:nth-child(4) { animation-delay: 0.4s; }
+.stagger-fade > *:nth-child(5) { animation-delay: 0.5s; }
+.stagger-fade > *:nth-child(6) { animation-delay: 0.6s; }
+.stagger-fade > *:nth-child(7) { animation-delay: 0.7s; }
+.stagger-fade > *:nth-child(8) { animation-delay: 0.8s; }
+
+@keyframes stagger-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Premium Border Glow Animation */
+.border-glow {
+  position: relative;
+}
+
+.border-glow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(
+    var(--border-glow-angle, 0deg),
+    hsl(var(--primary)),
+    hsl(var(--accent)),
+    hsl(var(--primary))
+  );
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: border-glow-rotate 4s linear infinite;
+}
+
+@keyframes border-glow-rotate {
+  from { --border-glow-angle: 0deg; }
+  to { --border-glow-angle: 360deg; }
+}
+
+@property --border-glow-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* Cursor Trail Effect Class */
+.cursor-trail-enabled {
+  cursor: none;
+}
+
+/* Focus Ring Premium */
+.premium-focus:focus-visible {
+  outline: none;
+  box-shadow: 
+    0 0 0 2px hsl(var(--background)),
+    0 0 0 4px hsl(var(--primary)),
+    0 0 20px hsl(var(--primary) / 0.3);
 }

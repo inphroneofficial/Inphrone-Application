@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/web-manifest-combined.json",
   "name": "Inphrone - People-Powered Entertainment Intelligence",
   "short_name": "Inphrone",
-  "description": "World's first people-powered entertainment intelligence platform. Share opinions on Film, Music, OTT, TV, YouTube, Gaming, Social Media & App Development. Founded by Thangella Gadidamalla.",
+  "description": "World's first people-powered entertainment intelligence platform. Share opinions on Film, Music, OTT, TV, YouTube, Gaming, Social Media & App Development. Features InphroSync daily pulse, Your Turn competitions, Hype It demand signals. Founded by Thangella Gadidamalla.",
   "start_url": "/",
   "scope": "/",
   "id": "/",
@@ -13,7 +13,7 @@
   "orientation": "portrait-primary",
   "lang": "en",
   "dir": "ltr",
-  "categories": ["entertainment", "social", "productivity", "lifestyle"],
+  "categories": ["entertainment", "social", "productivity", "lifestyle", "news"],
   "iarc_rating_id": "",
   "prefer_related_applications": false,
   "icons": [
@@ -92,21 +92,35 @@
     {
       "name": "Dashboard",
       "short_name": "Dashboard",
-      "description": "View your activity dashboard",
+      "description": "View your activity dashboard and stats",
       "url": "/dashboard",
       "icons": [{ "src": "/inphrone-logo.jpg", "sizes": "192x192" }]
     },
     {
       "name": "InphroSync",
       "short_name": "Sync",
-      "description": "Daily entertainment pulse",
+      "description": "Daily entertainment pulse - answer 3 questions daily",
       "url": "/inphrosync",
+      "icons": [{ "src": "/inphrone-logo.jpg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Your Turn",
+      "short_name": "YourTurn",
+      "description": "Ask questions and let community vote",
+      "url": "/yourturn",
+      "icons": [{ "src": "/inphrone-logo.jpg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Hype It",
+      "short_name": "Hype",
+      "description": "Signal what you want studios to create",
+      "url": "/hype-it",
       "icons": [{ "src": "/inphrone-logo.jpg", "sizes": "192x192" }]
     },
     {
       "name": "Insights",
       "short_name": "Insights",
-      "description": "View entertainment insights",
+      "description": "View entertainment insights and trends",
       "url": "/insights",
       "icons": [{ "src": "/inphrone-logo.jpg", "sizes": "192x192" }]
     }
@@ -115,5 +129,14 @@
   "handle_links": "preferred",
   "launch_handler": {
     "client_mode": "navigate-existing"
-  }
+  },
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+inphrone",
+      "url": "/?action=%s"
+    }
+  ]
 }

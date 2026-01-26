@@ -9,7 +9,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Search, Trash2, Eye, UserCog, Mail, MapPin, Calendar, Building2, Briefcase, Globe, Users, Heart, Gift, Clock } from "lucide-react";
+import { Search, Trash2, Eye, UserCog, Mail, MapPin, Calendar, Building2, Briefcase, Globe, Users, Heart, Gift, Clock, Activity, Zap } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
@@ -38,6 +38,8 @@ interface UserStats {
   total_time_spent: number;
   streaks: any;
   badges: any[];
+  inphrosync_count: number;
+  yourturn_count: number;
 }
 
 interface SpecificProfile {
@@ -101,15 +103,17 @@ export function UserManagement() {
   const fetchUserStats = async (userId: string, userType: string) => {
     setStatsLoading(true);
     try {
-      // Fetch basic stats
-      const [opinionsRes, couponsRes, upvotesGivenRes, activityRes, timeRes, streaksRes, badgesRes] = await Promise.all([
+      // Fetch basic stats including InphroSync and YourTurn participation
+      const [opinionsRes, couponsRes, upvotesGivenRes, activityRes, timeRes, streaksRes, badgesRes, inphrosyncRes, yourturnRes] = await Promise.all([
         supabase.from("opinions").select("id", { count: "exact", head: true }).eq("user_id", userId),
         supabase.from("coupons").select("id", { count: "exact", head: true }).eq("user_id", userId),
         supabase.from("opinion_upvotes").select("id", { count: "exact", head: true }).eq("user_id", userId),
-        supabase.from("user_activity_logs").select("created_at").eq("user_id", userId).order("created_at", { ascending: false }).limit(1).single(),
+        supabase.from("user_activity_logs").select("created_at").eq("user_id", userId).order("created_at", { ascending: false }).limit(1).maybeSingle(),
         supabase.from("user_activity_logs").select("duration_seconds").eq("user_id", userId),
-        supabase.from("user_streaks").select("*").eq("user_id", userId).single(),
-        supabase.from("user_badges").select("*").eq("user_id", userId)
+        supabase.from("user_streaks").select("*").eq("user_id", userId).maybeSingle(),
+        supabase.from("user_badges").select("*").eq("user_id", userId),
+        supabase.from("inphrosync_responses").select("id", { count: "exact", head: true }).eq("user_id", userId),
+        supabase.from("your_turn_votes").select("id", { count: "exact", head: true }).eq("user_id", userId)
       ]);
 
       // Calculate upvotes received on user's opinions
@@ -133,42 +137,44 @@ export function UserManagement() {
         last_activity: activityRes.data?.created_at || null,
         total_time_spent: totalTimeSpent,
         streaks: streaksRes.data || null,
-        badges: badgesRes.data || []
+        badges: badgesRes.data || [],
+        inphrosync_count: inphrosyncRes.count || 0,
+        yourturn_count: yourturnRes.count || 0
       });
 
       // Fetch specific profile based on user type
       let specificData = null;
       switch (userType) {
         case 'audience':
-          const { data: audienceData } = await supabase.from("audience_profiles").select("*").eq("user_id", userId).single();
+          const { data: audienceData } = await supabase.from("audience_profiles").select("*").eq("user_id", userId).maybeSingle();
           specificData = audienceData;
           break;
         case 'creator':
-          const { data: creatorData } = await supabase.from("creator_profiles").select("*").eq("user_id", userId).single();
+          const { data: creatorData } = await supabase.from("creator_profiles").select("*").eq("user_id", userId).maybeSingle();
           specificData = creatorData;
           break;
         case 'studio':
-          const { data: studioData } = await supabase.from("studio_profiles").select("*").eq("user_id", userId).single();
+          const { data: studioData } = await supabase.from("studio_profiles").select("*").eq("user_id", userId).maybeSingle();
           specificData = studioData;
           break;
         case 'ott':
-          const { data: ottData } = await supabase.from("ott_profiles").select("*").eq("user_id", userId).single();
+          const { data: ottData } = await supabase.from("ott_profiles").select("*").eq("user_id", userId).maybeSingle();
           specificData = ottData;
           break;
         case 'tv':
-          const { data: tvData } = await supabase.from("tv_profiles").select("*").eq("user_id", userId).single();
+          const { data: tvData } = await supabase.from("tv_profiles").select("*").eq("user_id", userId).maybeSingle();
           specificData = tvData;
           break;
         case 'gaming':
-          const { data: gamingData } = await supabase.from("gaming_profiles").select("*").eq("user_id", userId).single();
+          const { data: gamingData } = await supabase.from("gaming_profiles").select("*").eq("user_id", userId).maybeSingle();
           specificData = gamingData;
           break;
         case 'music':
-          const { data: musicData } = await supabase.from("music_profiles").select("*").eq("user_id", userId).single();
+          const { data: musicData } = await supabase.from("music_profiles").select("*").eq("user_id", userId).maybeSingle();
           specificData = musicData;
           break;
         case 'developer':
-          const { data: developerData } = await supabase.from("developer_profiles").select("*").eq("user_id", userId).single();
+          const { data: developerData } = await supabase.from("developer_profiles").select("*").eq("user_id", userId).maybeSingle();
           specificData = developerData;
           break;
       }
@@ -236,7 +242,14 @@ export function UserManagement() {
   };
 
   const renderSpecificProfileDetails = (userType: string, profile: SpecificProfile | null) => {
-    if (!profile) return <div className="text-sm text-muted-foreground">No specific profile data available.</div>;
+    if (!profile) {
+      return (
+        <div className="text-center py-4 space-y-2">
+          <p className="text-sm text-muted-foreground">No specific profile data available in the database.</p>
+          <p className="text-xs text-muted-foreground">This user may not have completed their profile setup during onboarding.</p>
+        </div>
+      );
+    }
 
     switch (userType) {
       case 'audience':
@@ -671,13 +684,27 @@ export function UserManagement() {
                                     <div className="text-center py-4">Loading activity stats...</div>
                                   ) : userStats && (
                                     <>
-                                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                         <div className="p-4 bg-muted/30 rounded-lg">
                                           <div className="flex items-center gap-2 mb-2">
                                             <Briefcase className="w-4 h-4 text-primary" />
                                             <p className="text-sm font-medium">Opinions</p>
                                           </div>
                                           <p className="text-2xl font-bold">{userStats.opinions_count}</p>
+                                        </div>
+                                        <div className="p-4 bg-muted/30 rounded-lg">
+                                          <div className="flex items-center gap-2 mb-2">
+                                            <Activity className="w-4 h-4 text-primary" />
+                                            <p className="text-sm font-medium">InphroSync</p>
+                                          </div>
+                                          <p className="text-2xl font-bold">{userStats.inphrosync_count}</p>
+                                        </div>
+                                        <div className="p-4 bg-muted/30 rounded-lg">
+                                          <div className="flex items-center gap-2 mb-2">
+                                            <Users className="w-4 h-4 text-primary" />
+                                            <p className="text-sm font-medium">YourTurn</p>
+                                          </div>
+                                          <p className="text-2xl font-bold">{userStats.yourturn_count}</p>
                                         </div>
                                         <div className="p-4 bg-muted/30 rounded-lg">
                                           <div className="flex items-center gap-2 mb-2">
@@ -688,7 +715,7 @@ export function UserManagement() {
                                         </div>
                                         <div className="p-4 bg-muted/30 rounded-lg">
                                           <div className="flex items-center gap-2 mb-2">
-                                            <Heart className="w-4 h-4 text-primary" />
+                                            <Heart className="w-4 h-4 text-accent" />
                                             <p className="text-sm font-medium">Likes Received</p>
                                           </div>
                                           <p className="text-2xl font-bold">{userStats.upvotes_received}</p>

@@ -86,7 +86,8 @@ export const WeeklyRecap = ({ userId, onClose }: WeeklyRecapProps) => {
       // Find top category
       const categoryCount: Record<string, number> = {};
       opinions?.forEach(op => {
-        const catName = (op.categories as any)?.name || "Unknown";
+        const categories = op.categories as { name?: string } | null;
+        const catName = categories?.name || "Unknown";
         categoryCount[catName] = (categoryCount[catName] || 0) + 1;
       });
       const topCategory = Object.entries(categoryCount)

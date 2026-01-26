@@ -4,34 +4,30 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ScrollToTop } from "@/components/ScrollToTop";
-import { LiveDataHero } from "@/components/landing/LiveDataHero";
 import { RealTestimonials } from "@/components/landing/RealTestimonials";
+import { UltimateLiveDashboard } from "@/components/landing/UltimateLiveDashboard";
+import { HypeItHomeSection } from "@/components/hype/HypeItHomeSection";
 import { 
   TrendingUp, 
-  Users, 
   Film, 
   Music, 
   Tv, 
   Gamepad2, 
   Youtube,
   Lightbulb,
-  Globe,
   Award,
   Sparkles,
-  ArrowRight,
-  Zap,
   Shield,
-  BarChart3,
   Heart,
   Eye,
   Lock,
   ChevronRight,
-  Play,
-  Star,
   MessageCircle,
   Target,
+  Radio,
+  Users,
   Layers,
-  Radio
+  BarChart3,
 } from "lucide-react";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
@@ -173,10 +169,12 @@ const Landing = () => {
       <div className="relative z-10 pt-16">
         <Navbar />
         
-        {/* Hero Section - Premium Data Dashboard */}
-        <LiveDataHero />
+        {/* Single Ultimate Live Analytics Dashboard */}
+        <UltimateLiveDashboard />
 
-        {/* How It Works - Premium Steps */}
+        {/* Hype It Section - At Top with Gating */}
+        <HypeItHomeSection />
+
         <section className="py-28 md:py-36 relative">
           <div className="container mx-auto px-4">
             <motion.div 
@@ -247,6 +245,8 @@ const Landing = () => {
 
         {/* Real Testimonials Section */}
         <RealTestimonials />
+
+        {/* TrendingSignals moved to HypeItHomeSection at top */}
 
         {/* Vision Section - Premium Design */}
         <section className="py-24 md:py-32 relative">

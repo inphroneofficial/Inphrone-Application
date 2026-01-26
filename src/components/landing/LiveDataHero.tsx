@@ -36,6 +36,17 @@ interface PlatformStats {
   totalUpvotes: number;
   totalViews: number;
   countriesCount: number;
+  // Enhanced analytics
+  activeToday: number;
+  inphrosyncResponses: number;
+  yourturnVotes: number;
+  engagementScore: number;
+  userGrowth: number;
+  thisWeekUsers: number;
+  thisWeekOpinions: number;
+  avgOpinionsPerUser: number;
+  avgUpvotesPerOpinion: number;
+  userTypeCounts: Record<string, number>;
 }
 
 interface CategoryData {
@@ -48,7 +59,7 @@ interface DailyData {
   count: number;
 }
 
-// Animated counter hook
+
 const useAnimatedCounter = (end: number, duration: number = 2000, delay: number = 0) => {
   const [count, setCount] = useState(0);
   
@@ -79,6 +90,77 @@ const LivePulse = () => (
     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
     <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
   </span>
+);
+
+// Data flow particle animation for premium sci-fi effect
+const DataFlowParticle = ({ delay, duration }: { delay: number; duration: number }) => (
+  <motion.div
+    className="absolute w-1 h-1 rounded-full bg-primary"
+    initial={{ left: "0%", opacity: 0 }}
+    animate={{ 
+      left: ["0%", "100%"],
+      opacity: [0, 1, 1, 0]
+    }}
+    transition={{
+      duration,
+      delay,
+      repeat: Infinity,
+      repeatDelay: 1,
+      ease: "linear"
+    }}
+    style={{ top: `${Math.random() * 100}%` }}
+  />
+);
+
+// Premium data network visualization
+const DataNetworkViz = () => (
+  <div className="relative h-16 w-full overflow-hidden rounded-lg bg-muted/20 border border-border/30">
+    <div className="absolute inset-0 flex items-center justify-between px-4">
+      {/* Left node */}
+      <div className="flex flex-col items-center gap-1">
+        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center">
+          <Users className="w-4 h-4 text-white" />
+        </div>
+        <span className="text-[8px] text-muted-foreground">USERS</span>
+      </div>
+      
+      {/* Data flow lines */}
+      <div className="flex-1 h-px mx-4 relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/50 via-accent/50 to-primary/50" />
+        {[0, 1, 2, 3].map((i) => (
+          <DataFlowParticle key={i} delay={i * 0.5} duration={2} />
+        ))}
+      </div>
+      
+      {/* Center node */}
+      <div className="flex flex-col items-center gap-1">
+        <motion.div 
+          className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg"
+          animate={{ scale: [1, 1.05, 1] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          <Activity className="w-5 h-5 text-white" />
+        </motion.div>
+        <span className="text-[8px] text-muted-foreground">PROCESSING</span>
+      </div>
+      
+      {/* Data flow lines */}
+      <div className="flex-1 h-px mx-4 relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/50 via-accent/50 to-primary/50" />
+        {[0, 1, 2, 3].map((i) => (
+          <DataFlowParticle key={i} delay={i * 0.5 + 1} duration={2} />
+        ))}
+      </div>
+      
+      {/* Right node */}
+      <div className="flex flex-col items-center gap-1">
+        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center">
+          <BarChart3 className="w-4 h-4 text-white" />
+        </div>
+        <span className="text-[8px] text-muted-foreground">INSIGHTS</span>
+      </div>
+    </div>
+  </div>
 );
 
 // Advanced data card with real data - shows exact numbers on all devices
@@ -545,6 +627,16 @@ export const LiveDataHero = () => {
     totalUpvotes: 0,
     totalViews: 0,
     countriesCount: 0,
+    activeToday: 0,
+    inphrosyncResponses: 0,
+    yourturnVotes: 0,
+    engagementScore: 0,
+    userGrowth: 0,
+    thisWeekUsers: 0,
+    thisWeekOpinions: 0,
+    avgOpinionsPerUser: 0,
+    avgUpvotesPerOpinion: 0,
+    userTypeCounts: {},
   });
   const [categoryData, setCategoryData] = useState<CategoryData[]>([]);
   const [weeklyData, setWeeklyData] = useState<DailyData[]>([]);
@@ -581,15 +673,13 @@ export const LiveDataHero = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch main stats
+        // Fetch main stats from edge function (includes all analytics)
         const [
-          { count: opinionsCount },
           { count: categoriesCount },
           opinionsWithUpvotes,
           { count: viewsCount },
           countsRes,
         ] = await Promise.all([
-          supabase.from('opinions').select('*', { count: 'exact', head: true }),
           supabase.from('categories').select('*', { count: 'exact', head: true }),
           supabase.from('opinions').select('upvotes'),
           supabase.from('opinion_views').select('*', { count: 'exact', head: true }),
@@ -598,18 +688,37 @@ export const LiveDataHero = () => {
 
         if (countsRes.error) throw countsRes.error;
 
-        const totalUsers = countsRes.data?.totalUsers ?? 0;
-        const countriesCount = countsRes.data?.countriesCount ?? 0;
+        const data = countsRes.data || {};
+        
+        // Parse numeric values safely
+        const parseNum = (val: any): number => {
+          if (typeof val === 'number') return val;
+          if (typeof val === 'string') {
+            const parsed = parseInt(val.replace(/[^0-9]/g, ''), 10);
+            return isNaN(parsed) ? 0 : parsed;
+          }
+          return 0;
+        };
 
-        const totalUpvotes = opinionsWithUpvotes.data?.reduce((sum, o) => sum + (o.upvotes || 0), 0) || 0;
+        const localUpvotes = opinionsWithUpvotes.data?.reduce((sum, o) => sum + (o.upvotes || 0), 0) || 0;
 
         setStats({
-          totalUsers,
-          totalOpinions: opinionsCount || 0,
+          totalUsers: parseNum(data.totalUsers),
+          totalOpinions: parseNum(data.totalOpinions),
           totalCategories: categoriesCount || 8,
-          totalUpvotes,
+          totalUpvotes: parseNum(data.totalUpvotes) || localUpvotes,
           totalViews: viewsCount || 0,
-          countriesCount,
+          countriesCount: parseNum(data.countriesCount),
+          activeToday: parseNum(data.activeToday),
+          inphrosyncResponses: parseNum(data.inphrosyncResponses),
+          yourturnVotes: parseNum(data.yourturnVotes),
+          engagementScore: parseNum(data.engagementScore),
+          userGrowth: parseNum(data.userGrowth),
+          thisWeekUsers: parseNum(data.thisWeekUsers),
+          thisWeekOpinions: parseNum(data.thisWeekOpinions),
+          avgOpinionsPerUser: parseFloat(data.avgOpinionsPerUser) || 0,
+          avgUpvotesPerOpinion: parseFloat(data.avgUpvotesPerOpinion) || 0,
+          userTypeCounts: data.userTypeCounts || {},
         });
         
         // Fetch category breakdown
@@ -930,47 +1039,78 @@ export const LiveDataHero = () => {
                       value={stats.totalUsers}
                       icon={Users}
                       gradient="from-primary to-primary/70"
-                      trend={isAuthenticated ? "+12%" : undefined}
+                      trend={stats.userGrowth > 0 ? `+${stats.userGrowth}%` : undefined}
                       delay={300}
-                      subtext={isAuthenticated ? "Active community members" : undefined}
+                      subtext={isAuthenticated ? `${stats.thisWeekUsers} joined this week` : undefined}
                     />
                     <AdvancedDataCard
                       title="Total Opinions"
                       value={stats.totalOpinions}
                       icon={MessageSquare}
                       gradient="from-violet-500 to-purple-600"
-                      trend={isAuthenticated ? "+8%" : undefined}
+                      trend={stats.thisWeekOpinions > 0 ? `+${stats.thisWeekOpinions}` : undefined}
                       delay={450}
-                      subtext={isAuthenticated ? "Authentic insights shared" : undefined}
+                      subtext={isAuthenticated ? `${stats.avgOpinionsPerUser} avg/user` : undefined}
                     />
                   </div>
                   
-                  {/* Second stats row - blur for unauthenticated */}
+                  {/* Enhanced stats row */}
                   <div className="grid grid-cols-3 gap-3">
                     <AdvancedDataCard
-                      title="Categories"
-                      value={stats.totalCategories}
-                      icon={Layers}
-                      gradient="from-blue-500 to-cyan-500"
-                      delay={600}
+                      title="Engagement"
+                      value={stats.engagementScore}
+                      icon={Target}
+                      gradient="from-primary to-accent"
+                      delay={500}
+                      subtext="Score"
                     />
                     <AdvancedDataCard
                       title="Upvotes"
                       value={stats.totalUpvotes}
                       icon={ThumbsUp}
                       gradient="from-amber-500 to-orange-500"
-                      delay={750}
+                      delay={600}
+                      subtext={isAuthenticated ? `${stats.avgUpvotesPerOpinion} avg/opinion` : undefined}
                       isBlurred={shouldBlurDetails}
                     />
                     <AdvancedDataCard
-                      title="Views"
-                      value={stats.totalViews}
-                      icon={Eye}
+                      title="Countries"
+                      value={stats.countriesCount}
+                      icon={Globe}
                       gradient="from-emerald-500 to-teal-500"
-                      delay={900}
+                      delay={700}
                       isBlurred={shouldBlurDetails}
                     />
                   </div>
+
+                  {/* Activity metrics row (authenticated only) */}
+                  {isAuthenticated && (
+                    <div className="grid grid-cols-3 gap-3">
+                      <AdvancedDataCard
+                        title="Active Today"
+                        value={stats.activeToday}
+                        icon={Activity}
+                        gradient="from-green-500 to-emerald-500"
+                        delay={750}
+                      />
+                      <AdvancedDataCard
+                        title="InphroSync"
+                        value={stats.inphrosyncResponses}
+                        icon={Zap}
+                        gradient="from-cyan-500 to-blue-500"
+                        delay={800}
+                        subtext="Responses"
+                      />
+                      <AdvancedDataCard
+                        title="YourTurn"
+                        value={stats.yourturnVotes}
+                        icon={Play}
+                        gradient="from-pink-500 to-rose-500"
+                        delay={850}
+                        subtext="Votes"
+                      />
+                    </div>
+                  )}
                   
                   {/* Middle section - Charts & Categories */}
                   <div className="grid grid-cols-2 gap-4">
@@ -1039,6 +1179,21 @@ export const LiveDataHero = () => {
                       </p>
                     )}
                   </div>
+                  
+                  {/* Data Network Visualization - Premium Sci-Fi Element */}
+                  {isAuthenticated && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.9 }}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-bold text-foreground">Data Pipeline</span>
+                        <span className="text-[10px] font-mono text-emerald-500">ACTIVE</span>
+                      </div>
+                      <DataNetworkViz />
+                    </motion.div>
+                  )}
                 </div>
               </div>
             </motion.div>

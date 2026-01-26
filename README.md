@@ -1,51 +1,100 @@
-# Inphrone - People-Powered Entertainment Intelligence
+# Inphrone™ - People-Powered Entertainment Intelligence Platform
+
+<div align="center">
+  <img src="public/inphrone-logo.jpg" alt="Inphrone Logo" width="120" height="120" />
+  
+  **World's First People-Powered Entertainment Intelligence Platform**
+  
+  *Where Audience Emotion Meets Creative Vision*
+
+  [![Website](https://img.shields.io/badge/Website-inphrone.com-red)](https://inphrone.com)
+  [![LinkedIn](https://img.shields.io/badge/LinkedIn-Inphrone-blue)](https://www.linkedin.com/company/inphrone)
+  [![Twitter](https://img.shields.io/badge/Twitter-@inphrone-1DA1F2)](https://x.com/inphrone)
+  [![Instagram](https://img.shields.io/badge/Instagram-@inphrone-E4405F)](https://instagram.com/inphrone)
+</div>
+
+---
+
+## 👨‍💻 Founder
+
+**Thangella Gadidamalla** (G. Thangella)  
+*Product Thinker • System Designer • Founder*
+
+Building products at the intersection of human behavior, technology, and design — with a deep focus on clarity, purpose, and long-term impact.
+
+- 🔗 [LinkedIn](https://www.linkedin.com/in/gthangella/)
+- 🐦 [Twitter](https://twitter.com/g_thangella)
+- 📧 [thangella@inphrone.com](mailto:thangella@inphrone.com)
+
+---
 
 ## 📱 What is Inphrone?
 
-**Inphrone** is a revolutionary entertainment insights platform that bridges the gap between audiences and content creators across Film, Music, TV/OTT, Gaming, and Social Media. The name combines "IN" (Insights) + "PHRONE" (Phronesis - practical wisdom in Greek), representing wisdom guided by real human insight.
+**Inphrone** is a revolutionary entertainment insights platform that bridges the gap between audiences and content creators across Film, Music, TV/OTT, Gaming, YouTube, Social Media, and App Development.
 
-### Core Mission
-Democratize entertainment intelligence by giving audiences a voice while providing creators with authentic, actionable insights.
+The name combines:
+- **IN** = Insights
+- **PHRONE** = Phronesis (practical wisdom in Greek)
 
-## 🎯 Project Info
+Together, **Inphrone** represents human-driven intelligence guided by real-world behavior, not assumptions.
 
-**URL**: https://lovable.dev/projects/8e949255-418c-439e-adf7-07937b6dc022
+### 🎯 Core Mission
 
-## ✨ Key Features
+Democratize entertainment intelligence by giving audiences a voice while providing creators, studios, and platforms with authentic, actionable insights.
 
-### 1. **InphroSync - Daily Entertainment Pulse** 🌟
+---
+
+## ✨ Core Features
+
+### 1. 📊 InphroSync - Daily Entertainment Pulse
 Our flagship feature that drives daily engagement:
 - **3 Daily Questions** about yesterday's entertainment consumption
 - **Interactive Swipeable Cards** - Tinder-style interface for engaging interaction
 - **Real-time Community Insights** with live stats and demographic filters
 - **Streak Tracking** - Build daily habits and earn rewards
-- **Gamified Experience** - Confetti celebrations, progress indicators, and visual feedback
+- **Gamified Experience** - Confetti celebrations, progress indicators, visual feedback
 - **Demographic Filtering** - View results by age, gender, and location
-- **Mobile-First Design** - Premium UI optimized for all devices
 
-### 2. **Opinion Sharing & Insights**
-- Submit detailed opinions across 7 entertainment categories
+### 2. 🔥 Hype It - Demand Signaling System
+Tell studios what YOU want created:
+- **Submit 2-3 word signals** describing content you want to see
+- **Vote 🔥 Hype or ➡️ Pass** on community signals
+- **7-day lifecycle** for signals
+- **Signal Score** = Hype count - Pass count
+- **Real-time analytics** and trending signals
+- **Top signals inform real content decisions**
+
+### 3. 🎯 Your Turn - Slot Competitions
+Community-driven question battles:
+- **3 Daily Slots**: 9 AM, 2 PM, 7 PM IST
+- **Submit questions** and let the community vote
+- **Winners get featured** and earn recognition
+- **Real-time voting** with live results
+
+### 4. 💬 Opinion Sharing & Insights
+- Submit detailed opinions across **8 entertainment categories**
 - Rich opinion data: title, genre, budget estimates, target audience
 - Upvoting system for non-audience users
 - View tracking and analytics
 - Weekly opinion statistics
 
-### 3. **Location-Aware Reward System** 🎁
-- Coupons display in user's local currency (USD, INR, GBP, EUR, AUD, CAD)
+### 5. 🎁 Location-Aware Reward System
+- Coupons display in user's **local currency** (USD, INR, GBP, EUR, AUD, CAD)
 - Multiple categories: Entertainment, Electronics, Food, Fashion, Travel
 - Track active, used, and expired coupons
 - Share coupons with friends via email
 - Detailed merchant information and usage instructions
-- Real-time expiration tracking
 
-### 4. **Advanced Gamification** 🏆
+### 6. 🏆 Advanced Gamification
 - **Streak Tracker**: Weekly contribution streaks with tier progression
 - **Badge System**: Earn achievements across different activities
 - **Creative Soul Avatar**: Personalized avatar that evolves with contributions
 - **Cultural Energy Map**: Visualize trends by location
 - **Wisdom Badges**: Recognition for category expertise
+- **Weekly Leaderboard**: Compete with the community
 
-### 5. **Multi-User Type System**
+### 7. 👥 Multi-User Type System
+Eight distinct user types with tailored experiences:
 - **Audience**: Share opinions, earn rewards, view insights
 - **Creators**: Access analytics and demographic data
 - **Studios/Production**: Industry-level insights and trend analysis
@@ -53,14 +102,25 @@ Our flagship feature that drives daily engagement:
 - **Music Labels**: Genre preferences and artist insights
 - **Gaming Companies**: Gaming content feedback
 - **TV Networks**: Broadcasting insights
+- **App Developers**: App development feedback
 
-### 6. **Real-Time Analytics**
+### 8. 📈 Real-Time Analytics
 - Global insights overview with trend analysis
 - Category-specific dashboards
 - Demographic analytics (age, gender, location)
 - Weekly content type analytics
 - Opinion upvote breakdown by user type
 - Time-spent tracking
+
+### 9. 🤖 InphroneBot - AI Assistant
+Intelligent chatbot with:
+- Full platform knowledge
+- Feature explanations
+- Voice input/output support
+- Contextual suggestions
+- Real-time platform statistics
+
+---
 
 ## 🏗️ Technical Stack
 
@@ -86,6 +146,9 @@ Our flagship feature that drives daily engagement:
 - `react-hook-form` - Form management
 - `zod` - Schema validation
 - `date-fns` - Date utilities
+- `driver.js` - Guided tours
+
+---
 
 ## 🚀 Getting Started
 
@@ -121,6 +184,8 @@ VITE_SUPABASE_PUBLISHABLE_KEY=your_anon_key
 VITE_SUPABASE_PROJECT_ID=your_project_id
 ```
 
+---
+
 ## 📝 Development Workflow
 
 ### Using Lovable (Recommended)
@@ -135,26 +200,20 @@ VITE_SUPABASE_PROJECT_ID=your_project_id
 3. Push to trigger Lovable sync
 4. Test in the live preview
 
-### Using GitHub Directly
-1. Navigate to files in GitHub
-2. Click "Edit" button (pencil icon)
-3. Make changes and commit
-4. Lovable will sync automatically
-
-### Using GitHub Codespaces
-1. Click "Code" → "Codespaces" → "New codespace"
-2. Edit in browser-based VS Code
-3. Commit and push when done
+---
 
 ## 🎨 Design Philosophy
 
 Inphrone follows a **cinematic premium design** approach:
-- **Dark mode first** with light mode support
+- **Inphrone Theme**: Dark mode with deep purple/red accents
+- **Light/Dark mode** support with seamless switching
 - **Semantic color tokens** for consistent theming
 - **Micro-animations** for delightful interactions
 - **Glass morphism** and gradient effects
 - **Mobile-first responsive** design
 - **Accessibility** built-in (WCAG compliant)
+
+---
 
 ## 🚢 Deployment
 
@@ -165,19 +224,13 @@ Simply open [Lovable](https://lovable.dev/projects/8e949255-418c-439e-adf7-07937
 1. Navigate to Project > Settings > Domains
 2. Click "Connect Domain"
 3. Follow DNS configuration instructions
-4. [Learn more about custom domains](https://docs.lovable.dev/features/custom-domain#custom-domain)
 
-### Deployment Platforms
-- **Vercel** (recommended) - See `VERCEL_DEPLOYMENT_README.md`
-- **Netlify** - Works out of the box
-- **Cloudflare Pages** - Fast global CDN
+### Supported Platforms
+- **Vercel** (recommended)
+- **Netlify**
+- **Cloudflare Pages**
 
-## 📚 Documentation
-
-- `DEPLOYMENT_AND_OVERVIEW.md` - Comprehensive feature overview
-- `VERCEL_DEPLOYMENT_README.md` - Detailed Vercel deployment guide
-- `README_FUTURE_IMPROVEMENTS.md` - Planned enhancements
-- `BETA_LAUNCH_CHECKLIST.md` - Pre-launch checklist
+---
 
 ## 🔐 Security Features
 
@@ -186,15 +239,65 @@ Simply open [Lovable](https://lovable.dev/projects/8e949255-418c-439e-adf7-07937
 - **Secure authentication** with email verification
 - **7-day grace period** for account deletion
 - **Account restoration** capability
+- **Content moderation** system
+
+---
+
+## 📚 Documentation
+
+| File | Description |
+|------|-------------|
+| `docs/HONEST_APPLICATION_ANALYSIS.md` | Comprehensive technical & business analysis |
+| `docs/CURRENT_FEATURES.md` | Detailed feature documentation |
+| `docs/TECHNICAL_ROADMAP.md` | Future development plans |
+| `DEPLOYMENT_AND_OVERVIEW.md` | Comprehensive feature overview |
+| `VERCEL_DEPLOYMENT_README.md` | Detailed Vercel deployment guide |
+
+---
+
+## 🌐 SEO & Discoverability
+
+Inphrone is optimized for maximum discoverability:
+- **Structured Data**: Organization, WebSite, SoftwareApplication, FAQPage, Person schemas
+- **Social Cards**: Open Graph and Twitter Card meta tags
+- **AI Crawler Friendly**: Explicitly allows GPTBot, ClaudeBot, PerplexityBot
+- **PWA Ready**: Full manifest with shortcuts and offline support
+- **Sitemap**: Comprehensive XML sitemap
+- **robots.txt**: Production-grade crawler directives
+
+---
+
+## 📞 Contact & Social
+
+| Platform | Link |
+|----------|------|
+| 🌐 Website | [inphrone.com](https://inphrone.com) |
+| 📧 Email | [inphrone@gmail.com](mailto:inphrone@gmail.com) |
+| 🔗 LinkedIn | [linkedin.com/company/inphrone](https://www.linkedin.com/company/inphrone) |
+| 🐦 Twitter/X | [@inphrone](https://x.com/inphrone) |
+| 📸 Instagram | [@inphrone](https://instagram.com/inphrone) |
+| 📺 YouTube | [@inphrone](https://youtube.com/@inphrone) |
+| 💬 Telegram | [@inphroneofficial](https://t.me/inphroneofficial) |
+| 📰 Substack | [@inphrone](https://substack.com/@inphrone) |
+| 🚀 Product Hunt | [@inphrone](https://www.producthunt.com/@inphrone) |
+| ✍️ Medium | [@inphrone](https://medium.com/@inphrone) |
+| 🔴 Reddit | [u/officialinphrone](https://www.reddit.com/user/officialinphrone/) |
+| 👤 Facebook | [inphrone](https://www.facebook.com/inphrone/) |
+
+---
 
 ## 🎯 What Makes Inphrone Unique?
 
-1. **Daily Habit Formation**: InphroSync creates a daily ritual for users
-2. **Swipeable Interface**: Premium, engaging UI that users love
-3. **Real-time Insights**: See community trends as they happen
-4. **Location-Aware**: Currency and content localized to user's region
-5. **Gamification Done Right**: Rewards feel earned, not forced
-6. **Multi-Stakeholder Platform**: Serves both audiences and industry professionals
+1. **Privacy-First Platform**: Users interact anonymously without public profiles or followers
+2. **Daily Habit Formation**: InphroSync creates a daily ritual for users
+3. **Demand Signaling**: Hype It lets audiences directly influence content creation
+4. **Swipeable Interface**: Premium, engaging UI that users love
+5. **Real-time Insights**: See community trends as they happen
+6. **Location-Aware**: Currency and content localized to user's region
+7. **Gamification Done Right**: Rewards feel earned, not forced
+8. **Multi-Stakeholder Platform**: Serves both audiences and industry professionals
+
+---
 
 ## 🤝 Contributing
 
@@ -205,43 +308,38 @@ We welcome contributions! Please follow these steps:
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📞 Support
-
-- **Issues**: Use GitHub Issues for bug reports
-- **Discussions**: Use GitHub Discussions for questions
-- **Email**: Contact through the app's feedback form
-
-## 📈 Analytics & Monitoring
-
-- **User Analytics**: Track engagement and usage patterns
-- **Performance Monitoring**: Vercel Analytics integration
-- **Error Tracking**: Console logs and error boundaries
-- **Database Insights**: Lovable Cloud dashboard
-
-## 🔮 Future Roadmap
-
-See `README_FUTURE_IMPROVEMENTS.md` for detailed plans including:
-- Mobile app (React Native)
-- AI-powered recommendations
-- Advanced analytics dashboard
-- Multi-language support
-- Partnership integrations
+---
 
 ## 📄 License
 
-This project is private and proprietary. All rights reserved.
+This project is **private and proprietary**. All rights reserved.
 
-## 🌟 Technologies We Love
-
-This project is built with:
-- ⚛️ **React** - UI library
-- 📘 **TypeScript** - Type safety
-- ⚡ **Vite** - Build tool
-- 🎨 **Tailwind CSS** - Styling
-- 🎭 **Framer Motion** - Animations
-- 🗄️ **Supabase** - Backend
-- ☁️ **Lovable Cloud** - Deployment
+© 2026 Inphrone™. Trademark Registration Pending.
 
 ---
 
-**Built with ❤️ using [Lovable](https://lovable.dev)**
+## 🌟 Technologies
+
+<div align="center">
+
+| Technology | Purpose |
+|------------|---------|
+| ⚛️ React 18 | UI Library |
+| 📘 TypeScript | Type Safety |
+| ⚡ Vite | Build Tool |
+| 🎨 Tailwind CSS | Styling |
+| 🎭 Framer Motion | Animations |
+| 🗄️ Supabase | Backend |
+| ☁️ Lovable Cloud | Deployment |
+
+</div>
+
+---
+
+<div align="center">
+  
+**Built with ❤️ by [Thangella Gadidamalla](https://www.linkedin.com/in/gthangella/)**
+
+*Using [Lovable](https://lovable.dev)*
+
+</div>

@@ -263,6 +263,8 @@ export function useSpotlightTour() {
     }
     isNavigatingRef.current = false;
     markTourCompleted();
+    // Always redirect to home after skipping
+    window.location.href = '/';
   }, [markTourCompleted]);
 
   const runFullTourPhase = useCallback((phaseIndex: number) => {

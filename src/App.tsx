@@ -33,6 +33,7 @@ import Feedback from "./pages/Feedback";
 import Admin from "./pages/Admin";
 import InphroSync from "./pages/InphroSync";
 import YourTurn from "./pages/YourTurn";
+import HypeIt from "./pages/HypeIt";
 import { supabase } from "@/integrations/supabase/client";
 import { ChatBot } from "./components/ChatBot";
 import { CookieConsent } from "./components/CookieConsent";
@@ -46,6 +47,8 @@ import { SpotlightTourProvider } from "./components/onboarding/SpotlightTourProv
 import { PushNotificationPrompt } from "./components/notifications/PushNotificationPrompt";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { OfflineIndicator } from "./components/common/OfflineIndicator";
+import { EmailVerificationBanner } from "./components/common/EmailVerificationBanner";
+import { useIndustryViewNotifications, IndustryViewNotificationPopup } from "./components/notifications/IndustryViewNotification";
 
 const queryClient = new QueryClient();
 
@@ -88,6 +91,7 @@ function AnimatedRoutes() {
         <Route path="/admin" element={<PageTransition><Admin /></PageTransition>} />
         <Route path="/inphrosync" element={<PageTransition><InphroSync /></PageTransition>} />
         <Route path="/yourturn" element={<PageTransition><YourTurn /></PageTransition>} />
+        <Route path="/hype" element={<PageTransition><HypeIt /></PageTransition>} />
         <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
       </Routes>
     </AnimatePresence>
@@ -117,6 +121,9 @@ const App = () => {
   useWeeklyNotifications();
   useCouponReminders();
   useComprehensiveNotifications(currentUserId);
+  
+  // Industry view notifications for audience users
+  const { showNotification, currentNotification, dismissNotification } = useIndustryViewNotifications(currentUserId);
 
   // Mark as loaded after loading screen completes
   const handleLoadingComplete = () => {
@@ -162,11 +169,17 @@ const App = () => {
             <Sonner />
             <OfflineIndicator />
             <BrowserRouter>
+              <EmailVerificationBanner />
               <AnimatedRoutes />
               <SpotlightTourProvider />
               <ChatBot />
               <CookieConsent />
               <PushNotificationPrompt />
+              <IndustryViewNotificationPopup
+                notification={currentNotification}
+                isVisible={showNotification}
+                onDismiss={dismissNotification}
+              />
             </BrowserRouter>
           </TooltipProvider>
         </LanguageProvider>

@@ -59,6 +59,8 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
   const [userType, setUserType] = useState<"audience" | "creator" | "studio" | "ott" | "tv" | "gaming" | "music" | "developer">("audience");
+  const [userName, setUserName] = useState<string>("");
+  const [userAvatar, setUserAvatar] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState<CategoryWithStats[]>([]);
   const [stats, setStats] = useState({
@@ -115,7 +117,7 @@ const Dashboard = () => {
         // Check if onboarding is complete and get user type
         const { data: profile, error: profileError } = await supabase
           .from("profiles")
-          .select("onboarding_completed, user_type, settings")
+          .select("onboarding_completed, user_type, settings, full_name, profile_picture")
           .eq("id", session.user.id)
           .single();
 
@@ -137,6 +139,8 @@ const Dashboard = () => {
         // Tour is only shown via settings dialog for existing users, not auto-shown
 
         setUserType(profile.user_type as "audience" | "creator" | "studio" | "ott" | "tv" | "gaming" | "music" | "developer");
+        setUserName(profile.full_name || "");
+        setUserAvatar(profile.profile_picture || null);
       
       // Fetch categories
       let { data: categoriesData } = await supabase
@@ -463,9 +467,28 @@ const Dashboard = () => {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
+                {/* User Avatar */}
+                <div className="relative">
+                  <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-gradient-to-br from-primary to-accent p-0.5 shadow-lg">
+                    <div className="w-full h-full rounded-full bg-background flex items-center justify-center overflow-hidden">
+                      {userAvatar ? (
+                        <img 
+                          src={userAvatar} 
+                          alt={userName} 
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-lg md:text-xl font-bold text-primary">
+                          {userName ? userName.charAt(0).toUpperCase() : "U"}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-green-500 rounded-full border-2 border-background" />
+                </div>
                 <div className="relative">
                   <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-                    INPHRONE
+                    {userName || "Welcome"}
                   </h1>
                 </div>
                 <Badge className={`${
@@ -699,13 +722,15 @@ const Dashboard = () => {
             <TrendingTopics />
           </SectionTransition>
 
-          {/* Activity Feed & Leaderboard */}
-          <SectionTransition delay={0.25}>
-            <div className="grid md:grid-cols-2 gap-6">
-              <ActivityFeed userId={user?.id} limit={8} />
-              <UserLeaderboard currentUserId={user?.id} limit={10} />
-            </div>
-          </SectionTransition>
+          {/* Activity Feed & Leaderboard - Audience Only */}
+          {userType === "audience" && (
+            <SectionTransition delay={0.25}>
+              <div className="grid md:grid-cols-2 gap-6">
+                <ActivityFeed userId={user?.id} limit={8} />
+                <UserLeaderboard currentUserId={user?.id} limit={10} />
+              </div>
+            </SectionTransition>
+          )}
 
           {/* AI-Powered Insights */}
           <SectionTransition delay={0.3}>
@@ -714,10 +739,12 @@ const Dashboard = () => {
             )}
           </SectionTransition>
 
-          {/* User Activity Analysis Widget */}
-          <SectionTransition delay={0.35}>
-            <ProfileActivityAnalysis />
-          </SectionTransition>
+          {/* User Activity Analysis Widget - Audience Only */}
+          {userType === "audience" && (
+            <SectionTransition delay={0.35}>
+              <ProfileActivityAnalysis />
+            </SectionTransition>
+          )}
 
           {/* CTA Card */}
           <SectionTransition delay={0.3}>

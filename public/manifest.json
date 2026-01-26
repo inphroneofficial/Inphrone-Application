@@ -1,21 +1,68 @@
 {
-  "name": "Inphrone - Audience Intelligence Platform",
+  "name": "Inphrone - People-Powered Entertainment Intelligence",
   "short_name": "Inphrone",
-  "description": "World's first people-powered entertainment intelligence platform. Share opinions on Film, Music, OTT, TV, YouTube, Gaming, Social Media & App Development.",
+  "description": "World's first people-powered entertainment intelligence platform. Share opinions on Film, Music, OTT, TV, YouTube, Gaming, Social Media & App Development. Features InphroSync, Your Turn, Hype It signals. Founded by Thangella Gadidamalla.",
   "start_url": "/",
+  "id": "/",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "browser"],
   "background_color": "#1F0021",
   "theme_color": "#b91c1c",
   "orientation": "portrait-primary",
   "scope": "/",
   "lang": "en",
-  "categories": ["entertainment", "social", "productivity"],
+  "dir": "ltr",
+  "categories": ["entertainment", "social", "productivity", "lifestyle", "news"],
+  "iarc_rating_id": "",
+  "prefer_related_applications": false,
   "icons": [
+    {
+      "src": "/inphrone-logo.jpg",
+      "sizes": "48x48",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "/inphrone-logo.jpg",
+      "sizes": "72x72",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "/inphrone-logo.jpg",
+      "sizes": "96x96",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "/inphrone-logo.jpg",
+      "sizes": "128x128",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "/inphrone-logo.jpg",
+      "sizes": "144x144",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
     {
       "src": "/inphrone-logo.jpg",
       "sizes": "192x192",
       "type": "image/jpeg",
       "purpose": "any maskable"
+    },
+    {
+      "src": "/inphrone-logo.jpg",
+      "sizes": "256x256",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "/inphrone-logo.jpg",
+      "sizes": "384x384",
+      "type": "image/jpeg",
+      "purpose": "any"
     },
     {
       "src": "/inphrone-logo.jpg",
@@ -26,20 +73,69 @@
   ],
   "screenshots": [
     {
-      "src": "/screenshot-wide.png",
+      "src": "/screenshots/inphrone-dashboard-wide.png",
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "Inphrone Dashboard"
+      "label": "Inphrone Dashboard - Desktop View"
     },
     {
-      "src": "/screenshot-narrow.png",
+      "src": "/screenshots/inphrone-mobile.png",
       "sizes": "720x1280",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "Inphrone Mobile"
+      "label": "Inphrone Mobile Experience"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "View your activity dashboard and stats",
+      "url": "/dashboard",
+      "icons": [{ "src": "/inphrone-logo.jpg", "sizes": "192x192" }]
+    },
+    {
+      "name": "InphroSync",
+      "short_name": "Sync",
+      "description": "Daily entertainment pulse - answer 3 questions daily",
+      "url": "/inphrosync",
+      "icons": [{ "src": "/inphrone-logo.jpg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Your Turn",
+      "short_name": "YourTurn",
+      "description": "Ask questions and let community vote",
+      "url": "/yourturn",
+      "icons": [{ "src": "/inphrone-logo.jpg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Hype It",
+      "short_name": "Hype",
+      "description": "Signal what you want studios to create",
+      "url": "/hype-it",
+      "icons": [{ "src": "/inphrone-logo.jpg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Insights",
+      "short_name": "Insights",
+      "description": "View entertainment insights and trends",
+      "url": "/insights",
+      "icons": [{ "src": "/inphrone-logo.jpg", "sizes": "192x192" }]
     }
   ],
   "related_applications": [],
-  "prefer_related_applications": false
+  "handle_links": "preferred",
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+inphrone",
+      "url": "/?action=%s"
+    }
+  ]
 }

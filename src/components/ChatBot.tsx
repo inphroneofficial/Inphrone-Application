@@ -151,34 +151,50 @@ const MessageBubble = ({
   </motion.div>
 );
 
-// Animated suggested question button
-const SuggestedQuestion = ({ question, onClick, index }: { question: string; onClick: () => void; index: number }) => (
-  <motion.button
-    initial={{ opacity: 0, y: 10, scale: 0.9 }}
-    animate={{ opacity: 1, y: 0, scale: 1 }}
-    exit={{ opacity: 0, scale: 0.9 }}
-    transition={{ 
-      delay: index * 0.08,
-      type: "spring",
-      stiffness: 200,
-      damping: 20
-    }}
-    whileHover={{ 
-      scale: 1.03, 
-      boxShadow: "0 4px 20px rgba(var(--primary), 0.15)" 
-    }}
-    whileTap={{ scale: 0.97 }}
-    onClick={onClick}
-    className="group relative px-3 py-2 rounded-full text-xs font-medium bg-card/80 backdrop-blur-sm border border-border/50 hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 text-left"
-  >
-    <span className="relative z-10 flex items-center gap-1.5">
-      <Lightbulb className="w-3 h-3 text-primary/70 group-hover:text-primary transition-colors" />
-      <span className="text-muted-foreground group-hover:text-foreground transition-colors line-clamp-1">
-        {question}
+// Animated suggested question button with icons
+const SuggestedQuestion = ({ question, onClick, index }: { question: string; onClick: () => void; index: number }) => {
+  // Extract emoji if present at start
+  const hasEmoji = /^[\u{1F300}-\u{1F9FF}]/u.test(question);
+  const displayText = hasEmoji ? question.slice(2).trim() : question;
+  const emoji = hasEmoji ? question.slice(0, 2) : null;
+  
+  return (
+    <motion.button
+      initial={{ opacity: 0, y: 10, scale: 0.9 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.9 }}
+      transition={{ 
+        delay: index * 0.06,
+        type: "spring",
+        stiffness: 200,
+        damping: 20
+      }}
+      whileHover={{ 
+        scale: 1.03, 
+        boxShadow: "0 4px 20px rgba(var(--primary), 0.2)" 
+      }}
+      whileTap={{ scale: 0.97 }}
+      onClick={onClick}
+      className="group relative px-3 py-2.5 rounded-xl text-xs font-medium bg-gradient-to-br from-card/90 to-muted/50 backdrop-blur-sm border border-border/50 hover:border-primary/50 hover:from-primary/10 hover:to-accent/5 transition-all duration-300 text-left shadow-sm hover:shadow-md"
+    >
+      <span className="relative z-10 flex items-center gap-2">
+        {emoji ? (
+          <span className="text-sm">{emoji}</span>
+        ) : (
+          <Lightbulb className="w-3.5 h-3.5 text-primary/70 group-hover:text-primary transition-colors" />
+        )}
+        <span className="text-muted-foreground group-hover:text-foreground transition-colors line-clamp-1 font-medium">
+          {displayText}
+        </span>
       </span>
-    </span>
-  </motion.button>
-);
+      {/* Subtle gradient overlay on hover */}
+      <motion.div
+        className="absolute inset-0 rounded-xl bg-gradient-to-r from-primary/0 via-primary/5 to-accent/0 opacity-0 group-hover:opacity-100 transition-opacity"
+        initial={false}
+      />
+    </motion.button>
+  );
+};
 
 export function ChatBot() {
   const location = useLocation();
@@ -186,32 +202,59 @@ export function ChatBot() {
   const [isVisible, setIsVisible] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { role: "assistant", content: `🎬 Welcome to InphroneBot — Your AI-Powered Entertainment Intelligence Guide!
+    { role: "assistant", content: `🎬 **Welcome to InphroneBot** — Your AI Entertainment Intelligence Guide!
 
-I'm here to help you explore the world of Inphrone, the revolutionary Audience Intelligence Platform.
+I'm your personal assistant for exploring **Inphrone**, the People-Powered Entertainment Platform.
 
-✨ **What I Can Help With:**
-• Navigate platform features & categories
-• Understand user roles (Audience, Creator, Studio, OTT, TV, Gaming, Music, Developer)
-• Access real-time analytics & demographic insights
-• Learn about InphroSync daily pulse check
-• Master Your Turn slot competitions
-• Discover rewards & gamification system
+**✨ What I Can Help You With:**
+• Navigate all 7 entertainment categories
+• Understand the 8 user profile types
+• Master InphroSync daily pulse & streaks
+• Learn Your Turn slot competitions
+• **🔥 Hype It** - Signal what you want created
+• Explore rewards & gamification
+• Access real-time analytics & trends
 
-💡 **Quick Tips:**
-Ask me about trending opinions, category insights, or how to maximize your Inphrone experience!
+**🔥 NEW: Hype It Feature**
+Launch short 2-3 word signals to tell studios what YOU want! Vote 🔥 Hype or ➡️ Pass on signals. Top signals inform real content decisions!
+
+**💡 Pro Tip:** Ask me about "Hype It", "How do signals work?", or "What's trending?"
 
 What would you like to explore today?` }
   ]);
   
-  const suggestedQuestions = [
-    "How does the Your Turn slot work?",
-    "What is InphroSync?",
-    "Show me trending categories",
-    "How do rewards work?",
-    "What can creators access?",
-    "Explain demographic insights"
-  ];
+  // Dynamic suggested questions based on context - Hype It always prioritized
+  const getContextualQuestions = () => {
+    // Priority questions - always show Hype It related ones first
+    const priorityQuestions = [
+      "🔥 How does Hype It work?",
+      "🚀 How do I launch a signal?",
+      "🔥 What signals are trending?"
+    ];
+    
+    const otherQuestions = [
+      "🎯 How does Your Turn work?",
+      "📊 What's InphroSync?",
+      "🎁 How do rewards work?",
+      "✨ What can creators access?",
+      "📈 Explain demographic insights",
+      "🎬 Tell me about Film category",
+      "🏆 How do I level up?",
+      "🌍 Show platform statistics",
+      "💡 What makes Inphrone unique?",
+      "🎭 Who founded Inphrone?"
+    ];
+    
+    // Always include at least 2 Hype It questions, then rotate others
+    const messageCount = messages.length;
+    const startIndex = (messageCount * 2) % otherQuestions.length;
+    const rotatedOthers = [...otherQuestions.slice(startIndex), ...otherQuestions.slice(0, startIndex)];
+    
+    // First 2 are priority (Hype It), remaining 4 rotate from others
+    return [...priorityQuestions.slice(0, 2), ...rotatedOthers.slice(0, 4)];
+  };
+  
+  const suggestedQuestions = getContextualQuestions();
   
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -505,17 +548,20 @@ What would you like to explore today?` }
   const clearChat = () => {
     stopSpeaking();
     setMessages([
-      { role: "assistant", content: `🎬 Chat cleared! Ready for a fresh start.
+      { role: "assistant", content: `🔄 **Chat Refreshed!** Ready for a fresh conversation.
 
-I'm InphroneBot, your AI guide to the entertainment intelligence platform.
+I'm InphroneBot, your expert guide to the entertainment intelligence platform.
 
-**Quick Actions:**
-• Ask about any feature
-• Explore categories & insights
-• Learn about gamification
+**🚀 Quick Navigation:**
+• Ask about any of the 7 categories
+• Learn about InphroSync streaks
 • Discover Your Turn slots
+• Explore rewards & levels
+• Get real-time platform stats
 
-What would you like to know?` }
+**💬 Try asking:** "What's the most active category?" or "How do I maximize my rewards?"
+
+What interests you?` }
     ]);
   };
 

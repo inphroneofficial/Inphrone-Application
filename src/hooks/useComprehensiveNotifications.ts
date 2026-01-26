@@ -6,9 +6,40 @@ import { useNotificationSettings } from "./useNotificationSettings";
 /**
  * Comprehensive notification system focused on app engagement
  * Gamified elements for opinions and InphroSync - NO coupon notifications
+ * Also handles email notifications for important events
  */
 export const useComprehensiveNotifications = (userId: string | null) => {
   const { canSendPushNotification, canSendEmailNotification } = useNotificationSettings(userId);
+
+  // Helper to send email notifications
+  const sendEmailNotification = useCallback(async (
+    type: string,
+    data?: Record<string, any>
+  ) => {
+    if (!userId || !canSendEmailNotification()) return;
+    
+    try {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('email, full_name')
+        .eq('id', userId)
+        .single();
+
+      if (!profile?.email) return;
+
+      await supabase.functions.invoke('send-notification-email', {
+        body: {
+          type,
+          to: profile.email,
+          name: profile.full_name || 'User',
+          data
+        }
+      });
+      console.log(`[Notifications] Email sent: ${type} to ${profile.email}`);
+    } catch (error) {
+      console.error('Error sending email notification:', error);
+    }
+  }, [userId, canSendEmailNotification]);
   
   useEffect(() => {
     if (!userId) return;
@@ -96,6 +127,26 @@ export const useComprehensiveNotifications = (userId: string | null) => {
                 message: `"${opinion.title}" in ${categoryName} - Your voice matters!`,
                 action_url: '/insights'
               });
+
+              // Send email for industry likes (non-audience users liking)
+              const isIndustryLike = likerType !== 'audience';
+              if (isIndustryLike) {
+                sendEmailNotification('industry_recognition', {
+                  opinionTitle: opinion.title,
+                  likerName,
+                  likerType
+                });
+              } else {
+                // Regular audience like - send email for milestone likes
+                if (likeMilestones[totalLikes]) {
+                  sendEmailNotification('opinion_liked', {
+                    opinionTitle: opinion.title,
+                    likerName,
+                    likerType,
+                    totalLikes
+                  });
+                }
+              }
             }
           }
         )
@@ -179,6 +230,12 @@ export const useComprehensiveNotifications = (userId: string | null) => {
             message: payload.new.badge_description || 'A new wisdom badge for your collection!',
             action_url: '/profile'
           });
+
+          // Send email for badge earned
+          sendEmailNotification('badge_earned', {
+            badgeName: payload.new.badge_name,
+            badgeDescription: payload.new.badge_description
+          });
         }
       )
       .subscribe();
@@ -255,6 +312,13 @@ export const useComprehensiveNotifications = (userId: string | null) => {
             message: 'Shape entertainment with your daily voice!',
             action_url: '/inphrosync'
           });
+
+          // Send email reminder for InphroSync (only once per day, check hoursSinceLastNotif)
+          if (hoursSinceLastNotif > 20) {
+            sendEmailNotification('inphrosync_reminder', {
+              currentStreak
+            });
+          }
         }
       }
     };
@@ -321,5 +385,5 @@ export const useComprehensiveNotifications = (userId: string | null) => {
     };
 
     setupNotifications();
-  }, [userId, canSendPushNotification]);
+  }, [userId, canSendPushNotification, sendEmailNotification]);
 };

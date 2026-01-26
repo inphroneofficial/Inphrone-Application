@@ -223,17 +223,30 @@ const GuidedTour = ({ onComplete }: GuidedTourProps) => {
         .eq("id", user.id);
     }
     
-    // Navigate to dashboard after completing the tour
+    // Navigate to home after completing the tour
     setTimeout(() => {
       // Final cleanup
       document.body.style.overflow = '';
       document.body.style.pointerEvents = '';
       onComplete();
-      navigate("/dashboard");
+      navigate("/");
     }, 300);
   };
 
-  const handleSkip = () => {
+  // Skip goes to home directly without saving completion
+  const handleSkip = async () => {
+    setIsExiting(true);
+    document.body.style.overflow = '';
+    document.body.style.pointerEvents = '';
+    
+    setTimeout(() => {
+      onComplete();
+      navigate("/");
+    }, 300);
+  };
+
+  // Cancel (X button) - mark as completed and go to home
+  const handleCancel = () => {
     handleComplete();
   };
 
@@ -261,7 +274,7 @@ const GuidedTour = ({ onComplete }: GuidedTourProps) => {
       } else if (e.key === 'ArrowLeft') {
         handlePrev();
       } else if (e.key === 'Escape') {
-        handleSkip();
+        handleCancel(); // Escape cancels and goes to home
       }
     };
     
@@ -334,19 +347,20 @@ const GuidedTour = ({ onComplete }: GuidedTourProps) => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.98 }}
             transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-            className="relative w-full max-w-xs sm:max-w-sm z-10"
+            className="relative w-full max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-3xl z-10"
           >
             {/* Glass card - more compact */}
             <div className="relative bg-card/90 backdrop-blur-lg rounded-2xl border border-border/40 shadow-xl overflow-hidden max-h-[85vh] overflow-y-auto">
               {/* Gradient border glow - subtle */}
               <div className={`absolute inset-0 bg-gradient-to-br ${step.gradient} opacity-5 blur-lg`} />
               
-              {/* Skip button */}
+              {/* Cancel button (X) - marks as completed and goes home */}
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={handleSkip}
+                onClick={handleCancel}
                 className="absolute top-2 right-2 z-20 w-7 h-7 rounded-full bg-muted/60 hover:bg-destructive/20 hover:text-destructive transition-all"
+                title="Cancel tour"
               >
                 <X className="w-3.5 h-3.5" />
               </Button>
@@ -481,9 +495,21 @@ const GuidedTour = ({ onComplete }: GuidedTourProps) => {
                   )}
                 </div>
 
+                {/* Skip Tour button */}
+                <div className="flex justify-center">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleSkip}
+                    className="text-xs text-muted-foreground hover:text-foreground"
+                  >
+                    Skip Tour →
+                  </Button>
+                </div>
+
                 {/* Keyboard hint */}
                 <p className="text-xs text-center text-muted-foreground/60">
-                  Use ← → arrow keys or Esc to skip
+                  Use ← → arrow keys • Esc to cancel
                 </p>
               </div>
             </div>

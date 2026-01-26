@@ -1,9 +1,14 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Radio, TrendingUp, Sparkles, Users, Zap, Heart, Star, ChevronDown, Activity, Waves } from "lucide-react";
-import { DailyQuestionNew } from "@/components/inphrosync/DailyQuestionNew";
-import { YesterdayInsights } from "@/components/inphrosync/YesterdayInsights";
+import { Radio, TrendingUp, Sparkles, Users, Zap, Heart, Star, ChevronDown, Activity, Waves, Share2 } from "lucide-react";
+import { YesterdayInsightsEnhanced } from "@/components/inphrosync/YesterdayInsightsEnhanced";
+import { ProAnalyticsDashboard } from "@/components/inphrosync/ProAnalyticsDashboard";
+import { LiveActivityFeed } from "@/components/inphrosync/LiveActivityFeed";
+import { PulseOrb, DataStream, CircuitBackground } from "@/components/inphrosync/InphroSyncPremium";
+import { PremiumQuestionCard } from "@/components/inphrosync/PremiumQuestionCard";
+import { InphroSyncStreakGamification } from "@/components/inphrosync/InphroSyncStreakGamification";
+import { ShareInsightCard } from "@/components/inphrosync/ShareInsightCard";
 import { NavigationControls } from "@/components/NavigationControls";
 import { toast } from "sonner";
 import { ScrollToTop } from "@/components/ScrollToTop";
@@ -168,55 +173,43 @@ export default function InphroSync() {
 
   return (
     <div className="min-h-screen relative overflow-hidden pt-16">
-      {/* Premium gradient background */}
-      <div className="fixed inset-0 bg-gradient-to-br from-background via-muted/20 to-background" />
-      <div className="fixed inset-0 bg-dot-pattern opacity-30 pointer-events-none" />
+      {/* Premium gradient background - cleaner without lines */}
+      <div className="fixed inset-0 bg-gradient-to-br from-background via-muted/10 to-background" />
       
-      {/* Static background orbs on mobile, animated on desktop */}
+      {/* Subtle mesh gradient */}
+      <div 
+        className="fixed inset-0 opacity-40 pointer-events-none"
+        style={{
+          background: `
+            radial-gradient(ellipse at 20% 20%, hsl(var(--primary) / 0.08) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 80%, hsl(var(--accent) / 0.08) 0%, transparent 50%),
+            radial-gradient(ellipse at 50% 50%, hsl(var(--primary) / 0.03) 0%, transparent 70%)
+          `
+        }}
+      />
+      
+      {/* Animated pulse orbs - subtle */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         {shouldReduceMotion ? (
           <>
             <div
-              className="absolute -top-32 -left-32 w-[300px] h-[300px] md:w-[500px] md:h-[500px] rounded-full blur-[100px] md:blur-[150px]"
-              style={{ background: "hsl(var(--primary) / 0.1)" }}
+              className="absolute -top-32 -left-32 w-[300px] h-[300px] md:w-[400px] md:h-[400px] rounded-full blur-[120px] md:blur-[150px]"
+              style={{ background: "hsl(var(--primary) / 0.08)" }}
             />
             <div
-              className="absolute top-1/3 -right-32 w-[250px] h-[250px] md:w-[400px] md:h-[400px] rounded-full blur-[80px] md:blur-[120px]"
-              style={{ background: "hsl(var(--accent) / 0.15)" }}
+              className="absolute top-1/2 -right-32 w-[250px] h-[250px] md:w-[350px] md:h-[350px] rounded-full blur-[100px] md:blur-[120px]"
+              style={{ background: "hsl(var(--accent) / 0.1)" }}
             />
           </>
         ) : (
           <>
-            <motion.div
-              className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full blur-[150px]"
-              style={{ background: "hsl(var(--primary) / 0.1)", willChange: "transform" }}
-              animate={{
-                scale: [1, 1.2, 1],
-                x: [0, 50, 0],
-                y: [0, 30, 0],
-              }}
-              transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-            />
-            <motion.div
-              className="absolute top-1/3 -right-32 w-[400px] h-[400px] rounded-full blur-[120px]"
-              style={{ background: "hsl(var(--accent) / 0.15)", willChange: "transform" }}
-              animate={{
-                scale: [1, 1.3, 1],
-                x: [0, -40, 0],
-              }}
-              transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-            />
-            <motion.div
-              className="absolute bottom-0 left-1/3 w-[350px] h-[350px] rounded-full blur-[100px]"
-              style={{ background: "hsl(var(--primary) / 0.08)", willChange: "transform" }}
-              animate={{
-                scale: [1, 1.15, 1],
-                y: [0, -50, 0],
-              }}
-              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 4 }}
-            />
+            <PulseOrb className="-top-32 -left-32" color="primary" size="lg" delay={0} />
+            <PulseOrb className="top-1/2 -right-32" color="accent" size="md" delay={2} />
           </>
         )}
+        
+        {/* Data stream particles - subtle */}
+        {!shouldReduceMotion && <DataStream />}
       </div>
 
       <div className="relative z-10 container max-w-6xl mx-auto px-4 py-8">
@@ -408,40 +401,77 @@ export default function InphroSync() {
           </motion.div>
         )}
 
-        {/* Yesterday Insights */}
+        {/* Yesterday Insights - Enhanced */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          <YesterdayInsights />
+          <YesterdayInsightsEnhanced />
         </motion.section>
 
-        {/* Audience: Interactive Questions */}
+        {/* Live Activity Feed */}
+        <motion.section
+          className="mt-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+        >
+          <LiveActivityFeed showDetailedVotes={!isAudience} />
+        </motion.section>
+        {/* Audience: Streak Gamification + Share */}
+        {isAudience && (
+          <motion.section
+            className="mt-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.55 }}
+          >
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="md:col-span-2">
+                <InphroSyncStreakGamification />
+              </div>
+              <div className="flex flex-col justify-center items-center gap-4 p-6 glass-card rounded-2xl border border-border/50">
+                <div className="text-center">
+                  <h4 className="font-semibold mb-1">Share Your Journey</h4>
+                  <p className="text-sm text-muted-foreground">Create a shareable card of your insights</p>
+                </div>
+                <ShareInsightCard />
+              </div>
+            </div>
+          </motion.section>
+        )}
+
+        {/* Audience: Interactive Premium Questions */}
         {isAudience && (
           <motion.section
             className="mt-16"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
           >
-            <div className="flex items-center gap-4 mb-8">
-              <div className="w-1.5 h-10 rounded-full bg-gradient-to-b from-primary to-accent" />
-              <div>
-                <h2 className="text-2xl font-bold">Today's Questions</h2>
-                <p className="text-sm text-muted-foreground">Based on yesterday's entertainment</p>
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-4">
+                <div className="w-1.5 h-10 rounded-full bg-gradient-to-b from-primary to-accent" />
+                <div>
+                  <h2 className="text-2xl font-bold">Today's Questions</h2>
+                  <p className="text-sm text-muted-foreground">Based on yesterday's entertainment</p>
+                </div>
               </div>
+              <Badge className="bg-primary/10 text-primary border-primary/20">
+                {questions.length} Questions
+              </Badge>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-8">
               {questions.map((question, index) => (
                 <motion.div
                   key={question.id}
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
+                  transition={{ duration: 0.5, delay: 0.7 + index * 0.1 }}
                 >
-                  <DailyQuestionNew
+                  <PremiumQuestionCard
                     question={question}
                     isAudience={isAudience}
                     questionNumber={index + 1}
@@ -453,64 +483,15 @@ export default function InphroSync() {
           </motion.section>
         )}
 
-        {/* Non-Audience: Analytics Dashboard */}
+        {/* Non-Audience: Pro Analytics Dashboard */}
         {!isAudience && (
           <motion.section
             className="mt-16"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
           >
-            <div className="premium-card p-10 md:p-14 rounded-3xl overflow-hidden relative">
-              {/* Decorative elements */}
-              <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full bg-gradient-to-br from-primary/20 to-transparent blur-3xl" />
-              <div className="absolute -bottom-20 -left-20 w-60 h-60 rounded-full bg-gradient-to-br from-accent/20 to-transparent blur-3xl" />
-              
-              <div className="relative z-10 max-w-3xl mx-auto text-center">
-                <motion.div
-                  className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-glow"
-                  animate={{ rotate: [0, 5, -5, 0] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  <TrendingUp className="w-10 h-10 text-primary-foreground" />
-                </motion.div>
-
-                <h3 className="text-2xl md:text-3xl font-bold mb-3">
-                  <span className="text-gradient">Audience Analytics</span>
-                </h3>
-                <p className="text-muted-foreground mb-8">
-                  Real-time entertainment insights from daily audience engagement
-                </p>
-
-                <div className="grid sm:grid-cols-3 gap-4 mb-8">
-                  {[
-                    { emoji: "📊", title: "Live Trends", desc: "Real-time preferences" },
-                    { emoji: "🎯", title: "Demographics", desc: "Age, gender, location" },
-                    { emoji: "📈", title: "Patterns", desc: "Device & platform data" },
-                  ].map((item, idx) => (
-                    <motion.div
-                      key={item.title}
-                      className="glass-card p-5 rounded-xl"
-                      whileHover={{ scale: 1.02, y: -2 }}
-                    >
-                      <div className="text-3xl mb-3">{item.emoji}</div>
-                      <h4 className="font-semibold text-sm mb-1">{item.title}</h4>
-                      <p className="text-xs text-muted-foreground">{item.desc}</p>
-                    </motion.div>
-                  ))}
-                </div>
-
-                <div className="glass-card p-6 rounded-xl border border-accent/20">
-                  <div className="flex items-center justify-center gap-2 mb-2">
-                    <Sparkles className="w-5 h-5 text-accent" />
-                    <span className="font-semibold">Want to Participate?</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    Create an <span className="font-medium text-accent">Audience account</span> to submit daily choices and earn rewards
-                  </p>
-                </div>
-              </div>
-            </div>
+            <ProAnalyticsDashboard userType={userType} />
           </motion.section>
         )}
       </div>

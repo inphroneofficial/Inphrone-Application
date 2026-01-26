@@ -94,16 +94,24 @@ export function EnhancedOpinionCards({ opinions, categoryIcon: CategoryIcon, sor
 
   useEffect(() => {
     const fetchUpvoteBreakdowns = async () => {
-      const breakdowns: Record<string, any> = {};
-      for (const opinion of opinions) {
-        const { data } = await supabase.rpc('get_opinion_upvote_breakdown', {
-          opinion_uuid: opinion.id
-        });
-        if (data) {
-          breakdowns[opinion.id] = data;
+      try {
+        const breakdowns: Record<string, any> = {};
+        for (const opinion of opinions) {
+          const { data, error } = await supabase.rpc('get_opinion_upvote_breakdown', {
+            opinion_uuid: opinion.id
+          });
+          if (error) {
+            console.error("Error fetching upvote breakdown:", error);
+            continue;
+          }
+          if (data) {
+            breakdowns[opinion.id] = data;
+          }
         }
+        setUpvoteBreakdowns(breakdowns);
+      } catch (error) {
+        console.error("Error fetching upvote breakdowns:", error);
       }
-      setUpvoteBreakdowns(breakdowns);
     };
 
     if (opinions.length > 0) {
@@ -121,15 +129,12 @@ export function EnhancedOpinionCards({ opinions, categoryIcon: CategoryIcon, sor
       const hasUpvoted = userUpvotes.has(opinionId);
 
       if (hasUpvoted) {
-        // Remove upvote/like
+        // Remove upvote/like - trigger automatically decrements count
         await supabase
           .from("opinion_upvotes")
           .delete()
           .eq("opinion_id", opinionId)
           .eq("user_id", currentUserId);
-
-        // Decrement count for ALL likes (both audience and non-audience)
-        await supabase.rpc("decrement_opinion_upvotes", { opinion_id: opinionId });
 
         setUserUpvotes(prev => {
           const newSet = new Set(prev);
@@ -139,7 +144,7 @@ export function EnhancedOpinionCards({ opinions, categoryIcon: CategoryIcon, sor
 
         toast.success("Like removed");
       } else {
-        // Add upvote/like
+        // Add upvote/like - trigger automatically increments count
         const { data: profile } = await supabase
           .from("profiles")
           .select("user_type")
@@ -154,9 +159,6 @@ export function EnhancedOpinionCards({ opinions, categoryIcon: CategoryIcon, sor
           user_type: profile?.user_type || null,
           is_upvote: isAudience // Track type internally but ALL likes count the same
         });
-
-        // Increment count for ALL likes (both audience and non-audience)
-        await supabase.rpc("increment_opinion_upvotes", { opinion_id: opinionId });
 
         setUserUpvotes(prev => new Set([...prev, opinionId]));
 

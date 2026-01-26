@@ -107,17 +107,21 @@ export function YourTurnManagement() {
         .order("slot_date", { ascending: true })
         .order("slot_time", { ascending: true });
 
-      // Fetch all questions
+      // Fetch all questions with user profiles
       const { data: questionsData } = await supabase
         .from("your_turn_questions")
-        .select("*")
+        .select(`
+          *,
+          profiles:user_id (full_name, email)
+        `)
         .eq("is_deleted", false)
         .order("created_at", { ascending: false });
 
       // Map questions with proper type casting
       const mappedQuestions = (questionsData || []).map(q => ({
         ...q,
-        options: (q.options as { id: string; label: string }[]) || []
+        options: (q.options as { id: string; label: string }[]) || [],
+        profiles: q.profiles as { full_name: string; email: string } | null
       }));
 
       setQuestions(mappedQuestions);
@@ -462,7 +466,11 @@ export function YourTurnManagement() {
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <p className="font-medium text-lg">{question.question_text}</p>
-                          <div className="flex items-center gap-2 mt-2">
+                          <div className="flex items-center gap-2 mt-2 flex-wrap">
+                            <Badge variant="outline" className="gap-1">
+                              <Users className="w-3 h-3" />
+                              {question.profiles?.full_name || 'Unknown User'}
+                            </Badge>
                             {question.is_approved ? (
                               <Badge className="bg-green-500 gap-1">
                                 <CheckCircle className="w-3 h-3" />

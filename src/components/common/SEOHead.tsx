@@ -63,42 +63,52 @@ export function SEOHead({
 export const SEO_CONFIGS = {
   dashboard: {
     title: "Dashboard",
-    description: "View your entertainment insights, track opinions, and earn rewards on INPHRONE.",
-    keywords: "dashboard, opinions, rewards, entertainment insights"
+    description: "View your entertainment insights, track opinions, and earn rewards on Inphrone™.",
+    keywords: "dashboard, opinions, rewards, entertainment insights, analytics"
   },
   profile: {
     title: "Your Profile",
-    description: "Manage your INPHRONE profile, view stats, and track your entertainment journey.",
-    keywords: "profile, user stats, entertainment preferences"
+    description: "Manage your Inphrone™ profile, view stats, and track your entertainment journey.",
+    keywords: "profile, user stats, entertainment preferences, badges"
   },
   insights: {
     title: "Insights",
-    description: "Discover trending entertainment insights from the global audience on INPHRONE.",
-    keywords: "insights, trends, entertainment data, audience preferences"
+    description: "Discover trending entertainment insights from the global audience on Inphrone™.",
+    keywords: "insights, trends, entertainment data, audience preferences, analytics"
   },
   inphrosync: {
     title: "InphroSync - Daily Pulse",
-    description: "Answer daily entertainment questions and see how your preferences match the world.",
-    keywords: "daily questions, entertainment pulse, community opinions"
+    description: "Answer 3 daily entertainment questions and see how your preferences match the world on Inphrone™.",
+    keywords: "daily questions, entertainment pulse, community opinions, streaks"
   },
   yourturn: {
     title: "YourTurn - Ask the Community",
-    description: "Submit questions and let the INPHRONE community vote on what matters to you.",
-    keywords: "community questions, voting, entertainment polls"
+    description: "Submit questions and let the Inphrone™ community vote on what matters to you.",
+    keywords: "community questions, voting, entertainment polls, slots"
+  },
+  hypeit: {
+    title: "Hype It - Signal What You Want",
+    description: "Launch 2-3 word signals to tell studios what content YOU want created. Vote 🔥 Hype or ➡️ Pass on Inphrone™.",
+    keywords: "hype it, demand signals, content creation, studio feedback, voting"
   },
   category: (name: string) => ({
     title: `${name} Opinions`,
-    description: `Share your opinions about ${name} and see what others think on INPHRONE.`,
+    description: `Share your opinions about ${name} and see what others think on Inphrone™.`,
     keywords: `${name.toLowerCase()}, opinions, entertainment, insights`
   }),
   about: {
-    title: "About INPHRONE",
-    description: "Learn about INPHRONE - the world's first people-powered entertainment intelligence platform.",
-    keywords: "about, mission, entertainment platform, audience intelligence"
+    title: "About Inphrone™",
+    description: "Learn about Inphrone™ - the world's first people-powered entertainment intelligence platform. Founded by Thangella Gadidamalla.",
+    keywords: "about, mission, entertainment platform, audience intelligence, Thangella Gadidamalla, founder"
   },
   contact: {
     title: "Contact Us",
-    description: "Get in touch with the INPHRONE team. We'd love to hear from you!",
+    description: "Get in touch with the Inphrone™ team. We'd love to hear from you!",
     keywords: "contact, support, feedback, help"
+  },
+  faq: {
+    title: "FAQ",
+    description: "Frequently asked questions about Inphrone™, InphroSync, Your Turn, Hype It, and all platform features.",
+    keywords: "faq, help, questions, features, inphrosync, your turn, hype it"
   }
 };

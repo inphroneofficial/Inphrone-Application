@@ -141,6 +141,7 @@ export function NotificationBroadcast() {
       // Send email notifications using the consolidated push notification function
       if (sendEmailNotification) {
         try {
+          console.log("Sending email notifications to", users.length, "users");
           const { data: result, error: pushError } = await supabase.functions.invoke('send-push-notification', {
             body: {
               userIds: users.map(u => u.id),
@@ -148,11 +149,13 @@ export function NotificationBroadcast() {
               message,
               url: actionUrl || '/dashboard',
               type: notificationType,
-              sendPush: false, // Already handled above if enabled
+              sendPush: false,
               sendEmail: true,
-              sendInApp: false // Already handled above
+              sendInApp: false
             }
           });
+
+          console.log("Email notification result:", result, "error:", pushError);
 
           if (pushError) {
             console.error("Error sending emails:", pushError);
@@ -160,6 +163,7 @@ export function NotificationBroadcast() {
           } else if (result) {
             emailsSent = result.results?.emailSent || 0;
             emailsFailed = result.results?.emailFailed || 0;
+            console.log(`Emails sent: ${emailsSent}, failed: ${emailsFailed}`);
           }
         } catch (emailError) {
           console.error("Failed to send emails:", emailError);

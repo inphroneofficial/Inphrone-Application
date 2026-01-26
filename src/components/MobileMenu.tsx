@@ -13,7 +13,8 @@ import {
   Sun,
   Moon,
   Settings,
-  Trophy
+  Trophy,
+  Flame
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "./SettingsDialog";
@@ -32,15 +33,21 @@ export function MobileMenu() {
   const { theme, setTheme, resolvedTheme } = useTheme();
   const { t } = useLanguage();
 
-  const menuItems: MenuItem[] = [
+  // Base menu items for all users
+  const baseMenuItems: MenuItem[] = [
     { label: t('home'), path: "/", icon: Home },
     { label: t('about'), path: "/about", icon: Info },
     { label: t('insights'), path: "/insights", icon: BarChart3 },
     { label: t('inphrosync'), path: "/inphrosync", icon: Zap },
     { label: t('yourTurn'), path: "/yourturn", icon: Trophy },
+    { label: "Hype It", path: "/hype", icon: Flame },
     { label: t('dashboard'), path: "/dashboard", icon: LayoutDashboard },
-    { label: t('settings'), path: "/settings", icon: Settings },
   ];
+
+  // Only show settings for authenticated users
+  const menuItems: MenuItem[] = isAuthenticated 
+    ? [...baseMenuItems, { label: t('settings'), path: "/settings", icon: Settings }]
+    : baseMenuItems;
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setIsAuthenticated(!!session);
@@ -70,7 +77,7 @@ export function MobileMenu() {
   }, [isOpen]);
 
   const handleNavigate = (path: string) => {
-    const protectedPaths = ["/dashboard", "/insights", "/inphrosync", "/yourturn"];
+    const protectedPaths = ["/dashboard", "/insights", "/inphrosync", "/yourturn", "/hype"];
     
     // Settings should open dialog, not navigate
     if (path === "/settings") {

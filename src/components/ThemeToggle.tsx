@@ -6,19 +6,42 @@ export function ThemeToggle() {
   const [theme, setTheme] = useState<"light" | "dark">("dark");
 
   useEffect(() => {
+    // Check if Inphrone theme is active - treat it as dark mode
+    const isInphroneTheme = document.documentElement.classList.contains('inphrone-theme');
+    
+    if (isInphroneTheme) {
+      setTheme("dark");
+      return;
+    }
+
     const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const initialTheme = savedTheme || (prefersDark ? "dark" : "light");
+    const isDarkClass = document.documentElement.classList.contains("dark");
+    
+    // Use existing class first, then saved theme, then system preference
+    const initialTheme = isDarkClass ? "dark" : savedTheme || (prefersDark ? "dark" : "light");
     
     setTheme(initialTheme);
     document.documentElement.classList.toggle("dark", initialTheme === "dark");
   }, []);
 
   const toggleTheme = () => {
+    const root = document.documentElement;
+    const isInphroneTheme = root.classList.contains('inphrone-theme');
+    
+    // If in Inphrone theme, switching to light removes the inphrone-theme
+    if (isInphroneTheme && theme === "dark") {
+      root.classList.remove('inphrone-theme', 'dark');
+      setTheme("light");
+      localStorage.setItem("theme", "light");
+      return;
+    }
+    
+    // Standard toggle behavior
     const newTheme = theme === "dark" ? "light" : "dark";
     setTheme(newTheme);
     localStorage.setItem("theme", newTheme);
-    document.documentElement.classList.toggle("dark", newTheme === "dark");
+    root.classList.toggle("dark", newTheme === "dark");
   };
 
   return (

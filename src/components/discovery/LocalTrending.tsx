@@ -53,14 +53,17 @@ export const LocalTrending = ({ userCity, userCountry, userState }: LocalTrendin
         const cityFiltered = opinions
           .filter(o => o.city?.toLowerCase() === userCity.toLowerCase())
           .slice(0, 5)
-          .map(o => ({
-            id: o.id,
-            title: o.title,
-            category: (o.categories as any)?.name || "General",
-            upvotes: o.upvotes || 0,
-            contributor_count: 1,
-            city: o.city
-          }));
+          .map(o => {
+            const categories = o.categories as { name?: string } | null;
+            return {
+              id: o.id,
+              title: o.title,
+              category: categories?.name || "General",
+              upvotes: o.upvotes || 0,
+              contributor_count: 1,
+              city: o.city
+            };
+          });
         setCityTrends(cityFiltered);
       }
 

@@ -73,12 +73,20 @@ export const BookmarkManager = ({ userId }: BookmarkManagerProps) => {
   };
 
   const removeBookmark = (opinionId: string) => {
-    const stored = localStorage.getItem(`bookmarks_${userId}`);
-    if (stored) {
-      const bookmarkIds = JSON.parse(stored).filter((id: string) => id !== opinionId);
-      localStorage.setItem(`bookmarks_${userId}`, JSON.stringify(bookmarkIds));
-      setBookmarks(prev => prev.filter(b => b.id !== opinionId));
-      toast.success("Removed from bookmarks");
+    try {
+      const stored = localStorage.getItem(`bookmarks_${userId}`);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        const bookmarkIds = Array.isArray(parsed) 
+          ? parsed.filter((id: string) => id !== opinionId)
+          : [];
+        localStorage.setItem(`bookmarks_${userId}`, JSON.stringify(bookmarkIds));
+        setBookmarks(prev => prev.filter(b => b.id !== opinionId));
+        toast.success("Removed from bookmarks");
+      }
+    } catch (error) {
+      console.error("Error removing bookmark:", error);
+      toast.error("Failed to remove bookmark");
     }
   };
 

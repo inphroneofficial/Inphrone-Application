@@ -1,9 +1,9 @@
 # =============================================================================
 # robots.txt — Inphrone™
-# Audience Intelligence Before Content Exists
+# People-Powered Entertainment Intelligence Platform
 # Website: https://inphrone.com
-# Company: Inphrone
-# Last Updated: January 19, 2026
+# Founded by: Thangella Gadidamalla
+# Last Updated: January 24, 2026
 # =============================================================================
 
 # PURPOSE
@@ -24,9 +24,25 @@
 
 User-agent: *
 Allow: /
+Allow: /about
+Allow: /insights
+Allow: /inphrosync
+Allow: /yourturn
+Allow: /hype-it
+Allow: /dashboard
+Allow: /blog
+Allow: /faq
+Allow: /help-center
+Allow: /reviews
+Allow: /careers
+Allow: /contact
+Allow: /feedback
+Allow: /privacy-policy
+Allow: /terms
 
 # SENSITIVE / NON-PUBLIC PATHS
 # Administrative & internal systems
+Disallow: /admin
 Disallow: /admin/
 Disallow: /api/
 Disallow: /_internal/
@@ -35,11 +51,21 @@ Disallow: /server/
 Disallow: /config/
 
 # Authentication & account flows
-Disallow: /login/
-Disallow: /signup/
-Disallow: /logout/
-Disallow: /auth/
-Disallow: /reset-password/
+Disallow: /login
+Disallow: /signup
+Disallow: /logout
+Disallow: /auth
+Disallow: /reset-password
+Disallow: /password-reset
+Disallow: /forgot-password
+Disallow: /onboarding
+
+# User-specific pages (protect privacy)
+Disallow: /profile
+Disallow: /my-coupons
+Disallow: /coupon-analytics
+Disallow: /coupon-wishlist
+Disallow: /stats
 
 # QUERY STRING LEAK PREVENTION
 # Prevent crawling of URLs containing sensitive tokens or sessions
@@ -49,6 +75,8 @@ Disallow: /*?*session=
 Disallow: /*?*key=
 Disallow: /*?*secret=
 Disallow: /*?*access=
+Disallow: /*?*password=
+Disallow: /*?*email=
 
 # CRAWL RATE CONTROL
 # Respected by Bing, Yandex, Baidu, DuckDuckGo (ignored by Google)
@@ -60,15 +88,64 @@ Crawl-delay: 1
 
 User-agent: GPTBot
 Allow: /
+Allow: /about
+Allow: /insights
+Allow: /inphrosync
+Allow: /yourturn
+Allow: /hype-it
+Allow: /faq
+Allow: /blog
+Disallow: /admin
+Disallow: /auth
+Disallow: /profile
+
+User-agent: ChatGPT-User
+Allow: /
+Allow: /about
+Allow: /faq
+Disallow: /admin
+Disallow: /auth
 
 User-agent: ClaudeBot
 Allow: /
+Allow: /about
+Allow: /insights
+Allow: /faq
+Disallow: /admin
+Disallow: /auth
+
+User-agent: Claude-Web
+Allow: /
+Allow: /about
+Disallow: /admin
+Disallow: /auth
 
 User-agent: Google-Extended
 Allow: /
+Disallow: /admin
+Disallow: /auth
+
+User-agent: Anthropic-AI
+Allow: /
+Allow: /about
+Disallow: /admin
+Disallow: /auth
+
+User-agent: PerplexityBot
+Allow: /
+Allow: /about
+Disallow: /admin
+Disallow: /auth
+
+User-agent: Cohere-AI
+Allow: /
+Disallow: /admin
+Disallow: /auth
 
 User-agent: CCBot
 Allow: /
+Disallow: /admin
+Disallow: /auth
 
 # =============================================================================
 # SOCIAL MEDIA & PREVIEW BOTS (CARDS / EMBEDS)
@@ -89,11 +166,29 @@ Allow: /
 User-agent: Discordbot
 Allow: /
 
+User-agent: WhatsApp
+Allow: /
+
+User-agent: TelegramBot
+Allow: /
+
+User-agent: Pinterest
+Allow: /
+
+User-agent: Redditbot
+Allow: /
+
 # =============================================================================
 # SEARCH ENGINE SPECIFIC
 # =============================================================================
 
 User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Googlebot-Video
 Allow: /
 
 User-agent: Bingbot
@@ -111,7 +206,42 @@ Allow: /
 User-agent: Slurp
 Allow: /
 
+User-agent: Applebot
+Allow: /
+
+# =============================================================================
+# BAD BOTS — BLOCK SCRAPERS & SPAM
+# =============================================================================
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
+
+User-agent: DataForSeoBot
+Disallow: /
+
 # =============================================================================
 # SITEMAP DECLARATION
 # =============================================================================
 Sitemap: https://inphrone.com/sitemap.xml
+
+# =============================================================================
+# CONTACT INFORMATION
+# =============================================================================
+# Platform: Inphrone™ - People-Powered Entertainment Intelligence
+# Founder: Thangella Gadidamalla
+# Email: inphrone@gmail.com
+# Website: https://inphrone.com
+# Social: @inphrone on all platforms
+# =============================================================================

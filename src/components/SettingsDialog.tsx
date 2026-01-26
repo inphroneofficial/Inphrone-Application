@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext, useContext, ReactNode } from "react";
-import { Settings, Sun, Moon, Monitor, Bell, BellOff, Globe, Compass, RotateCcw } from "lucide-react";
+import { Settings, Sun, Moon, Monitor, Bell, BellOff, Globe, Compass, RotateCcw, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -25,7 +25,7 @@ interface UserSettings {
   notifications_enabled: boolean;
   email_notifications: boolean;
   language: string;
-  theme_mode: 'light' | 'dark' | 'system';
+  theme_mode: 'light' | 'dark' | 'system' | 'inphrone';
   tour_completed?: boolean;
 }
 
@@ -154,11 +154,20 @@ export function SettingsDialog() {
 
   // Sync settings.theme_mode with current theme when dialog opens or theme changes
   useEffect(() => {
-    if (open && theme) {
-      setSettings(prev => ({
-        ...prev,
-        theme_mode: theme as 'light' | 'dark' | 'system'
-      }));
+    if (open) {
+      // Check if inphrone theme is active
+      const isInphroneTheme = document.documentElement.classList.contains('inphrone-theme');
+      if (isInphroneTheme) {
+        setSettings(prev => ({
+          ...prev,
+          theme_mode: 'inphrone'
+        }));
+      } else if (theme) {
+        setSettings(prev => ({
+          ...prev,
+          theme_mode: theme as 'light' | 'dark' | 'system'
+        }));
+      }
       fetchSettings();
     }
   }, [open, theme]);
@@ -219,7 +228,19 @@ export function SettingsDialog() {
     
     // Apply theme mode changes
     if (newSettings.theme_mode) {
-      setTheme(newSettings.theme_mode);
+      const root = document.documentElement;
+      
+      // Remove inphrone-theme class first
+      root.classList.remove('inphrone-theme');
+      
+      if (newSettings.theme_mode === 'inphrone') {
+        // Apply inphrone theme - pure black & white (built on dark mode)
+        root.classList.add('inphrone-theme', 'dark');
+        setTheme('dark'); // Inphrone theme IS dark mode variant
+      } else {
+        // Standard light/dark/system - these work independently
+        setTheme(newSettings.theme_mode);
+      }
     }
 
     // Apply language changes
@@ -315,8 +336,8 @@ export function SettingsDialog() {
             
             <RadioGroup 
               value={settings.theme_mode} 
-              onValueChange={(value: 'light' | 'dark' | 'system') => updateSettings({ theme_mode: value })}
-              className="grid grid-cols-3 gap-3"
+              onValueChange={(value: 'light' | 'dark' | 'system' | 'inphrone') => updateSettings({ theme_mode: value })}
+              className="grid grid-cols-2 gap-3"
             >
               <Label 
                 htmlFor="light" 
@@ -347,6 +368,19 @@ export function SettingsDialog() {
                 <RadioGroupItem value="system" id="system" className="sr-only" />
                 <Monitor className="w-6 h-6" />
                 <span className="text-sm font-medium">{t('system')}</span>
+              </Label>
+              <Label 
+                htmlFor="inphrone" 
+                className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                  settings.theme_mode === 'inphrone' 
+                    ? 'border-white bg-black text-white' 
+                    : 'border-border hover:border-primary/50 hover:bg-black/5 dark:hover:bg-white/5'
+                }`}
+              >
+                <RadioGroupItem value="inphrone" id="inphrone" className="sr-only" />
+                <Sparkles className={`w-6 h-6 ${settings.theme_mode === 'inphrone' ? 'text-white' : ''}`} />
+                <span className={`text-sm font-medium ${settings.theme_mode === 'inphrone' ? 'text-white' : ''}`}>Inphrone</span>
+                <span className={`text-[10px] ${settings.theme_mode === 'inphrone' ? 'text-white/70' : 'text-muted-foreground'}`}>Black & White</span>
               </Label>
             </RadioGroup>
           </div>
@@ -503,9 +537,9 @@ export function SettingsDialog() {
                 <div className="flex flex-col items-center gap-1">
                   <div className="flex items-center gap-2">
                     <Compass className="w-5 h-5 text-primary animate-pulse" />
-                    <span className="font-semibold">Full Guided Tour</span>
+                    <span className="font-semibold text-foreground">Full Guided Tour</span>
                   </div>
-                  <span className="text-xs text-muted-foreground">Navigate through all sections • 9 phases</span>
+                  <span className="text-xs text-foreground/70">Navigate through all sections • 9 phases</span>
                 </div>
               </Button>
             </motion.div>
@@ -524,9 +558,9 @@ export function SettingsDialog() {
                 <div className="flex flex-col items-center gap-1">
                   <div className="flex items-center gap-2">
                     <Globe className="w-5 h-5 text-accent" />
-                    <span className="font-semibold">Quick Overview</span>
+                    <span className="font-semibold text-foreground">Quick Overview</span>
                   </div>
-                  <span className="text-xs text-muted-foreground">Learn all features in one place • 14 steps</span>
+                  <span className="text-xs text-foreground/70">Learn all features in one place • 14 steps</span>
                 </div>
               </Button>
             </motion.div>

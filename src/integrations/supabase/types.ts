@@ -976,6 +976,85 @@ export type Database = {
           },
         ]
       }
+      hype_signals: {
+        Row: {
+          category_id: string
+          created_at: string | null
+          created_by: string
+          expires_at: string | null
+          hype_count: number | null
+          id: string
+          is_archived: boolean | null
+          pass_count: number | null
+          phrase: string
+          signal_score: number | null
+        }
+        Insert: {
+          category_id: string
+          created_at?: string | null
+          created_by: string
+          expires_at?: string | null
+          hype_count?: number | null
+          id?: string
+          is_archived?: boolean | null
+          pass_count?: number | null
+          phrase: string
+          signal_score?: number | null
+        }
+        Update: {
+          category_id?: string
+          created_at?: string | null
+          created_by?: string
+          expires_at?: string | null
+          hype_count?: number | null
+          id?: string
+          is_archived?: boolean | null
+          pass_count?: number | null
+          phrase?: string
+          signal_score?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hype_signals_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hype_votes: {
+        Row: {
+          created_at: string | null
+          id: string
+          signal_id: string
+          user_id: string
+          vote_type: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          signal_id: string
+          user_id: string
+          vote_type: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          signal_id?: string
+          user_id?: string
+          vote_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hype_votes_signal_id_fkey"
+            columns: ["signal_id"]
+            isOneToOne: false
+            referencedRelation: "hype_signals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       inphrosync_questions: {
         Row: {
           created_at: string | null
@@ -2450,10 +2529,6 @@ export type Database = {
     Functions: {
       archive_weekly_stats: { Args: never; Returns: undefined }
       check_coupon_expiry: { Args: never; Returns: undefined }
-      decrement_opinion_upvotes: {
-        Args: { opinion_id: string }
-        Returns: undefined
-      }
       delete_user_account: { Args: never; Returns: undefined }
       generate_ambassador_code: {
         Args: { college_name: string }
@@ -2471,6 +2546,20 @@ export type Database = {
         Returns: Json
       }
       get_opinion_viewers: { Args: { _opinion_id: string }; Returns: Json }
+      get_rising_signals: {
+        Args: { category_filter?: string; limit_count?: number }
+        Returns: {
+          category_id: string
+          created_at: string
+          expires_at: string
+          hype_count: number
+          id: string
+          pass_count: number
+          phrase: string
+          signal_score: number
+          velocity: number
+        }[]
+      }
       get_user_counts: {
         Args: never
         Returns: {
@@ -2493,10 +2582,6 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
-      }
-      increment_opinion_upvotes: {
-        Args: { opinion_id: string }
-        Returns: undefined
       }
       increment_slot_attempts: {
         Args: { slot_uuid: string }

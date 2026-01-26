@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Globe, BarChart3, ArrowLeft } from "lucide-react";
+import { Globe, BarChart3, ArrowLeft, Flame, ChevronDown, Home, Info, LayoutDashboard, Zap, Clock, Sparkles } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ThemeToggle } from "./ThemeToggle";
 import { NotificationBell } from "./NotificationBell";
@@ -8,6 +8,15 @@ import { SettingsDialog, useLanguage } from "./SettingsDialog";
 import { MobileMenu } from "./MobileMenu";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigationHandler } from "@/hooks/useNavigationHandler";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+  DropdownMenuLabel,
+} from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -35,9 +44,8 @@ const Navbar = () => {
 
   const isActive = (path: string) => location.pathname === path;
 
-
   const go = (path: string) => {
-    const protectedPaths = ["/dashboard", "/insights", "/coupon-analytics", "/coupon-wishlist", "/inphrosync", "/yourturn"];
+    const protectedPaths = ["/dashboard", "/insights", "/coupon-analytics", "/coupon-wishlist", "/inphrosync", "/yourturn", "/hype"];
     if (!isAuthenticated && protectedPaths.includes(path)) {
       navigate("/auth");
       return;
@@ -45,14 +53,14 @@ const Navbar = () => {
     navigate(path);
   };
 
-  const navItems = [
-    { label: t('home'), path: "/" },
-    { label: t('about'), path: "/about" },
-    { label: t('insights'), path: "/insights", icon: BarChart3 },
-    { label: t('inphrosync'), path: "/inphrosync" },
-    { label: t('yourTurn'), path: "/yourturn" },
-    { label: t('dashboard'), path: "/dashboard" }
+  // Grouped navigation items for cleaner UI
+  const engageItems = [
+    { label: t('inphrosync'), path: "/inphrosync", icon: Zap, description: "Daily pulse questions" },
+    { label: t('yourTurn'), path: "/yourturn", icon: Clock, description: "Compete for spotlight" },
+    { label: "Hype It", path: "/hype", icon: Flame, description: "Signal what you want" },
   ];
+
+  const isEngageActive = engageItems.some(item => isActive(item.path));
 
   return (
     <nav id="main-navigation" className="fixed top-0 left-0 right-0 z-50 w-full border-b border-border/50 bg-background/95 dark:bg-black/90 backdrop-blur-xl shadow-sm">
@@ -87,26 +95,108 @@ const Navbar = () => {
             </button>
           </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-6">
-          {navItems.map((item) => {
-              const Icon = item.icon;
-              return (
+          {/* Desktop Navigation - Cleaner Grouped Layout */}
+          <div className="hidden md:flex items-center gap-2">
+            {/* Primary Nav Items */}
+            <Button
+              variant={isActive("/") ? "default" : "ghost"}
+              size="sm"
+              onClick={() => go("/")}
+              className={cn(
+                "transition-all duration-300",
+                isActive("/") ? "" : "text-foreground/80 hover:text-foreground hover:bg-muted"
+              )}
+            >
+              <Home className="w-4 h-4 mr-1.5" />
+              {t('home')}
+            </Button>
+
+            <Button
+              variant={isActive("/about") ? "default" : "ghost"}
+              size="sm"
+              onClick={() => go("/about")}
+              className={cn(
+                "transition-all duration-300",
+                isActive("/about") ? "" : "text-foreground/80 hover:text-foreground hover:bg-muted"
+              )}
+            >
+              <Info className="w-4 h-4 mr-1.5" />
+              {t('about')}
+            </Button>
+
+            <Button
+              variant={isActive("/insights") ? "default" : "ghost"}
+              size="sm"
+              onClick={() => go("/insights")}
+              className={cn(
+                "transition-all duration-300",
+                isActive("/insights") ? "" : "text-foreground/80 hover:text-foreground hover:bg-muted"
+              )}
+            >
+              <BarChart3 className="w-4 h-4 mr-1.5" />
+              {t('insights')}
+            </Button>
+
+            {/* Engage Dropdown - Groups InphroSync, YourTurn, HypeIt */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
                 <Button
-                  key={item.path}
-                  variant={isActive(item.path) ? "default" : "ghost"}
-                  onClick={() => go(item.path)}
-                  className={`transition-all duration-300 ${
-                    isActive(item.path) 
-                      ? "" 
-                      : "text-foreground/80 hover:text-foreground hover:bg-muted"
-                  }`}
+                  variant={isEngageActive ? "default" : "ghost"}
+                  size="sm"
+                  className={cn(
+                    "transition-all duration-300 gap-1",
+                    isEngageActive ? "" : "text-foreground/80 hover:text-foreground hover:bg-muted"
+                  )}
                 >
-                  {Icon && <Icon className="w-4 h-4 mr-2" />}
-                  {item.label}
+                  <Sparkles className="w-4 h-4" />
+                  Engage
+                  <ChevronDown className="w-3 h-3 ml-0.5" />
                 </Button>
-              );
-            })}
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="center" className="w-56">
+                <DropdownMenuLabel className="text-xs text-muted-foreground">
+                  Interactive Features
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {engageItems.map((item) => (
+                  <DropdownMenuItem
+                    key={item.path}
+                    onClick={() => go(item.path)}
+                    className={cn(
+                      "cursor-pointer flex items-start gap-3 py-2.5",
+                      isActive(item.path) && "bg-primary/10"
+                    )}
+                  >
+                    <item.icon className={cn(
+                      "w-4 h-4 mt-0.5",
+                      item.path === "/hype" && "text-orange-500"
+                    )} />
+                    <div className="flex flex-col">
+                      <span className="font-medium">{item.label}</span>
+                      <span className="text-xs text-muted-foreground">{item.description}</span>
+                    </div>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <Button
+              variant={isActive("/dashboard") ? "default" : "ghost"}
+              size="sm"
+              onClick={() => go("/dashboard")}
+              className={cn(
+                "transition-all duration-300",
+                isActive("/dashboard") ? "" : "text-foreground/80 hover:text-foreground hover:bg-muted"
+              )}
+            >
+              <LayoutDashboard className="w-4 h-4 mr-1.5" />
+              {t('dashboard')}
+            </Button>
+
+            {/* Divider */}
+            <div className="h-6 w-px bg-border/50 mx-1" />
+
+            {/* Utility Items - Only show settings for authenticated users */}
             {isAuthenticated && (
               <>
                 <NotificationBell />
@@ -122,7 +212,8 @@ const Navbar = () => {
               <Button
                 id="primary-cta-button"
                 onClick={() => navigate("/auth")}
-                className="bg-white text-gray-900 hover:bg-white/90 border-0 shadow-elegant hover:shadow-xl transition-all duration-300"
+                size="sm"
+                className="bg-white text-gray-900 hover:bg-white/90 border-0 shadow-elegant hover:shadow-xl transition-all duration-300 ml-1"
               >
                 {t('getStarted')}
               </Button>

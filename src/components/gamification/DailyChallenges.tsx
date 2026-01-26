@@ -57,7 +57,15 @@ export const DailyChallenges = ({ userId }: DailyChallengesProps) => {
 
       // Check completed challenges from local storage
       const completedKey = `challenges_${userId}_${new Date().toISOString().split('T')[0]}`;
-      const completedChallenges = JSON.parse(localStorage.getItem(completedKey) || "[]");
+      let completedChallenges: string[] = [];
+      try {
+        const stored = localStorage.getItem(completedKey);
+        const parsed = stored ? JSON.parse(stored) : [];
+        completedChallenges = Array.isArray(parsed) ? parsed : [];
+      } catch (error) {
+        console.error("Error parsing completed challenges:", error);
+        localStorage.removeItem(completedKey);
+      }
 
       const now = new Date();
       const endOfDay = new Date(now);
@@ -124,7 +132,14 @@ export const DailyChallenges = ({ userId }: DailyChallengesProps) => {
 
     // Check if already claimed
     const completedKey = `challenges_${userId}_${new Date().toISOString().split('T')[0]}`;
-    const completedChallenges = JSON.parse(localStorage.getItem(completedKey) || "[]");
+    let completedChallenges: string[] = [];
+    try {
+      const stored = localStorage.getItem(completedKey);
+      const parsed = stored ? JSON.parse(stored) : [];
+      completedChallenges = Array.isArray(parsed) ? parsed : [];
+    } catch (error) {
+      console.error("Error parsing completed challenges:", error);
+    }
     
     if (completedChallenges.includes(challenge.id)) {
       toast.info("Reward already claimed!");

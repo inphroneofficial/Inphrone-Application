@@ -39,9 +39,18 @@ export const ForYouFeed = ({ userId, userCity, userCountry }: ForYouFeedProps) =
 
   const fetchBookmarks = async () => {
     // Get bookmarked opinions from local storage for now
-    const stored = localStorage.getItem(`bookmarks_${userId}`);
-    if (stored) {
-      setBookmarkedIds(new Set(JSON.parse(stored)));
+    try {
+      const stored = localStorage.getItem(`bookmarks_${userId}`);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          setBookmarkedIds(new Set(parsed));
+        }
+      }
+    } catch (error) {
+      console.error("Error parsing bookmarks from localStorage:", error);
+      // Clear corrupted data
+      localStorage.removeItem(`bookmarks_${userId}`);
     }
   };
 

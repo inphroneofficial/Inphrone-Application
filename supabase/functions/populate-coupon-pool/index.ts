@@ -62,7 +62,9 @@ serve(async (req) => {
     await supabaseClient.from('coupon_pool').delete().neq('id', '00000000-0000-0000-0000-000000000000');
 
     const premiumCoupons = [];
-    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    // Set expiry to 2099 - coupons in pool never expire globally
+    // Individual user claims have their own 6-day expiry
+    const expiresAt = new Date('2099-12-31T23:59:59Z');
 
     // OTT/Streaming Platforms (50 coupons)
     const ottPlatforms = [

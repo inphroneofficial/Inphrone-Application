@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { Loader2, ArrowLeft, Eye, EyeOff, Shield, Sparkles, Users, Zap, Check, Globe } from "lucide-react";
 import { z } from "zod";
 import { motion, AnimatePresence } from "framer-motion";
+import { SocialAuthProviders } from "@/components/auth/SocialAuthProviders";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -418,6 +419,9 @@ const Auth = () => {
                         <p className="text-muted-foreground text-sm">Sign in to continue your journey</p>
                       </div>
 
+                      {/* Premium Social Auth Providers */}
+                      <SocialAuthProviders mode="signin" />
+
                       <form onSubmit={handleSignIn} className="space-y-5">
                         <div className="space-y-2">
                           <Label htmlFor="email" className="text-sm font-medium">Email Address</Label>
@@ -492,13 +496,11 @@ const Auth = () => {
                       </div>
 
                       <div className="space-y-4">
-                        <Button
-                          onClick={() => setShowRoleSelection(true)}
-                          className="w-full h-14 bg-gradient-to-r from-primary via-primary to-accent hover:opacity-90 text-white font-semibold text-base shadow-lg shadow-primary/25 transition-all hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5"
-                        >
-                          <Sparkles className="w-5 h-5 mr-2" />
-                          Get Started — Choose Your Role
-                        </Button>
+                        {/* Premium Social Auth Providers */}
+                        <SocialAuthProviders 
+                          mode="signup" 
+                          onEmailClick={() => setShowRoleSelection(true)} 
+                        />
 
                         <div className="grid grid-cols-3 gap-3 pt-2">
                           {features.slice(0, 3).map((feature) => (

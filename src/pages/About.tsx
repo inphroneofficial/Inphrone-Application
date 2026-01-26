@@ -156,6 +156,8 @@ const About = () => {
     countries: 0,
   });
 
+  const [categoryStats, setCategoryStats] = useState<{ name: string; count: number; percentage: number }[]>([]);
+
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [showSignInPrompt, setShowSignInPrompt] = useState(false);
 
@@ -206,13 +208,42 @@ const About = () => {
         const countsRes = await supabase.functions.invoke('public-platform-counts', { body: {} });
         if (countsRes.error) throw countsRes.error;
         
-        const { count: opinionsCount } = await supabase.from('opinions').select('*', { count: 'exact', head: true });
+        const data = countsRes.data || {};
+        
+        // Parse numeric values safely (handle both string and number types)
+        const parseNum = (val: any): number => {
+          if (typeof val === 'number') return val;
+          if (typeof val === 'string') {
+            const parsed = parseInt(val.replace(/[^0-9]/g, ''), 10);
+            return isNaN(parsed) ? 0 : parsed;
+          }
+          return 0;
+        };
         
         setMilestones({
-          users: countsRes.data?.totalUsers ?? 0,
-          opinions: opinionsCount || 0,
-          countries: countsRes.data?.countriesCount ?? 0,
+          users: parseNum(data.totalUsers),
+          opinions: parseNum(data.totalOpinions),
+          countries: parseNum(data.countriesCount),
         });
+
+        // Fetch category distribution for progress bars
+        const { data: catData } = await supabase
+          .from('categories')
+          .select(`name, opinions:opinions(count)`);
+        
+        if (catData) {
+          const formatted = catData.map(c => ({
+            name: c.name,
+            count: (c.opinions as any)?.[0]?.count || 0,
+          })).sort((a, b) => b.count - a.count);
+          
+          const maxCount = Math.max(...formatted.map(c => c.count), 1);
+          const withPercentage = formatted.slice(0, 3).map(c => ({
+            ...c,
+            percentage: Math.round((c.count / maxCount) * 100),
+          }));
+          setCategoryStats(withPercentage);
+        }
       } catch (error) {
         console.error('Error fetching milestones:', error);
       }
@@ -366,99 +397,209 @@ const About = () => {
               We're building the infrastructure that connects creative vision with collective human desire.
             </motion.p>
             
-            {/* Live Data Dashboard Preview */}
+            {/* Advanced Live Data Dashboard - Sci-Fi Big Data Style */}
             <motion.div
               initial={{ opacity: 0, y: 40, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ delay: 1, duration: 0.8 }}
-              className="relative max-w-4xl mx-auto"
+              className="relative max-w-5xl mx-auto"
             >
-              {/* Glow effect */}
-              <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20 rounded-3xl blur-2xl opacity-60" />
+              {/* Multi-layer glow effects */}
+              <div className="absolute -inset-6 bg-gradient-to-r from-primary/30 via-accent/20 to-primary/30 rounded-3xl blur-3xl opacity-50" />
+              <div className="absolute -inset-3 bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl blur-xl" />
               
-              {/* Dashboard card */}
-              <Card className="relative p-8 bg-card/80 backdrop-blur-xl border-2 border-primary/10 overflow-hidden">
-                {/* Grid overlay */}
+              {/* Main Dashboard Card */}
+              <Card className="relative p-6 md:p-8 bg-card/90 backdrop-blur-2xl border border-primary/20 overflow-hidden">
+                {/* Animated grid overlay */}
                 <div className="absolute inset-0 bg-grid-pattern opacity-5" />
+                <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-accent/5" />
                 
-                {/* Sign-in prompt overlay for non-authenticated users */}
+                {/* Scan line effect */}
+                <motion.div
+                  className="absolute inset-x-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent"
+                  animate={{ top: ['0%', '100%'] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                />
+                
+                {/* Sign-in prompt overlay */}
                 <AnimatePresence>
                   {showSignInPrompt && !isAuthenticated && (
                     <AboutSignInPrompt onSignIn={() => navigate('/auth')} />
                   )}
                 </AnimatePresence>
                 
-                {/* Header bar */}
-                <div className="flex items-center justify-between mb-8 relative">
+                {/* Header bar - Sci-Fi style */}
+                <div className="flex items-center justify-between mb-6 relative">
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
+                      <motion.div
+                        animate={{ scale: [1, 1.3, 1], opacity: [0.7, 1, 0.7] }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
+                        className="w-2.5 h-2.5 rounded-full bg-emerald-500"
+                      />
+                      <span className="text-sm font-mono font-bold text-foreground tracking-wider">LIVE DATA STREAM</span>
+                    </div>
+                    <div className="hidden md:flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-muted/50 border border-border/50">
+                      <Database className="w-3 h-3 text-primary" />
+                      <span className="text-[10px] font-mono text-muted-foreground">REAL-TIME</span>
+                    </div>
+                  </div>
                   <div className="flex items-center gap-3">
-                    <motion.div
-                      animate={{ scale: [1, 1.2, 1] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                      className="w-3 h-3 rounded-full bg-emerald-500"
-                    />
-                    <span className="text-sm font-mono text-muted-foreground">LIVE DATA STREAM</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Wifi className="w-4 h-4 text-emerald-500" />
-                    <span className="text-xs font-mono text-emerald-500">CONNECTED</span>
+                    <div className="hidden md:flex items-center gap-1.5 text-[10px] font-mono text-muted-foreground">
+                      <Activity className="w-3 h-3 text-primary animate-pulse" />
+                      <span>STREAM ACTIVE</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30">
+                      <Wifi className="w-3 h-3 text-emerald-500" />
+                      <span className="text-[10px] font-mono text-emerald-500">CONNECTED</span>
+                    </div>
                   </div>
                 </div>
                 
-                {/* Stats grid */}
-                <div className={`grid md:grid-cols-3 gap-8 transition-all duration-500 ${showSignInPrompt && !isAuthenticated ? 'blur-md pointer-events-none' : ''}`}>
-                  {[
-                    { value: milestones.users, label: "Active Users", icon: Users, trend: "+12%" },
-                    { value: milestones.opinions, label: "Opinions Captured", icon: Radio, trend: "+8%" },
-                    { value: milestones.countries, label: "Countries", icon: GlobeIcon, trend: "+3" },
-                  ].map((stat, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 1.2 + i * 0.15 }}
-                      className="relative group"
-                    >
-                      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
-                      <div className="relative p-4 text-center">
-                        <stat.icon className="w-6 h-6 mx-auto mb-3 text-primary/60" />
-                        <p className="text-4xl md:text-5xl font-black text-foreground mb-1 font-mono">
-                          <AnimatedCounter value={stat.value} duration={2} />
-                        </p>
-                        <p className="text-sm text-muted-foreground mb-2">{stat.label}</p>
-                        <span className="text-xs font-mono text-emerald-500 bg-emerald-500/10 px-2 py-1 rounded-full">
-                          {stat.trend}
-                        </span>
+                {/* Main Analytics Grid */}
+                <div className={`space-y-6 transition-all duration-500 ${showSignInPrompt && !isAuthenticated ? 'blur-md pointer-events-none' : ''}`}>
+                  
+                  {/* Primary Stats Row */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {[
+                      { value: milestones.users, label: "Active Users", icon: Users, trend: "+12%", color: "from-primary to-primary/60" },
+                      { value: milestones.opinions, label: "Data Points", icon: Database, trend: "+8%", color: "from-violet-500 to-purple-600" },
+                      { value: milestones.countries, label: "Regions", icon: GlobeIcon, trend: "+3", color: "from-emerald-500 to-teal-500" },
+                      { value: Math.round(milestones.opinions / Math.max(milestones.users, 1) * 10) / 10, label: "Avg/User", icon: BarChart3, trend: "↑", color: "from-amber-500 to-orange-500" },
+                    ].map((stat, i) => (
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 1.2 + i * 0.1 }}
+                        className="relative group"
+                      >
+                        <div className={`absolute inset-0 bg-gradient-to-br ${stat.color} rounded-xl opacity-0 group-hover:opacity-10 transition-opacity`} />
+                        <div className="relative p-4 rounded-xl bg-muted/30 border border-border/50 hover:border-primary/30 transition-colors">
+                          <div className="flex items-center justify-between mb-2">
+                            <stat.icon className="w-4 h-4 text-muted-foreground" />
+                            <span className="text-[10px] font-mono text-emerald-500">{stat.trend}</span>
+                          </div>
+                          <p className="text-2xl md:text-3xl font-black text-foreground font-mono">
+                            <AnimatedCounter value={stat.value} duration={2} />
+                          </p>
+                          <p className="text-[10px] md:text-xs text-muted-foreground mt-1">{stat.label}</p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                  
+                  {/* Category Distribution with Visual Analytics */}
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {/* Left: Category Bars */}
+                    <div className="p-4 rounded-xl bg-muted/20 border border-border/30">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2">
+                          <Layers className="w-4 h-4 text-primary" />
+                          <span className="text-xs font-bold text-foreground">Category Distribution</span>
+                        </div>
+                        <span className="text-[10px] font-mono text-muted-foreground">LIVE</span>
                       </div>
-                    </motion.div>
-                  ))}
-                </div>
-                
-                {/* Animated progress bars */}
-                <div className={`mt-8 space-y-3 transition-all duration-500 ${showSignInPrompt && !isAuthenticated ? 'blur-md pointer-events-none' : ''}`}>
-                  {['Film & Cinema', 'Music & Audio', 'Gaming'].map((category, i) => (
-                    <motion.div
-                      key={category}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 1.8 + i * 0.1 }}
-                      className="flex items-center gap-4"
-                    >
-                      <span className="text-xs font-mono text-muted-foreground w-24 truncate">{category}</span>
-                      <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
+                      <div className="space-y-3">
+                        {(categoryStats.length > 0 ? categoryStats.slice(0, 5) : [
+                          { name: 'Film', percentage: 75, count: 0 },
+                          { name: 'Music', percentage: 60, count: 0 },
+                          { name: 'Gaming', percentage: 45, count: 0 },
+                          { name: 'OTT', percentage: 35, count: 0 },
+                          { name: 'TV', percentage: 25, count: 0 },
+                        ]).map((category, i) => (
+                          <motion.div
+                            key={category.name}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 1.5 + i * 0.1 }}
+                            className="group"
+                          >
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-[11px] font-medium text-foreground">{category.name}</span>
+                              <span className="text-[10px] font-mono text-primary">{category.percentage}%</span>
+                            </div>
+                            <div className="h-2 bg-muted rounded-full overflow-hidden">
+                              <motion.div
+                                className={`h-full rounded-full bg-gradient-to-r ${
+                                  i === 0 ? 'from-primary via-primary/80 to-primary/60' :
+                                  i === 1 ? 'from-accent via-accent/80 to-accent/60' :
+                                  i === 2 ? 'from-emerald-500 to-teal-500' :
+                                  i === 3 ? 'from-amber-500 to-orange-500' :
+                                  'from-violet-500 to-purple-500'
+                                }`}
+                                initial={{ width: 0 }}
+                                animate={{ width: `${category.percentage}%` }}
+                                transition={{ delay: 1.8 + i * 0.15, duration: 1, ease: "easeOut" }}
+                              />
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Right: Data Metrics Grid */}
+                    <div className="p-4 rounded-xl bg-muted/20 border border-border/30">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2">
+                          <Network className="w-4 h-4 text-accent" />
+                          <span className="text-xs font-bold text-foreground">Platform Analytics</span>
+                        </div>
                         <motion.div
-                          className={`h-full rounded-full ${
-                            i === 0 ? 'bg-gradient-to-r from-primary to-pink-500' :
-                            i === 1 ? 'bg-gradient-to-r from-accent to-cyan-400' :
-                            'bg-gradient-to-r from-emerald-500 to-teal-400'
-                          }`}
-                          initial={{ width: 0 }}
-                          animate={{ width: `${60 + i * 15}%` }}
-                          transition={{ delay: 2 + i * 0.2, duration: 1.5, ease: "easeOut" }}
+                          animate={{ opacity: [0.5, 1, 0.5] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                          className="w-1.5 h-1.5 rounded-full bg-primary"
                         />
                       </div>
-                      <span className="text-xs font-mono text-foreground w-12 text-right">{60 + i * 15}%</span>
-                    </motion.div>
-                  ))}
+                      <div className="grid grid-cols-2 gap-3">
+                        {[
+                          { label: "Data Velocity", value: "2.3K/hr", icon: Zap },
+                          { label: "Active Sessions", value: milestones.users > 10 ? `${Math.round(milestones.users * 0.3)}` : "4", icon: Activity },
+                          { label: "Engagement Rate", value: "78%", icon: TrendingUp },
+                          { label: "Insight Quality", value: "94%", icon: Brain },
+                        ].map((metric, i) => (
+                          <motion.div
+                            key={metric.label}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 1.6 + i * 0.1 }}
+                            className="p-3 rounded-lg bg-background/50 border border-border/30 hover:border-primary/20 transition-colors"
+                          >
+                            <metric.icon className="w-3.5 h-3.5 text-muted-foreground mb-1.5" />
+                            <p className="text-lg font-bold font-mono text-foreground">{metric.value}</p>
+                            <p className="text-[9px] text-muted-foreground">{metric.label}</p>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Bottom: Live Activity Ticker */}
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 2 }}
+                    className="p-3 rounded-xl bg-muted/10 border border-border/30 flex items-center gap-3 overflow-hidden"
+                  >
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <Radio className="w-3.5 h-3.5 text-primary animate-pulse" />
+                      <span className="text-[10px] font-mono text-muted-foreground">LIVE FEED</span>
+                    </div>
+                    <div className="flex-1 overflow-hidden">
+                      <motion.div
+                        animate={{ x: [0, -500] }}
+                        transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                        className="flex items-center gap-8 whitespace-nowrap"
+                      >
+                        <span className="text-xs text-muted-foreground">🎬 New film opinion from India</span>
+                        <span className="text-xs text-muted-foreground">🎵 Music preference captured in USA</span>
+                        <span className="text-xs text-muted-foreground">📺 OTT insight from Germany</span>
+                        <span className="text-xs text-muted-foreground">🎮 Gaming data from Japan</span>
+                        <span className="text-xs text-muted-foreground">📱 App preference logged in UK</span>
+                        <span className="text-xs text-muted-foreground">🎬 New film opinion from India</span>
+                      </motion.div>
+                    </div>
+                  </motion.div>
                 </div>
               </Card>
             </motion.div>
