@@ -111,7 +111,7 @@ export function DeveloperModal({ open, onOpenChange }: DeveloperModalProps) {
                       className="absolute -inset-1 bg-gradient-conic from-primary via-accent to-primary opacity-50 blur-sm"
                     />
                     <img
-                      src="/inphrone-logo.jpg"
+                      src="/GTK1.png"
                       alt="G. Thangella"
                       className="w-full h-full object-cover rounded-2xl relative z-[1] shadow-2xl"
                     />
