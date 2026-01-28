@@ -102,7 +102,7 @@ export function DeveloperModal({ open, onOpenChange }: DeveloperModalProps) {
                   <motion.div
                     whileHover={{ scale: 1.05 }}
                     onClick={() => setImageOpen(true)}
-                    className="group relative w-40 h-40 mb-6 rounded-2xl overflow-hidden cursor-pointer"
+                    className="group relative w-40 max-h-56 mb-6 rounded-2xl overflow-hidden cursor-pointer bg-black/5 flex items-center justify-center"
                   >
                     <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-transparent to-accent/30 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     <motion.div
@@ -111,10 +111,11 @@ export function DeveloperModal({ open, onOpenChange }: DeveloperModalProps) {
                       className="absolute -inset-1 bg-gradient-conic from-primary via-accent to-primary opacity-50 blur-sm"
                     />
                     <img
-                      src="/GTK1.png"
-                      alt="G.Thangella"
-                      className="w-full h-full object-contain rounded-2xl relative z-[1] shadow-2xl"
-                    />
+  src="/GTK1.png"
+  alt="G.Thangella"
+  className="max-w-full max-h-full object-contain rounded-2xl relative z-[1] shadow-2xl"
+/>
+
                     <div className="absolute inset-0 rounded-2xl ring-2 ring-white/20 z-20" />
                   </motion.div>
 
