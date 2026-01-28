@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -43,14 +43,42 @@ export function NotificationBroadcast() {
   const [userCounts, setUserCounts] = useState<Record<string, number>>({});
   const [loadingCounts, setLoadingCounts] = useState(false);
 
-  // Fetch user counts when component mounts or target changes
+  // Fetch user counts when component mounts
+  useEffect(() => {
+    fetchUserCounts();
+  }, []);
+
   const fetchUserCounts = async () => {
     setLoadingCounts(true);
     try {
-      const { data, error } = await supabase.rpc('get_user_counts');
+      // Fetch actual profile counts by user_type
+      const { data: profiles, error } = await supabase
+        .from('profiles')
+        .select('user_type');
+      
       if (error) throw error;
-      if (data && data.length > 0) {
-        setUserCounts(data[0]);
+      
+      if (profiles) {
+        const counts: Record<string, number> = {
+          total_users: profiles.length,
+          audience: 0,
+          creator: 0,
+          studio: 0,
+          production: 0,
+          ott: 0,
+          tv: 0,
+          gaming: 0,
+          music: 0,
+          developer: 0
+        };
+        
+        profiles.forEach(p => {
+          if (p.user_type && counts.hasOwnProperty(p.user_type)) {
+            counts[p.user_type]++;
+          }
+        });
+        
+        setUserCounts(counts);
       }
     } catch (error) {
       console.error("Error fetching user counts:", error);
@@ -58,10 +86,6 @@ export function NotificationBroadcast() {
       setLoadingCounts(false);
     }
   };
-
-  useState(() => {
-    fetchUserCounts();
-  });
 
   const getTargetCount = () => {
     if (targetUserType === "all") return userCounts.total_users || 0;
@@ -82,26 +106,32 @@ export function NotificationBroadcast() {
       return;
     }
 
-    const confirmMessage = `Send ${sendAppNotification ? "app" : ""}${sendAppNotification && sendEmailNotification ? " and " : ""}${sendEmailNotification ? "email" : ""} notifications to ${getTargetCount()} users?`;
+    const targetCount = getTargetCount();
+    if (targetCount === 0) {
+      toast.error("No users found for the selected criteria");
+      return;
+    }
+
+    const confirmMessage = `Send ${sendAppNotification ? "app" : ""}${sendAppNotification && sendEmailNotification ? " and " : ""}${sendEmailNotification ? "email" : ""} notifications to ${targetCount} users?`;
     
     if (!confirm(confirmMessage)) return;
 
     setSending(true);
     try {
-      // Build user type filter
+      // Build user type filter to get actual user IDs
       let userTypeFilter: string[] = [];
       if (targetUserType === "all") {
-        userTypeFilter = ['audience', 'creator', 'studio', 'production', 'ott', 'tv', 'gaming', 'music'];
+        userTypeFilter = ['audience', 'creator', 'studio', 'production', 'ott', 'tv', 'gaming', 'music', 'developer'];
       } else if (targetUserType === "non_audience") {
-        userTypeFilter = ['creator', 'studio', 'production', 'ott', 'tv', 'gaming', 'music'];
+        userTypeFilter = ['creator', 'studio', 'production', 'ott', 'tv', 'gaming', 'music', 'developer'];
       } else {
         userTypeFilter = [targetUserType];
       }
 
-      // Fetch target users
+      // Fetch target users - get IDs directly
       const { data: users, error: usersError } = await supabase
         .from('profiles')
-        .select('id, email, full_name, user_type, settings')
+        .select('id')
         .in('user_type', userTypeFilter);
 
       if (usersError) throw usersError;
@@ -112,11 +142,13 @@ export function NotificationBroadcast() {
         return;
       }
 
+      console.log(`Found ${users.length} users for broadcast`);
+
       let appNotifsSent = 0;
       let emailsSent = 0;
       let emailsFailed = 0;
 
-      // Send app notifications
+      // Send app notifications directly to DB for reliability
       if (sendAppNotification) {
         const notifications = users.map(user => ({
           user_id: user.id,
@@ -138,13 +170,15 @@ export function NotificationBroadcast() {
         }
       }
 
-      // Send email notifications using the consolidated push notification function
+      // Send email notifications using edge function
       if (sendEmailNotification) {
         try {
           console.log("Sending email notifications to", users.length, "users");
+          const userIds = users.map(u => u.id);
+          
           const { data: result, error: pushError } = await supabase.functions.invoke('send-push-notification', {
             body: {
-              userIds: users.map(u => u.id),
+              userIds,
               title,
               message,
               url: actionUrl || '/dashboard',
@@ -155,19 +189,24 @@ export function NotificationBroadcast() {
             }
           });
 
-          console.log("Email notification result:", result, "error:", pushError);
+          console.log("Email notification result:", result);
 
           if (pushError) {
             console.error("Error sending emails:", pushError);
             emailsFailed = users.length;
+            toast.error(`Email sending failed: ${pushError.message}`);
           } else if (result) {
             emailsSent = result.results?.emailSent || 0;
             emailsFailed = result.results?.emailFailed || 0;
-            console.log(`Emails sent: ${emailsSent}, failed: ${emailsFailed}`);
+            
+            if (result.results?.errors?.length > 0) {
+              console.error("Email errors:", result.results.errors);
+            }
           }
         } catch (emailError) {
           console.error("Failed to send emails:", emailError);
           emailsFailed = users.length;
+          toast.error("Failed to send email notifications");
         }
       }
 
@@ -177,7 +216,11 @@ export function NotificationBroadcast() {
       if (emailsSent > 0) successMsg += `${emailsSent} emails sent. `;
       if (emailsFailed > 0) successMsg += `${emailsFailed} emails failed.`;
       
-      toast.success(successMsg || "Notifications sent successfully!");
+      if (successMsg) {
+        toast.success(successMsg);
+      } else {
+        toast.info("Notifications processed");
+      }
 
       // Reset form
       setTitle("");

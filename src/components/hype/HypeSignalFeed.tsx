@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Sparkles, TrendingUp, Clock, Filter } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Sparkles, TrendingUp, Clock, Filter, Eye } from "lucide-react";
 import { HypeSignalCard } from "./HypeSignalCard";
 import { useHypeSignals } from "@/hooks/useHypeSignals";
 import { SkeletonList } from "@/components/common/SkeletonCard";
@@ -32,7 +33,8 @@ export function HypeSignalFeed({
     userVotes, 
     fetchSignals, 
     fetchRisingSignals,
-    vote 
+    vote,
+    isViewOnly 
   } = useHypeSignals(selectedCategory === 'all' ? undefined : selectedCategory);
 
   useEffect(() => {
@@ -61,6 +63,20 @@ export function HypeSignalFeed({
 
   return (
     <div className="space-y-4">
+      {/* View Only Banner for non-audience */}
+      {isViewOnly && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-center gap-2 p-3 rounded-lg bg-muted/50 border border-border"
+        >
+          <Eye className="w-4 h-4 text-muted-foreground" />
+          <span className="text-sm text-muted-foreground">
+            <strong>Industry View:</strong> You're viewing audience demand signals. Only audience members can vote.
+          </span>
+        </motion.div>
+      )}
+
       {/* Controls */}
       <div className={cn(
         "flex flex-col sm:flex-row gap-4",
@@ -117,7 +133,7 @@ export function HypeSignalFeed({
         <EmptyState
           icon={Sparkles}
           title="No signals yet"
-          description="Be the first to signal what you want to see created!"
+          description={isViewOnly ? "No audience signals in this category yet." : "Be the first to signal what you want to see created!"}
         />
       ) : (
         <motion.div 
@@ -141,6 +157,7 @@ export function HypeSignalFeed({
               userVote={userVotes[signal.id]}
               onVote={vote}
               showRank={activeTab === 'top' ? index + 1 : undefined}
+              isViewOnly={isViewOnly}
             />
           ))}
         </motion.div>

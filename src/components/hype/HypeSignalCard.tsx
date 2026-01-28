@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Flame, ArrowRight, Clock, TrendingUp } from "lucide-react";
+import { Flame, ArrowRight, Clock, TrendingUp, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -20,6 +20,7 @@ interface HypeSignalCardProps {
   userVote?: 'hype' | 'pass' | null;
   onVote: (signalId: string, voteType: 'hype' | 'pass') => Promise<boolean>;
   showRank?: number;
+  isViewOnly?: boolean;
 }
 
 export function HypeSignalCard({
@@ -35,17 +36,28 @@ export function HypeSignalCard({
   userVote,
   onVote,
   showRank,
+  isViewOnly = false,
 }: HypeSignalCardProps) {
   const [isVoting, setIsVoting] = useState(false);
   const [localHypeCount, setLocalHypeCount] = useState(hypeCount);
   const [localPassCount, setLocalPassCount] = useState(passCount);
   const [localVote, setLocalVote] = useState(userVote);
 
+  // Sync with prop changes (from real-time updates)
+  useEffect(() => {
+    setLocalHypeCount(hypeCount);
+    setLocalPassCount(passCount);
+  }, [hypeCount, passCount]);
+
+  useEffect(() => {
+    setLocalVote(userVote);
+  }, [userVote]);
+
   const daysLeft = differenceInDays(new Date(expiresAt), new Date());
   const timeAgo = formatDistanceToNow(new Date(createdAt), { addSuffix: true });
 
   const handleVote = async (voteType: 'hype' | 'pass') => {
-    if (isVoting) return;
+    if (isVoting || isViewOnly) return;
     
     setIsVoting(true);
     
@@ -109,7 +121,7 @@ export function HypeSignalCard({
         "relative p-4 rounded-xl border transition-all duration-300",
         "bg-card/50 backdrop-blur-sm hover:bg-card/80",
         "border-l-4",
-        localVote === 'hype' && "ring-2 ring-orange-500/30"
+        localVote === 'hype' && !isViewOnly && "ring-2 ring-orange-500/30"
       )}
       style={{ borderLeftColor: categoryColor }}
     >
@@ -117,6 +129,16 @@ export function HypeSignalCard({
       {showRank && (
         <div className="absolute -top-2 -left-2 w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm shadow-lg">
           #{showRank}
+        </div>
+      )}
+
+      {/* View Only Badge */}
+      {isViewOnly && (
+        <div className="absolute -top-2 -right-2">
+          <Badge variant="secondary" className="text-xs gap-1">
+            <Eye className="w-3 h-3" />
+            View Only
+          </Badge>
         </div>
       )}
 
@@ -165,45 +187,64 @@ export function HypeSignalCard({
         </span>
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex gap-2">
-        <Button
-          variant={localVote === 'hype' ? 'default' : 'outline'}
-          className={cn(
-            "flex-1 gap-2 transition-all duration-300",
-            localVote === 'hype' 
-              ? "bg-gradient-to-r from-orange-500 to-red-500 text-white border-0 shadow-lg shadow-orange-500/30" 
-              : "hover:bg-orange-500/10 hover:border-orange-500/50 hover:text-orange-500"
-          )}
-          onClick={() => handleVote('hype')}
-          disabled={isVoting}
-        >
-          <Flame className={cn(
-            "w-4 h-4",
-            localVote === 'hype' && "animate-pulse"
-          )} />
-          <span>Hype It</span>
-          <Badge variant="secondary" className="ml-1 text-xs bg-background/20">
-            {localHypeCount}
-          </Badge>
-        </Button>
+      {/* Action Buttons - Show as view-only stats for non-audience */}
+      {isViewOnly ? (
+        <div className="flex gap-2">
+          <div className="flex-1 flex items-center justify-center gap-2 p-2 rounded-lg bg-orange-500/10 border border-orange-500/20">
+            <Flame className="w-4 h-4 text-orange-500" />
+            <span className="text-sm font-medium text-orange-500">Hype</span>
+            <Badge variant="secondary" className="text-xs">
+              {localHypeCount}
+            </Badge>
+          </div>
+          <div className="flex-1 flex items-center justify-center gap-2 p-2 rounded-lg bg-muted/50 border border-border">
+            <ArrowRight className="w-4 h-4 text-muted-foreground" />
+            <span className="text-sm font-medium text-muted-foreground">Pass</span>
+            <Badge variant="outline" className="text-xs">
+              {localPassCount}
+            </Badge>
+          </div>
+        </div>
+      ) : (
+        <div className="flex gap-2">
+          <Button
+            variant={localVote === 'hype' ? 'default' : 'outline'}
+            className={cn(
+              "flex-1 gap-2 transition-all duration-300",
+              localVote === 'hype' 
+                ? "bg-gradient-to-r from-orange-500 to-red-500 text-white border-0 shadow-lg shadow-orange-500/30" 
+                : "hover:bg-orange-500/10 hover:border-orange-500/50 hover:text-orange-500"
+            )}
+            onClick={() => handleVote('hype')}
+            disabled={isVoting}
+          >
+            <Flame className={cn(
+              "w-4 h-4",
+              localVote === 'hype' && "animate-pulse"
+            )} />
+            <span>Hype It</span>
+            <Badge variant="secondary" className="ml-1 text-xs bg-background/20">
+              {localHypeCount}
+            </Badge>
+          </Button>
 
-        <Button
-          variant={localVote === 'pass' ? 'secondary' : 'ghost'}
-          className={cn(
-            "flex-1 gap-2 transition-all",
-            localVote === 'pass' && "bg-muted"
-          )}
-          onClick={() => handleVote('pass')}
-          disabled={isVoting}
-        >
-          <ArrowRight className="w-4 h-4" />
-          <span>Pass</span>
-          <Badge variant="outline" className="ml-1 text-xs">
-            {localPassCount}
-          </Badge>
-        </Button>
-      </div>
+          <Button
+            variant={localVote === 'pass' ? 'secondary' : 'ghost'}
+            className={cn(
+              "flex-1 gap-2 transition-all",
+              localVote === 'pass' && "bg-muted"
+            )}
+            onClick={() => handleVote('pass')}
+            disabled={isVoting}
+          >
+            <ArrowRight className="w-4 h-4" />
+            <span>Pass</span>
+            <Badge variant="outline" className="ml-1 text-xs">
+              {localPassCount}
+            </Badge>
+          </Button>
+        </div>
+      )}
     </motion.div>
   );
 }

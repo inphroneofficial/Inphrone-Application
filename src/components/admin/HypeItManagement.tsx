@@ -49,29 +49,41 @@ export function HypeItManagement() {
   const fetchSignals = async () => {
     setLoading(true);
     try {
+      // Fetch signals - the RLS policy now allows admin access to all signals
       const { data, error } = await supabase
         .from("hype_signals")
         .select(`
           *,
-          categories:category_id (name, color),
-          profiles:created_by (full_name)
+          categories:category_id (name, color)
         `)
         .order("created_at", { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching signals:", error);
+        throw error;
+      }
 
       if (data) {
+        // Fetch creator names separately to avoid JOIN issues
+        const creatorIds = [...new Set(data.map(s => s.created_by))];
+        const { data: creators } = await supabase
+          .from("profiles")
+          .select("id, full_name")
+          .in("id", creatorIds);
+
+        const creatorMap = new Map(creators?.map(c => [c.id, c.full_name]) || []);
+
         const formattedSignals: HypeSignal[] = data.map((s: any) => ({
           ...s,
           category_name: s.categories?.name,
           category_color: s.categories?.color,
-          creator_name: s.profiles?.full_name,
+          creator_name: creatorMap.get(s.created_by) || "Unknown",
         }));
         setSignals(formattedSignals);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error fetching signals:", error);
-      toast.error("Failed to fetch signals");
+      toast.error("Failed to fetch signals: " + (error.message || "Unknown error"));
     } finally {
       setLoading(false);
     }

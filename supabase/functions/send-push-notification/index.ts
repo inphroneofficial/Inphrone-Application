@@ -135,11 +135,26 @@ serve(async (req) => {
       targetUserIds = users?.map(u => u.id) || [];
     }
 
+    console.log(`[send-push-notification] Target user IDs count: ${targetUserIds.length}`);
+    console.log(`[send-push-notification] Target user IDs: ${targetUserIds.slice(0, 5).join(', ')}${targetUserIds.length > 5 ? '...' : ''}`);
+
     if (targetUserIds.length === 0) {
       console.log("[send-push-notification] No target users found");
       return new Response(
-        JSON.stringify({ success: false, message: "No target users found" }),
-        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+        JSON.stringify({ 
+          success: false, 
+          message: "No target users found",
+          results: {
+            pushSent: 0,
+            pushFailed: 0,
+            emailSent: 0,
+            emailFailed: 0,
+            inAppSent: 0,
+            inAppFailed: 0,
+            errors: ["No target users found"]
+          }
+        }),
+        { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
       );
     }
 
@@ -155,26 +170,60 @@ serve(async (req) => {
       errors: [] as string[]
     };
 
-    // Batch fetch all user profiles
-    const { data: profiles, error: profilesError } = await supabase
-      .from("profiles")
-      .select("id, email, full_name, settings")
-      .in("id", targetUserIds);
+    // Batch fetch all user profiles - fetch in chunks if too many
+    const chunkSize = 100;
+    const allProfiles: any[] = [];
+    
+    for (let i = 0; i < targetUserIds.length; i += chunkSize) {
+      const chunk = targetUserIds.slice(i, i + chunkSize);
+      const { data: profiles, error: profilesError } = await supabase
+        .from("profiles")
+        .select("id, email, full_name, settings")
+        .in("id", chunk);
 
-    if (profilesError) {
-      console.error("[send-push-notification] Error fetching profiles:", profilesError);
-      throw profilesError;
+      if (profilesError) {
+        console.error("[send-push-notification] Error fetching profiles chunk:", profilesError);
+        continue;
+      }
+      
+      if (profiles) {
+        allProfiles.push(...profiles);
+      }
     }
 
-    console.log(`[send-push-notification] Found ${profiles?.length || 0} profiles`);
+    console.log(`[send-push-notification] Found ${allProfiles.length} profiles for ${targetUserIds.length} user IDs`);
+
+    if (allProfiles.length === 0) {
+      console.log("[send-push-notification] No profiles found for provided user IDs");
+      return new Response(
+        JSON.stringify({ 
+          success: false, 
+          message: "No profiles found for user IDs",
+          results: {
+            pushSent: 0,
+            pushFailed: 0,
+            emailSent: 0,
+            emailFailed: 0,
+            inAppSent: 0,
+            inAppFailed: 0,
+            errors: ["No profiles found for provided user IDs"]
+          }
+        }),
+        { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    // Check RESEND_API_KEY upfront for email notifications
+    if (sendEmail && !RESEND_API_KEY) {
+      console.error("[send-push-notification] RESEND_API_KEY not configured - cannot send emails");
+      results.errors.push("RESEND_API_KEY not configured");
+    }
 
     // Process each user
-    for (const profile of (profiles || [])) {
+    for (const profile of allProfiles) {
       const settings = (profile.settings as Record<string, unknown>) || {};
       const userName = profile.full_name || "User";
       const userEmail = profile.email;
-
-      console.log(`[send-push-notification] Processing user ${profile.id} (${userEmail})`);
 
       // 1. Send In-App Notification
       if (sendInApp && settings.notifications_enabled !== false) {
@@ -194,7 +243,6 @@ serve(async (req) => {
             results.inAppFailed++;
             results.errors.push(`In-app failed for ${userEmail}: ${notifError.message}`);
           } else {
-            console.log(`[send-push-notification] In-app notification sent to ${profile.id}`);
             results.inAppSent++;
           }
         } catch (inAppError) {
@@ -207,7 +255,6 @@ serve(async (req) => {
       if (sendPush && settings.push_subscription) {
         try {
           const subscription = settings.push_subscription as PushSubscription;
-          console.log(`[send-push-notification] Sending push to ${profile.id}`);
           
           const pushPayload = {
             title,
@@ -230,10 +277,16 @@ serve(async (req) => {
       }
 
       // 3. Send Email Notification
-      if (sendEmail && RESEND_API_KEY && userEmail && settings.email_notifications !== false) {
+      if (sendEmail && userEmail && RESEND_API_KEY) {
+        // Check if user has disabled email notifications (default to enabled)
+        const emailEnabled = settings.email_notifications !== false;
+        
+        if (!emailEnabled) {
+          console.log(`[send-push-notification] User ${profile.id} has disabled email notifications`);
+          continue;
+        }
+
         try {
-          console.log(`[send-push-notification] Sending email to ${userEmail}`);
-          
           const emailHtml = `
             <!DOCTYPE html>
             <html>
@@ -278,28 +331,29 @@ serve(async (req) => {
             </html>
           `;
 
+          const emailPayload = {
+            from: RESEND_FROM,
+            to: [userEmail],
+            subject: title,
+            html: emailHtml
+          };
+
           const emailRes = await fetch("https://api.resend.com/emails", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
               "Authorization": `Bearer ${RESEND_API_KEY}`
             },
-            body: JSON.stringify({
-              from: RESEND_FROM,
-              to: [userEmail],
-              subject: title,
-              html: emailHtml
-            })
+            body: JSON.stringify(emailPayload)
           });
 
           const emailResponseText = await emailRes.text();
-          console.log(`[send-push-notification] Resend API response for ${userEmail}:`, emailRes.status, emailResponseText);
 
           if (emailRes.ok) {
             console.log(`[send-push-notification] Email sent successfully to ${userEmail}`);
             results.emailSent++;
           } else {
-            console.error(`[send-push-notification] Email failed for ${userEmail}:`, emailResponseText);
+            console.error(`[send-push-notification] Email failed for ${userEmail}:`, emailRes.status, emailResponseText);
             results.emailFailed++;
             results.errors.push(`Email failed for ${userEmail}: ${emailResponseText}`);
           }
@@ -308,9 +362,6 @@ serve(async (req) => {
           results.emailFailed++;
           results.errors.push(`Email error for ${userEmail}: ${String(emailError)}`);
         }
-      } else if (sendEmail && !RESEND_API_KEY) {
-        console.warn("[send-push-notification] RESEND_API_KEY not configured");
-        results.errors.push("RESEND_API_KEY not configured");
       }
     }
 
@@ -320,7 +371,8 @@ serve(async (req) => {
       JSON.stringify({
         success: true,
         results,
-        targetCount: targetUserIds.length
+        targetCount: targetUserIds.length,
+        processedCount: allProfiles.length
       }),
       {
         status: 200,
@@ -331,7 +383,19 @@ serve(async (req) => {
     console.error("[send-push-notification] Critical error:", error);
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
     return new Response(
-      JSON.stringify({ error: errorMessage, success: false }),
+      JSON.stringify({ 
+        error: errorMessage, 
+        success: false,
+        results: {
+          pushSent: 0,
+          pushFailed: 0,
+          emailSent: 0,
+          emailFailed: 0,
+          inAppSent: 0,
+          inAppFailed: 0,
+          errors: [errorMessage]
+        }
+      }),
       {
         status: 500,
         headers: { "Content-Type": "application/json", ...corsHeaders },

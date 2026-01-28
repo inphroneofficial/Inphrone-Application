@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Flame, Rocket, Plus, TrendingUp, Users } from "lucide-react";
+import { Flame, Rocket, Plus, TrendingUp, Users, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { HypeSignalFeed } from "./HypeSignalFeed";
 import { HypeSubmitDialog } from "./HypeSubmitDialog";
 import { useHypeSignals } from "@/hooks/useHypeSignals";
@@ -22,7 +23,7 @@ export function HypeItSection({
   className,
 }: HypeItSectionProps) {
   const [showSubmitDialog, setShowSubmitDialog] = useState(false);
-  const { signals, canSubmit, currentUserId } = useHypeSignals(categoryId);
+  const { signals, canSubmit, currentUserId, isViewOnly } = useHypeSignals(categoryId);
 
   // Calculate some stats
   const totalSignals = signals.length;
@@ -41,9 +42,17 @@ export function HypeItSection({
             <h2 className="text-3xl font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
               Hype It
             </h2>
+            {isViewOnly && (
+              <Badge variant="secondary" className="gap-1">
+                <Eye className="w-3 h-3" />
+                Industry View
+              </Badge>
+            )}
           </div>
           <p className="text-muted-foreground max-w-md mx-auto">
-            Signal what you want to see created next. Your voice shapes entertainment.
+            {isViewOnly 
+              ? "View what audiences want to see created next. Real-time demand signals." 
+              : "Signal what you want to see created next. Your voice shapes entertainment."}
           </p>
         </motion.div>
       )}
@@ -94,8 +103,8 @@ export function HypeItSection({
         </motion.div>
       )}
 
-      {/* Submit Button */}
-      {currentUserId && (
+      {/* Submit Button - Only for audience users */}
+      {currentUserId && !isViewOnly && (
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}

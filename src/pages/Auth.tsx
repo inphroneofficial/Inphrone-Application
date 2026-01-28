@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,7 @@ import { SocialAuthProviders } from "@/components/auth/SocialAuthProviders";
 const Auth = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [checkingSession, setCheckingSession] = useState(true);
   const [showRoleSelection, setShowRoleSelection] = useState(false);
   const [selectedRole, setSelectedRole] = useState<"audience" | "creator" | "studio" | "production" | "ott" | "tv" | "gaming" | "music" | "developer" | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -67,53 +68,72 @@ const Auth = () => {
   const strengthLabels = ["Weak", "Fair", "Good", "Strong"];
   const strengthColors = ["bg-destructive", "bg-orange-500", "bg-yellow-500", "bg-emerald-500"];
 
-  useEffect(() => {
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      if (session) {
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("onboarding_completed, settings")
-          .eq("id", session.user.id)
-          .single();
+  // Handle navigation after auth
+  const handleAuthNavigation = useCallback(async (userId: string) => {
+    try {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("onboarding_completed, settings")
+        .eq("id", userId)
+        .single();
 
-        if (profile?.onboarding_completed) {
-          // Check if tour should be shown for returning users
-          const settings = profile.settings as { tour_completed?: boolean } | null;
-          if (!settings?.tour_completed) {
-            // First login - clear any stale tour flags
-            localStorage.removeItem('inphrone_tour_completed');
-          }
-          navigate("/dashboard");
-        } else {
-          navigate("/onboarding");
+      if (profile?.onboarding_completed) {
+        const settings = profile.settings as { tour_completed?: boolean } | null;
+        if (!settings?.tour_completed) {
+          localStorage.removeItem('inphrone_tour_completed');
+        }
+        navigate("/dashboard", { replace: true });
+      } else {
+        navigate("/onboarding", { replace: true });
+      }
+    } catch (error) {
+      console.error("Error checking profile:", error);
+      navigate("/onboarding", { replace: true });
+    }
+  }, [navigate]);
+
+  // Check session on mount
+  useEffect(() => {
+    let mounted = true;
+
+    const checkSession = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (session && mounted) {
+          await handleAuthNavigation(session.user.id);
+        }
+      } catch (error) {
+        console.error("Session check error:", error);
+      } finally {
+        if (mounted) {
+          setCheckingSession(false);
         }
       }
-    });
+    };
 
+    checkSession();
+
+    return () => {
+      mounted = false;
+    };
+  }, [handleAuthNavigation]);
+
+  // Listen for auth state changes
+  useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (session) {
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("onboarding_completed, settings")
-          .eq("id", session.user.id)
-          .single();
-
-        if (profile?.onboarding_completed) {
-          // Check if tour should be shown for this login
-          const settings = profile.settings as { tour_completed?: boolean } | null;
-          if (!settings?.tour_completed) {
-            // First login after signup - clear tour flags to trigger tour
-            localStorage.removeItem('inphrone_tour_completed');
-          }
-          navigate("/dashboard");
-        } else {
-          navigate("/onboarding");
-        }
+      console.log("Auth state change:", event, session?.user?.id);
+      
+      if (event === 'SIGNED_IN' && session) {
+        // Small delay to ensure profile is created
+        setTimeout(() => {
+          handleAuthNavigation(session.user.id);
+        }, 500);
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [navigate]);
+  }, [handleAuthNavigation]);
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -185,6 +205,7 @@ const Auth = () => {
         toast.success("🎉 Welcome to Inphrone™!", {
           description: "Your account has been created successfully."
         });
+        // Navigation will be handled by onAuthStateChange
       } else if (data.user && !data.session) {
         toast.success("Account created! Please verify your email.", {
           duration: 7000,
@@ -243,6 +264,7 @@ const Auth = () => {
         }
 
         toast.success("Welcome back! 👋");
+        // Navigation will be handled by onAuthStateChange
       }
     } catch (error: any) {
       console.error("Sign in error:", error);
@@ -258,6 +280,22 @@ const Auth = () => {
     { icon: Shield, text: "Secure & Private" },
     { icon: Zap, text: "Instant Rewards" },
   ];
+
+  // Show loading while checking session
+  if (checkingSession) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-center"
+        >
+          <Loader2 className="w-12 h-12 animate-spin text-primary mx-auto" />
+          <p className="mt-4 text-muted-foreground">Loading...</p>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex relative overflow-hidden">
@@ -487,86 +525,102 @@ const Auth = () => {
                       </form>
                     </TabsContent>
 
-                    <TabsContent value="signup" className="space-y-6 pt-6">
-                      <div className="text-center space-y-3">
+                    <TabsContent value="signup" className="space-y-5 pt-6">
+                      <div className="text-center space-y-2">
                         <h2 className="text-2xl font-bold">Join Inphrone™</h2>
                         <p className="text-muted-foreground text-sm">
-                          Be part of the entertainment revolution
+                          Select your role to get started
                         </p>
                       </div>
 
-                      <div className="space-y-4">
-                        {/* Premium Social Auth Providers */}
-                        <SocialAuthProviders 
-                          mode="signup" 
-                          onEmailClick={() => setShowRoleSelection(true)} 
-                        />
-
-                        <div className="grid grid-cols-3 gap-3 pt-2">
-                          {features.slice(0, 3).map((feature) => (
-                            <div key={feature.text} className="flex flex-col items-center gap-1 p-3 rounded-lg bg-muted/30">
-                              <feature.icon className="w-4 h-4 text-primary" />
-                              <span className="text-[10px] text-muted-foreground text-center">{feature.text}</span>
-                            </div>
-                          ))}
-                        </div>
+                      {/* Role Selection Cards - Visible Upfront */}
+                      <div className="grid grid-cols-2 gap-2.5 max-h-[320px] overflow-y-auto pr-1">
+                        {roles.map((role, index) => (
+                          <motion.div
+                            key={role.value}
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.2, delay: index * 0.03 }}
+                          >
+                            <Card
+                              className={`group relative p-3 cursor-pointer transition-all duration-300 border-2 bg-card/50 hover:bg-card hover:shadow-lg ${
+                                selectedRole === role.value 
+                                  ? 'border-primary shadow-lg ring-2 ring-primary/20' 
+                                  : 'hover:border-primary/50'
+                              }`}
+                              onClick={() => setSelectedRole(role.value as any)}
+                            >
+                              <div className="flex flex-col items-center gap-2 text-center">
+                                <div className={`text-2xl p-2 rounded-xl bg-gradient-to-br ${role.color} bg-opacity-10 group-hover:scale-110 transition-transform ${selectedRole === role.value ? 'scale-110' : ''}`}>
+                                  {role.icon}
+                                </div>
+                                <div>
+                                  <h3 className={`font-semibold text-xs leading-tight transition-colors ${selectedRole === role.value ? 'text-primary' : 'group-hover:text-primary'}`}>
+                                    {role.label}
+                                  </h3>
+                                </div>
+                                {selectedRole === role.value && (
+                                  <motion.div
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    className="absolute top-1 right-1"
+                                  >
+                                    <Check className="w-4 h-4 text-primary" />
+                                  </motion.div>
+                                )}
+                              </div>
+                            </Card>
+                          </motion.div>
+                        ))}
                       </div>
+
+                      {/* Continue Button - Shows after role selection */}
+                      <AnimatePresence>
+                        {selectedRole && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            className="space-y-3"
+                          >
+                            <div className="flex items-center justify-center gap-2 p-2 rounded-lg bg-primary/10">
+                              <span className="text-lg">{roles.find(r => r.value === selectedRole)?.icon}</span>
+                              <span className="text-sm font-medium text-primary">{roles.find(r => r.value === selectedRole)?.label}</span>
+                            </div>
+                            
+                            <Button
+                              className="w-full h-11 bg-gradient-to-r from-primary to-accent hover:opacity-90 text-white font-semibold shadow-lg shadow-primary/25 transition-all hover:shadow-xl hover:-translate-y-0.5"
+                              onClick={() => setShowRoleSelection(true)}
+                            >
+                              <Sparkles className="w-4 h-4 mr-2" />
+                              Continue as {roles.find(r => r.value === selectedRole)?.label}
+                            </Button>
+                            
+                            <div className="relative py-1">
+                              <div className="absolute inset-0 flex items-center">
+                                <span className="w-full border-t border-border" />
+                              </div>
+                              <div className="relative flex justify-center text-xs uppercase">
+                                <span className="bg-card px-3 text-muted-foreground">or</span>
+                              </div>
+                            </div>
+                            
+                            {/* Google Quick Sign-up */}
+                            <SocialAuthProviders mode="signup" />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+
+                      {!selectedRole && (
+                        <p className="text-xs text-muted-foreground text-center">
+                          Choose how you'll use Inphrone™ to continue
+                        </p>
+                      )}
                     </TabsContent>
                   </Tabs>
                 </motion.div>
-              ) : !selectedRole ? (
-                <motion.div
-                  key="role-selection"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                  className="space-y-6"
-                >
-                  <div className="text-center space-y-3">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setShowRoleSelection(false)}
-                      className="mb-2 hover:bg-primary/10"
-                    >
-                      <ArrowLeft className="w-4 h-4 mr-2" />
-                      Back
-                    </Button>
-                    <h2 className="text-2xl font-bold">Choose Your Role</h2>
-                    <p className="text-muted-foreground text-sm">
-                      Select how you'll use Inphrone™
-                    </p>
-                  </div>
-
-                  <div className="grid gap-3 max-h-[400px] overflow-y-auto pr-2">
-                    {roles.map((role, index) => (
-                      <motion.div
-                        key={role.value}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.3, delay: index * 0.05 }}
-                      >
-                        <Card
-                          className="group p-4 cursor-pointer hover:shadow-lg transition-all duration-300 border-2 hover:border-primary/50 bg-card/50 hover:bg-card"
-                          onClick={() => setSelectedRole(role.value as any)}
-                        >
-                          <div className="flex items-center gap-4">
-                            <div className={`text-3xl p-2 rounded-xl bg-gradient-to-br ${role.color} bg-opacity-10 group-hover:scale-110 transition-transform`}>
-                              {role.icon}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <h3 className="font-bold text-base group-hover:text-primary transition-colors">{role.label}</h3>
-                              <p className="text-xs text-muted-foreground truncate">{role.tagline}</p>
-                            </div>
-                            <ArrowLeft className="w-4 h-4 rotate-180 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
-                          </div>
-                        </Card>
-                      </motion.div>
-                    ))}
-                  </div>
-                </motion.div>
               ) : (
+                /* Sign-up Form - Shows after role selection */
                 <motion.div
                   key="signup-form"
                   initial={{ opacity: 0, y: 10 }}
@@ -579,13 +633,16 @@ const Auth = () => {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => setSelectedRole(null)}
+                      onClick={() => {
+                        setShowRoleSelection(false);
+                        setSelectedRole(null);
+                      }}
                       className="mb-2 hover:bg-primary/10"
                     >
                       <ArrowLeft className="w-4 h-4 mr-2" />
                       Change Role
                     </Button>
-                    <div className={`inline-flex items-center gap-3 px-5 py-2.5 bg-gradient-to-r ${roles.find(r => r.value === selectedRole)?.color} rounded-full text-white shadow-lg`}>
+                    <div className={`inline-flex items-center gap-3 px-5 py-2.5 bg-gradient-to-r ${roles.find(r => r.value === selectedRole)?.color} rounded-full text-primary-foreground shadow-lg`}>
                       <span className="text-2xl">{roles.find(r => r.value === selectedRole)?.icon}</span>
                       <span className="font-bold">{roles.find(r => r.value === selectedRole)?.label}</span>
                     </div>
@@ -697,7 +754,7 @@ const Auth = () => {
                         </button>
                       </div>
                       {confirmPassword && password === confirmPassword && (
-                        <p className="text-xs text-emerald-500 flex items-center gap-1">
+                        <p className="text-xs text-primary flex items-center gap-1">
                           <Check className="w-3 h-3" /> Passwords match
                         </p>
                       )}
@@ -737,28 +794,20 @@ const Auth = () => {
                         className="text-xs leading-relaxed cursor-pointer"
                       >
                         I agree to the{" "}
-                        <button
-                          type="button"
-                          onClick={() => navigate("/terms")}
-                          className="text-primary hover:underline font-medium"
-                        >
-                          Terms & Conditions
+                        <button type="button" onClick={() => navigate("/terms")} className="text-primary hover:underline font-medium">
+                          Terms of Service
                         </button>{" "}
                         and{" "}
-                        <button
-                          type="button"
-                          onClick={() => navigate("/privacy-policy")}
-                          className="text-primary hover:underline font-medium"
-                        >
+                        <button type="button" onClick={() => navigate("/privacy-policy")} className="text-primary hover:underline font-medium">
                           Privacy Policy
                         </button>
                       </label>
                     </div>
-                    
+
                     <Button
                       type="submit"
                       className="w-full h-12 bg-gradient-to-r from-primary to-accent hover:opacity-90 text-white font-semibold shadow-lg shadow-primary/25 transition-all hover:shadow-xl hover:shadow-primary/30 hover:-translate-y-0.5"
-                      disabled={loading}
+                      disabled={loading || !agreeToTerms}
                     >
                       {loading ? (
                         <>
@@ -766,34 +815,14 @@ const Auth = () => {
                           Creating Account...
                         </>
                       ) : (
-                        <>
-                          <Sparkles className="w-4 h-4 mr-2" />
-                          Create Account
-                        </>
+                        "Create Account"
                       )}
                     </Button>
-                    
-                    <p className="text-[10px] text-muted-foreground/70 text-center leading-relaxed">
-                      By creating an account, you acknowledge Inphrone's™ proprietary ownership of its brand and algorithms.
-                    </p>
                   </form>
                 </motion.div>
               )}
             </AnimatePresence>
           </Card>
-
-          {/* Desktop back button */}
-          <div className="hidden lg:block mt-6 text-center">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate("/")}
-              className="text-muted-foreground hover:text-foreground"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Home
-            </Button>
-          </div>
         </motion.div>
       </div>
     </div>

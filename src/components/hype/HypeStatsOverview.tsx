@@ -31,68 +31,95 @@ export function HypeStatsOverview({ className, compact = false }: HypeStatsOverv
   });
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        // Fetch active signals with category info
-        const { data: signals } = await supabase
-          .from("hype_signals")
-          .select(`
-            *,
-            categories:category_id (name, color)
-          `)
-          .eq("is_archived", false)
-          .gt("expires_at", new Date().toISOString());
+  const fetchStats = async () => {
+    try {
+      // Fetch active signals with category info
+      const { data: signals } = await supabase
+        .from("hype_signals")
+        .select(`
+          *,
+          categories:category_id (name, color)
+        `)
+        .eq("is_archived", false)
+        .gt("expires_at", new Date().toISOString());
 
-        // Fetch total votes
-        const { count: totalVotes } = await supabase
-          .from("hype_votes")
-          .select("*", { count: "exact", head: true });
+      // Fetch total votes
+      const { count: totalVotes } = await supabase
+        .from("hype_votes")
+        .select("*", { count: "exact", head: true });
 
-        // Fetch all signals for total count
-        const { count: totalSignals } = await supabase
-          .from("hype_signals")
-          .select("*", { count: "exact", head: true });
+      // Fetch all signals for total count
+      const { count: totalSignals } = await supabase
+        .from("hype_signals")
+        .select("*", { count: "exact", head: true });
 
-        if (signals) {
-          // Calculate category distribution
-          const categoryCount: Record<string, { count: number; color: string }> = {};
-          let totalHype = 0;
-          let totalScore = 0;
+      if (signals) {
+        // Calculate category distribution
+        const categoryCount: Record<string, { count: number; color: string }> = {};
+        let totalHype = 0;
+        let totalScore = 0;
 
-          signals.forEach((s: any) => {
-            const catName = s.categories?.name || "Unknown";
-            const catColor = s.categories?.color || "#666";
-            if (!categoryCount[catName]) {
-              categoryCount[catName] = { count: 0, color: catColor };
-            }
-            categoryCount[catName].count++;
-            totalHype += s.hype_count || 0;
-            totalScore += s.signal_score || 0;
-          });
+        signals.forEach((s: any) => {
+          const catName = s.categories?.name || "Unknown";
+          const catColor = s.categories?.color || "#666";
+          if (!categoryCount[catName]) {
+            categoryCount[catName] = { count: 0, color: catColor };
+          }
+          categoryCount[catName].count++;
+          totalHype += s.hype_count || 0;
+          totalScore += s.signal_score || 0;
+        });
 
-          const topCategories = Object.entries(categoryCount)
-            .map(([name, data]) => ({ name, ...data }))
-            .sort((a, b) => b.count - a.count)
-            .slice(0, 5);
+        const topCategories = Object.entries(categoryCount)
+          .map(([name, data]) => ({ name, ...data }))
+          .sort((a, b) => b.count - a.count)
+          .slice(0, 5);
 
-          setStats({
-            totalSignals: totalSignals || 0,
-            activeSignals: signals.length,
-            totalVotes: totalVotes || 0,
-            totalHype,
-            avgScore: signals.length > 0 ? Math.round(totalScore / signals.length) : 0,
-            topCategories,
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching hype stats:", error);
-      } finally {
-        setLoading(false);
+        setStats({
+          totalSignals: totalSignals || 0,
+          activeSignals: signals.length,
+          totalVotes: totalVotes || 0,
+          totalHype,
+          avgScore: signals.length > 0 ? Math.round(totalScore / signals.length) : 0,
+          topCategories,
+        });
       }
-    };
+    } catch (error) {
+      console.error("Error fetching hype stats:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchStats();
+
+    // Set up realtime subscription for live updates
+    const channel = supabase
+      .channel('hype-stats-realtime')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'hype_signals' },
+        () => {
+          fetchStats();
+        }
+      )
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'hype_votes' },
+        () => {
+          fetchStats();
+        }
+      )
+      .subscribe();
+
+    // Also poll every 5 seconds as a fallback
+    const interval = setInterval(fetchStats, 5000);
+
+    return () => {
+      supabase.removeChannel(channel);
+      clearInterval(interval);
+    };
   }, []);
 
   const statCards = [

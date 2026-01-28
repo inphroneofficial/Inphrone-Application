@@ -32,6 +32,7 @@ export function useHypeSignals(categoryId?: string) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [userVotes, setUserVotes] = useState<Record<string, 'hype' | 'pass'>>({});
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [currentUserType, setCurrentUserType] = useState<string | null>(null);
   const [userSubmissionsToday, setUserSubmissionsToday] = useState(0);
 
   // Fetch categories
@@ -43,11 +44,21 @@ export function useHypeSignals(categoryId?: string) {
     fetchCategories();
   }, []);
 
-  // Fetch current user
+  // Fetch current user and their type
   useEffect(() => {
     const getUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       setCurrentUserId(user?.id || null);
+      
+      if (user?.id) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("user_type")
+          .eq("id", user.id)
+          .single();
+        
+        setCurrentUserType(profile?.user_type || null);
+      }
     };
     getUser();
   }, []);
@@ -178,6 +189,12 @@ export function useHypeSignals(categoryId?: string) {
       return false;
     }
 
+    // Only audience users can submit signals
+    if (currentUserType && currentUserType !== 'audience') {
+      toast.error("Only audience members can submit signals");
+      return false;
+    }
+
     if (userSubmissionsToday >= 3) {
       toast.error("Daily limit reached", {
         description: "You can submit up to 3 signals per day"
@@ -250,6 +267,12 @@ export function useHypeSignals(categoryId?: string) {
       return false;
     }
 
+    // Only audience users can vote
+    if (currentUserType && currentUserType !== 'audience') {
+      toast.info("Voting is for audience members only");
+      return false;
+    }
+
     const existingVote = userVotes[signalId];
 
     try {
@@ -264,11 +287,27 @@ export function useHypeSignals(categoryId?: string) {
           
           if (error) throw error;
           
+          // Update local state immediately
           setUserVotes(prev => {
             const updated = { ...prev };
             delete updated[signalId];
             return updated;
           });
+
+          // Update signal counts locally
+          setSignals(prev => prev.map(s => {
+            if (s.id === signalId) {
+              const newHype = voteType === 'hype' ? s.hype_count - 1 : s.hype_count;
+              const newPass = voteType === 'pass' ? s.pass_count - 1 : s.pass_count;
+              return {
+                ...s,
+                hype_count: newHype,
+                pass_count: newPass,
+                signal_score: newHype - newPass
+              };
+            }
+            return s;
+          }));
         } else {
           // Change vote
           const { error } = await supabase
@@ -280,6 +319,21 @@ export function useHypeSignals(categoryId?: string) {
           if (error) throw error;
           
           setUserVotes(prev => ({ ...prev, [signalId]: voteType }));
+
+          // Update signal counts locally
+          setSignals(prev => prev.map(s => {
+            if (s.id === signalId) {
+              const newHype = voteType === 'hype' ? s.hype_count + 1 : s.hype_count - 1;
+              const newPass = voteType === 'pass' ? s.pass_count + 1 : s.pass_count - 1;
+              return {
+                ...s,
+                hype_count: newHype,
+                pass_count: newPass,
+                signal_score: newHype - newPass
+              };
+            }
+            return s;
+          }));
         }
       } else {
         // New vote
@@ -292,6 +346,21 @@ export function useHypeSignals(categoryId?: string) {
         if (error) throw error;
         
         setUserVotes(prev => ({ ...prev, [signalId]: voteType }));
+
+        // Update signal counts locally
+        setSignals(prev => prev.map(s => {
+          if (s.id === signalId) {
+            const newHype = voteType === 'hype' ? s.hype_count + 1 : s.hype_count;
+            const newPass = voteType === 'pass' ? s.pass_count + 1 : s.pass_count;
+            return {
+              ...s,
+              hype_count: newHype,
+              pass_count: newPass,
+              signal_score: newHype - newPass
+            };
+          }
+          return s;
+        }));
         
         // Update rewards (+1 point for voting)
         const { data: rewardData } = await supabase
@@ -316,14 +385,15 @@ export function useHypeSignals(categoryId?: string) {
     }
   };
 
-  // Setup realtime subscription
+  // Setup realtime subscription for signals
   useEffect(() => {
-    const channel = supabase
+    const signalChannel = supabase
       .channel('hype-signals-realtime')
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'hype_signals' },
         (payload) => {
+          console.log('Hype signal change:', payload);
           if (payload.eventType === 'UPDATE') {
             setSignals(prev => prev.map(s => 
               s.id === payload.new.id 
@@ -338,10 +408,67 @@ export function useHypeSignals(categoryId?: string) {
       )
       .subscribe();
 
+    // Also subscribe to votes for real-time count updates
+    const votesChannel = supabase
+      .channel('hype-votes-realtime')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'hype_votes' },
+        async (payload) => {
+          console.log('Hype vote change:', payload);
+          // Refetch the specific signal to get updated counts
+          if (payload.new && typeof payload.new === 'object' && 'signal_id' in payload.new) {
+            const signalId = payload.new.signal_id;
+            const { data: updatedSignal } = await supabase
+              .from("hype_signals")
+              .select("id, hype_count, pass_count, signal_score")
+              .eq("id", signalId)
+              .single();
+            
+            if (updatedSignal) {
+              setSignals(prev => prev.map(s =>
+                s.id === signalId
+                  ? { ...s, ...updatedSignal }
+                  : s
+              ));
+            }
+          }
+        }
+      )
+      .subscribe();
+
     return () => {
-      supabase.removeChannel(channel);
+      supabase.removeChannel(signalChannel);
+      supabase.removeChannel(votesChannel);
     };
   }, [fetchSignals]);
+
+  // Poll for updates every 5 seconds as fallback
+  useEffect(() => {
+    const pollInterval = setInterval(() => {
+      if (signals.length > 0) {
+        const signalIds = signals.map(s => s.id);
+        supabase
+          .from("hype_signals")
+          .select("id, hype_count, pass_count, signal_score")
+          .in("id", signalIds)
+          .then(({ data }) => {
+            if (data) {
+              setSignals(prev => prev.map(s => {
+                const updated = data.find(d => d.id === s.id);
+                return updated ? { ...s, ...updated } : s;
+              }));
+            }
+          });
+      }
+    }, 5000);
+
+    return () => clearInterval(pollInterval);
+  }, [signals]);
+
+  // Determine if user is audience (can vote/submit) or viewer (view-only)
+  const isAudience = currentUserType === 'audience' || currentUserType === null;
+  const isViewOnly = currentUserType !== null && currentUserType !== 'audience';
 
   return {
     signals,
@@ -349,11 +476,14 @@ export function useHypeSignals(categoryId?: string) {
     categories,
     userVotes,
     currentUserId,
+    currentUserType,
     userSubmissionsToday,
     fetchSignals,
     fetchRisingSignals,
     submitSignal,
     vote,
-    canSubmit: userSubmissionsToday < 3,
+    canSubmit: isAudience && userSubmissionsToday < 3,
+    canVote: isAudience,
+    isViewOnly,
   };
 }

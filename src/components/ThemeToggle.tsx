@@ -30,18 +30,22 @@ export function ThemeToggle() {
     const isInphroneTheme = root.classList.contains('inphrone-theme');
     
     // If in Inphrone theme, switching to light removes the inphrone-theme
-    if (isInphroneTheme && theme === "dark") {
+    if (isInphroneTheme) {
       root.classList.remove('inphrone-theme', 'dark');
       setTheme("light");
       localStorage.setItem("theme", "light");
+      localStorage.removeItem("inphrone-theme");
       return;
     }
     
-    // Standard toggle behavior
+    // Standard toggle behavior - cycle through light -> dark -> light
     const newTheme = theme === "dark" ? "light" : "dark";
     setTheme(newTheme);
     localStorage.setItem("theme", newTheme);
-    root.classList.toggle("dark", newTheme === "dark");
+    root.classList.remove('dark', 'inphrone-theme');
+    if (newTheme === "dark") {
+      root.classList.add("dark");
+    }
   };
 
   return (

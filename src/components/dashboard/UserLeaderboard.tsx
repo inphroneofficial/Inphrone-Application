@@ -46,11 +46,10 @@ export function UserLeaderboard({ currentUserId, limit = 10 }: UserLeaderboardPr
 
   const fetchLeaderboard = async () => {
     try {
-      // Fetch all audience profiles with their contribution stats
+      // Fetch ALL profiles (not just audience) for true top contributors
       const { data: profiles } = await supabase
         .from("profiles")
-        .select("id, full_name, profile_picture, user_type")
-        .eq("user_type", "audience");
+        .select("id, full_name, profile_picture, user_type");
 
       if (!profiles?.length) {
         setLoading(false);

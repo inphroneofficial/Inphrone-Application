@@ -219,7 +219,26 @@ export function MobileMenu() {
                 className="mt-8"
               >
                 <motion.button
-                  onClick={() => setTheme(isDark ? 'light' : 'dark')}
+                  onClick={() => {
+                    const root = document.documentElement;
+                    const isInphroneTheme = root.classList.contains('inphrone-theme');
+                    
+                    // If in Inphrone theme, switch to light mode
+                    if (isInphroneTheme) {
+                      root.classList.remove('inphrone-theme', 'dark');
+                      setTheme('light');
+                      localStorage.setItem("theme", "light");
+                      localStorage.removeItem("inphrone-theme");
+                    } else {
+                      // Standard toggle
+                      const newTheme = isDark ? 'light' : 'dark';
+                      setTheme(newTheme);
+                      root.classList.remove('dark', 'inphrone-theme');
+                      if (newTheme === 'dark') {
+                        root.classList.add('dark');
+                      }
+                    }
+                  }}
                   className="relative flex items-center gap-2 px-4 py-2 rounded-full bg-muted/30 border border-border/50"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}

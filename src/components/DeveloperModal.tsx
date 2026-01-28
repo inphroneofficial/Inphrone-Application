@@ -112,8 +112,8 @@ export function DeveloperModal({ open, onOpenChange }: DeveloperModalProps) {
                     />
                     <img
                       src="/GTK1.png"
-                      alt="G. Thangella"
-                      className="w-full h-full object-cover rounded-2xl relative z-[1] shadow-2xl"
+                      alt="G.Thangella"
+                      className="w-full h-full object-contain rounded-2xl relative z-[1] shadow-2xl"
                     />
                     <div className="absolute inset-0 rounded-2xl ring-2 ring-white/20 z-20" />
                   </motion.div>
@@ -124,7 +124,7 @@ export function DeveloperModal({ open, onOpenChange }: DeveloperModalProps) {
                     transition={{ delay: 0.3 }}
                     className="text-xl font-bold mb-1"
                   >
-                    G. Thangella
+                    G.Thangella
                   </motion.h3>
 
                   <motion.div
@@ -299,7 +299,7 @@ export function DeveloperModal({ open, onOpenChange }: DeveloperModalProps) {
                 className="flex items-center justify-center p-4"
               >
                 <img
-                  src="/inphrone-logo.jpg"
+                  src="/GTK1.png"
                   alt="G. Thangella - Founder of Inphrone"
                   className="max-h-[70vh] w-auto rounded-xl shadow-2xl"
                 />
