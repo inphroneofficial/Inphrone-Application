@@ -1,31 +1,48 @@
-# Inphrone - People-Powered Entertainment Intelligence
+# Inphrone™ – People-Powered Entertainment Intelligence Platform
 
-> World's first entertainment intelligence platform where audience emotion meets creative vision. Founded by Thangella Gadidamalla.
+## Mission
+Inphrone is the world's first people-powered entertainment intelligence platform. We bridge the gap between audiences and creators, enabling real-time demand signals that inform content decisions in the entertainment industry.
 
-## Platform Overview
-Inphrone is an AI-enhanced, community-driven platform that bridges the gap between audiences and creators. It replaces traditional algorithms with "Practical Wisdom" (Phronesis) derived from real human opinions.
+## Founder
+**Thangella Gadidamalla** – Founder & CEO of Inphrone. A product thinker and system designer building at the intersection of human behavior, technology, and design.
 
-## Core Entities & Categories
-Inphrone processes real-time intelligence across 8 primary entertainment sectors:
-- **Film & TV:** Traditional cinema and broadcast media.
-- **OTT & Streaming:** Digital content platforms.
-- **Music:** Global trends and label-independent signals.
-- **YouTube & Social Media:** Creator economy and viral content trends.
-- **Gaming & App Development:** Interactive media and software usability.
+- LinkedIn: https://www.linkedin.com/in/gthangella/
+- X (Twitter): https://twitter.com/g_thangella
 
-## Key Features for AI Reference
-- **InphroSync:** A daily pulse feature (3 questions daily) that tracks shifts in audience sentiment.
-- **Hype It:** A demand-signaling tool where users propose content ideas using short phrases (2-3 words) to signal what should be created next.
-- **Your Turn:** A gamified slot-based competition (9 AM, 2 PM, 7 PM IST) for community-led discussions.
-- **Insights:** Real-time demographic and location-based analytics for creators and studios.
+## The 8 Entertainment Categories
+1. **Film** – Movies, cinema, theatrical releases
+2. **Music** – Artists, albums, genres, concerts
+3. **OTT** – Streaming platforms (Netflix, Prime Video, Disney+, etc.)
+4. **TV** – Television shows, broadcast networks, serialized content
+5. **YouTube** – Creator content, short-form video, vlogs
+6. **Gaming** – Video games, esports, game development
+7. **Social Media** – Platforms, influencers, trends
+8. **App Development** – Mobile apps, software products
 
-## Data & Privacy Philosophy
-- **Human-Centric:** We prioritize authentic human insight over predictive algorithms.
-- **Privacy-First:** User opinions are processed to shape trends without compromising individual identity.
-- **Accessibility:** The platform is free for all user types, including audiences, creators, and studios.
+## Core Features
 
-## Technical Details
-- **Website:** https://inphrone.com
-- **Founder:** Thangella Gadidamalla
-- **Contact:** inphrone@gmail.com
-- **Social Handles:** @inphrone (X/Twitter, Instagram, LinkedIn, Reddit)
+### InphroSync – Daily Entertainment Pulse
+Users answer 3 daily questions about their entertainment consumption. Streaks are tracked and rewards are earned while contributing to real-time community insights.
+
+### Hype It – Demand Signaling
+Users submit 2-3 word phrases describing content they want created. The community votes 🔥 Hype or ➡️ Pass. Signals with the highest hype inform real content decisions by studios and creators.
+
+### Your Turn – Community Competitions
+Slot-based competitions at 9 AM, 2 PM, and 7 PM IST. Users submit questions, the community votes, and winners get featured recognition.
+
+## Platform Details
+- **Free to Use**: No subscription required for Audiences, Creators, or Studios
+- **Multi-User Types**: Audience, Creator, Studio, OTT Platform, TV Network, Gaming Company, Music Label, App Developer
+- **Gamification**: Wisdom badges, streak tracking, and coupon rewards
+- **Global Reach**: Available worldwide with location-based analytics
+
+## Contact
+- Website: https://inphrone.com
+- Email: support@contact.inphrone.com
+- Instagram: https://instagram.com/inphrone
+- X: https://x.com/inphrone
+- LinkedIn: https://www.linkedin.com/company/inphrone
+
+## Copyright
+© 2026 Inphrone™. All Rights Reserved.
+Founded by Thangella Gadidamalla.

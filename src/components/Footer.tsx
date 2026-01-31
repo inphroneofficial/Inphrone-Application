@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Heart, Instagram, Facebook, Youtube, Send, Mail, Code } from "lucide-react";
+import { Heart, Brain, Instagram, Facebook, Youtube, Send, Mail, Code } from "lucide-react";
 import { FaXTwitter, FaReddit } from "react-icons/fa6";
 import { SiMedium, SiProducthunt } from "react-icons/si";
 import { Button } from "@/components/ui/button";
@@ -157,7 +157,7 @@ export function Footer() {
             </div>
             <div className="flex items-center gap-2">
               <span>Made with</span>
-              <Heart className="h-4 w-4 text-red-500 animate-pulse" />
+              <Brain className="h-4 w-4 text-red-500 animate-pulse" />
               <span>by</span>
               <Button
                 variant="link"
@@ -165,7 +165,7 @@ export function Footer() {
                 onClick={() => setIsModalOpen(true)}
               >
                 <Code className="h-4 w-4 mr-1" />
-                G. Thangella
+                G.Thangella
               </Button>
             </div>
           </div>

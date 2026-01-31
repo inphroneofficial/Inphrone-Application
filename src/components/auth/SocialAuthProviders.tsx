@@ -98,7 +98,8 @@ export function SocialAuthProviders({ mode, onEmailClick }: SocialAuthProvidersP
         const { error } = await supabase.auth.signInWithOAuth({
           provider: 'google',
           options: {
-            redirectTo: `${window.location.origin}/dashboard`,
+            // Redirect to root, the Auth component will handle navigation
+            redirectTo: `${window.location.origin}/`,
             queryParams: {
               access_type: 'offline',
               prompt: 'consent',

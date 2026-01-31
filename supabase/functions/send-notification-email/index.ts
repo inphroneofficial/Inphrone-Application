@@ -1,7 +1,26 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-const RESEND_FROM = Deno.env.get("RESEND_FROM") || "Inphrone <onboarding@resend.dev>";
+
+// Ensure proper email format: "Name <email@domain.com>"
+const formatSenderEmail = (fromEnv: string | undefined): string => {
+  const fallback = "Inphrone <onboarding@resend.dev>";
+  if (!fromEnv) return fallback;
+  
+  // If already in proper format "Name <email>"
+  if (fromEnv.includes("<") && fromEnv.includes(">")) {
+    return fromEnv;
+  }
+  
+  // If just email, wrap with name
+  if (fromEnv.includes("@")) {
+    return `Inphrone <${fromEnv}>`;
+  }
+  
+  return fallback;
+};
+
+const RESEND_FROM = formatSenderEmail(Deno.env.get("RESEND_FROM"));
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",

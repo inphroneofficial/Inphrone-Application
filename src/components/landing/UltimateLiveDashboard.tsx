@@ -329,6 +329,8 @@ const AIProcessingViz = () => {
         {connections.map((conn, i) => {
           const from = nodes[conn.from];
           const to = nodes[conn.to];
+          // Safety check to prevent undefined values
+          if (!from || !to || from.x === undefined || to.x === undefined) return null;
           return (
             <motion.line
               key={`conn-${i}`}
@@ -357,13 +359,15 @@ const AIProcessingViz = () => {
         {connections.map((conn, i) => {
           const from = nodes[conn.from];
           const to = nodes[conn.to];
+          // Safety check to prevent undefined cx/cy values
+          if (!from || !to || from.x === undefined || to.x === undefined) return null;
           return (
             <motion.circle
               key={`pulse-${i}`}
               r="1.5"
               fill="hsl(var(--primary))"
               filter="url(#glow)"
-              initial={{ opacity: 0 }}
+              initial={{ opacity: 0, cx: from.x, cy: from.y }}
               animate={{
                 cx: [from.x, to.x],
                 cy: [from.y, to.y],
@@ -380,48 +384,52 @@ const AIProcessingViz = () => {
         })}
 
         {/* Nodes */}
-        {nodes.map((node, i) => (
-          <g key={`node-${i}`}>
-            {/* Outer glow ring */}
-            <motion.circle
-              cx={node.x}
-              cy={node.y}
-              r="6"
-              fill="none"
-              stroke="hsl(var(--primary) / 0.3)"
-              strokeWidth="0.5"
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ 
-                scale: [0.8, 1.2, 0.8],
-                opacity: [0.3, 0.6, 0.3]
-              }}
-              transition={{ 
-                duration: 2,
-                delay: node.delay,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            />
-            {/* Inner node */}
-            <motion.circle
-              cx={node.x}
-              cy={node.y}
-              r="3"
-              fill={i === nodes.length - 1 ? "hsl(var(--accent))" : "hsl(var(--primary))"}
-              filter="url(#glow)"
-              initial={{ scale: 0.5 }}
-              animate={{ 
-                scale: [1, 1.2, 1],
-              }}
-              transition={{ 
-                duration: 1.5,
-                delay: node.delay,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            />
-          </g>
-        ))}
+        {nodes.map((node, i) => {
+          // Safety check to prevent undefined cx/cy
+          if (!node || node.x === undefined || node.y === undefined) return null;
+          return (
+            <g key={`node-${i}`}>
+              {/* Outer glow ring */}
+              <motion.circle
+                cx={node.x}
+                cy={node.y}
+                r="6"
+                fill="none"
+                stroke="hsl(var(--primary) / 0.3)"
+                strokeWidth="0.5"
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ 
+                  scale: [0.8, 1.2, 0.8],
+                  opacity: [0.3, 0.6, 0.3]
+                }}
+                transition={{ 
+                  duration: 2,
+                  delay: node.delay || 0,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
+              {/* Inner node */}
+              <motion.circle
+                cx={node.x}
+                cy={node.y}
+                r="3"
+                fill={i === nodes.length - 1 ? "hsl(var(--accent))" : "hsl(var(--primary))"}
+                filter="url(#glow)"
+                initial={{ scale: 0.5 }}
+                animate={{ 
+                  scale: [1, 1.2, 1],
+                }}
+                transition={{ 
+                  duration: 1.5,
+                  delay: node.delay || 0,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
+            </g>
+          );
+        })}
 
         {/* SVG Defs */}
         <defs>
@@ -647,13 +655,13 @@ export const UltimateLiveDashboard = () => {
         setWeeklyStats({ thisWeek: thisWeekCount, lastWeek: lastWeekCount });
       }
 
-      // Activities
+      // Activities - simplified query without problematic joins
       const [opinionsRes, upvotesRes] = await Promise.all([
         supabase.from("opinions")
-          .select("id, created_at, profiles:user_id(user_type), categories:category_id(name)")
+          .select("id, created_at, user_id, categories:category_id(name)")
           .order("created_at", { ascending: false }).limit(5),
         supabase.from("opinion_upvotes")
-          .select("id, created_at, user_type, opinions:opinion_id(categories:category_id(name))")
+          .select("id, created_at, user_type")
           .order("created_at", { ascending: false }).limit(5),
       ]);
 
@@ -662,14 +670,14 @@ export const UltimateLiveDashboard = () => {
         allActivities.push({
           id: `o-${op.id}`, type: "opinion",
           category: op.categories?.name || "Entertainment",
-          userType: op.profiles?.user_type || "Audience",
+          userType: "Audience", // Default since we can't reliably fetch from profiles
           time: new Date(op.created_at),
         });
       });
       upvotesRes.data?.forEach((up: any) => {
         allActivities.push({
           id: `u-${up.id}`, type: "upvote",
-          category: up.opinions?.categories?.name || "Entertainment",
+          category: "Entertainment",
           userType: up.user_type || "Audience",
           time: new Date(up.created_at),
         });

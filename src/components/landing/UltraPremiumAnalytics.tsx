@@ -466,61 +466,71 @@ export const NeuralNetworkAdvanced = ({ className }: { className?: string }) => 
         
         {/* Connections with animated pulses */}
         {layers.slice(0, -1).map((layer, li) =>
-          layer.map((node, ni) =>
-            layers[li + 1].map((nextNode, nni) => (
-              <g key={`conn-${li}-${ni}-${nni}`}>
-                <line
-                  x1={node.x}
-                  y1={node.y}
-                  x2={nextNode.x}
-                  y2={nextNode.y}
-                  stroke="hsl(var(--primary) / 0.15)"
-                  strokeWidth="0.3"
-                />
-                <motion.circle
-                  r="0.8"
-                  fill="hsl(var(--primary))"
-                  filter="url(#glow)"
-                  initial={{ opacity: 0 }}
-                  animate={{
-                    cx: [node.x, nextNode.x],
-                    cy: [node.y, nextNode.y],
-                    opacity: [0, 1, 0],
-                  }}
-                  transition={{
-                    duration: 1.5,
-                    delay: (li * 0.4) + (ni * 0.1) + (nni * 0.05),
-                    repeat: Infinity,
-                    repeatDelay: 2,
-                  }}
-                />
-              </g>
-            ))
-          )
+          layer.map((node, ni) => {
+            // Safety check for node coordinates
+            if (!node || node.x === undefined || node.y === undefined) return null;
+            return layers[li + 1].map((nextNode, nni) => {
+              // Safety check for nextNode coordinates
+              if (!nextNode || nextNode.x === undefined || nextNode.y === undefined) return null;
+              return (
+                <g key={`conn-${li}-${ni}-${nni}`}>
+                  <line
+                    x1={node.x}
+                    y1={node.y}
+                    x2={nextNode.x}
+                    y2={nextNode.y}
+                    stroke="hsl(var(--primary) / 0.15)"
+                    strokeWidth="0.3"
+                  />
+                  <motion.circle
+                    r="0.8"
+                    fill="hsl(var(--primary))"
+                    filter="url(#glow)"
+                    initial={{ opacity: 0, cx: node.x, cy: node.y }}
+                    animate={{
+                      cx: [node.x, nextNode.x],
+                      cy: [node.y, nextNode.y],
+                      opacity: [0, 1, 0],
+                    }}
+                    transition={{
+                      duration: 1.5,
+                      delay: (li * 0.4) + (ni * 0.1) + (nni * 0.05),
+                      repeat: Infinity,
+                      repeatDelay: 2,
+                    }}
+                  />
+                </g>
+              );
+            });
+          })
         )}
         
         {/* Nodes */}
         {layers.map((layer, li) =>
-          layer.map((node, ni) => (
-            <motion.circle
-              key={`node-${li}-${ni}`}
-              cx={node.x}
-              cy={node.y}
-              r={li === 4 ? 4 : 2.5}
-              fill="hsl(var(--primary))"
-              filter="url(#glow)"
-              initial={{ scale: 0 }}
-              animate={{ 
-                scale: [1, 1.2, 1],
-                opacity: [0.7, 1, 0.7],
-              }}
-              transition={{
-                duration: 2,
-                delay: li * 0.3 + ni * 0.1,
-                repeat: Infinity,
-              }}
-            />
-          ))
+          layer.map((node, ni) => {
+            // Safety check for node coordinates
+            if (!node || node.x === undefined || node.y === undefined) return null;
+            return (
+              <motion.circle
+                key={`node-${li}-${ni}`}
+                cx={node.x}
+                cy={node.y}
+                r={li === 4 ? 4 : 2.5}
+                fill="hsl(var(--primary))"
+                filter="url(#glow)"
+                initial={{ scale: 0 }}
+                animate={{ 
+                  scale: [1, 1.2, 1],
+                  opacity: [0.7, 1, 0.7],
+                }}
+                transition={{
+                  duration: 2,
+                  delay: li * 0.3 + ni * 0.1,
+                  repeat: Infinity,
+                }}
+              />
+            );
+          })
         )}
       </svg>
       

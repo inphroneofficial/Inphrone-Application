@@ -439,13 +439,12 @@ const LiveActivityFeed = ({ isBlurred = false, limit = 4 }: { isBlurred?: boolea
 
   const fetchRealActivities = async () => {
     try {
-      // Recent opinions (no names; only role + category)
+      // Recent opinions (no names; only category - removed problematic profiles join)
       const { data: recentOpinions } = await supabase
         .from("opinions")
         .select(
           `
-          id, created_at,
-          profiles:user_id(user_type),
+          id, created_at, user_id,
           categories:category_id(name)
         `
         )
@@ -457,8 +456,7 @@ const LiveActivityFeed = ({ isBlurred = false, limit = 4 }: { isBlurred?: boolea
         .from("opinion_upvotes")
         .select(
           `
-          id, created_at, user_type,
-          opinions:opinion_id(categories:category_id(name))
+          id, created_at, user_type
         `
         )
         .order("created_at", { ascending: false })
@@ -478,7 +476,7 @@ const LiveActivityFeed = ({ isBlurred = false, limit = 4 }: { isBlurred?: boolea
         allActivities.push({
           id: `opinion-${op.id}`,
           type: "opinion",
-          user_type: op.profiles?.user_type || "audience",
+          user_type: "audience", // Default since join was removed
           category: categoryName,
           action: "shared an opinion",
           time: new Date(op.created_at),
@@ -487,12 +485,11 @@ const LiveActivityFeed = ({ isBlurred = false, limit = 4 }: { isBlurred?: boolea
       });
 
       recentUpvotes?.forEach((up: any) => {
-        const categoryName = up.opinions?.categories?.name || "Entertainment";
         allActivities.push({
           id: `upvote-${up.id}`,
           type: "upvote",
           user_type: up.user_type || "audience",
-          category: categoryName,
+          category: "Entertainment",
           action: "liked an opinion",
           time: new Date(up.created_at),
           icon: ThumbsUp,

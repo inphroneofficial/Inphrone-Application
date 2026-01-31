@@ -27,6 +27,8 @@ import {
   History,
   Smartphone
 } from "lucide-react";
+import { LiveIntelligencePulse } from "@/components/common/LiveIntelligencePulse";
+import { AISummary } from "@/components/common/AISummary";
 
 interface CategoryData {
   id: string;
@@ -676,21 +678,30 @@ const Insights = () => {
       
       <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 relative z-10">
         <div className="max-w-7xl mx-auto space-y-8">
+          {/* Live Intelligence Pulse */}
+          <div className="flex justify-between items-center">
+            <Button
+              variant="ghost"
+              onClick={() => navigate("/dashboard")}
+              className="hover:bg-primary/10 transition-all"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Dashboard
+            </Button>
+            <LiveIntelligencePulse />
+          </div>
+          
+          {/* AI Summary for SEO */}
+          <AISummary 
+            summary="Inphrone Insights provides real-time entertainment intelligence across 8 categories: Film, Music, OTT, TV, YouTube, Gaming, Social Media, and App Development. View global trends, demographic analytics, and community opinions powered by authentic audience voices."
+          />
+          
           {/* Futuristic Header */}
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             className="space-y-8"
           >
-            <Button
-              variant="ghost"
-              onClick={() => navigate("/dashboard")}
-              className="mb-4 hover:bg-primary/10 transition-all"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Dashboard
-            </Button>
-            
             <div className="relative">
               {/* Hero content */}
               <div className="text-center space-y-6 py-8 md:py-12">

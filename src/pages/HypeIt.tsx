@@ -19,7 +19,7 @@ export default function HypeIt() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [activeView, setActiveView] = useState<'feed' | 'swipe' | 'analytics'>('feed');
-  const { signals, userVotes, vote, currentUserId } = useHypeSignals();
+  const { signals, userVotes, vote, currentUserId, loading: signalsLoading, fetchSignals } = useHypeSignals();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -43,12 +43,15 @@ export default function HypeIt() {
       }
 
       setLoading(false);
+      
+      // Fetch signals after auth check
+      fetchSignals('new');
     };
 
     checkAuth();
-  }, [navigate]);
+  }, [navigate, fetchSignals]);
 
-  if (loading) {
+  if (loading || signalsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <motion.div
@@ -57,7 +60,7 @@ export default function HypeIt() {
           className="text-center"
         >
           <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="mt-4 text-muted-foreground">Loading...</p>
+          <p className="mt-4 text-muted-foreground">Loading Hype Signals...</p>
         </motion.div>
       </div>
     );

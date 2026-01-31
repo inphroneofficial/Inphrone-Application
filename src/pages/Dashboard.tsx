@@ -40,6 +40,8 @@ import { ActivityFeed } from "@/components/dashboard/ActivityFeed";
 import { UserLeaderboard } from "@/components/dashboard/UserLeaderboard";
 import { TrendingTopics } from "@/components/dashboard/TrendingTopics";
 import { EmailVerificationBanner } from "@/components/common/EmailVerificationBanner";
+import { LiveIntelligencePulse } from "@/components/common/LiveIntelligencePulse";
+import { AISummary } from "@/components/common/AISummary";
 import { NonAudienceDashboard } from "@/components/dashboard/NonAudienceDashboard";
 
 interface Category {
@@ -460,6 +462,13 @@ const Dashboard = () => {
       <EmailVerificationBanner />
       
       <Navbar />
+      
+      {/* Live Intelligence Pulse */}
+      <div className="container mx-auto px-4 pt-4">
+        <div className="flex justify-end">
+          <LiveIntelligencePulse />
+        </div>
+      </div>
       
       {/* Enhanced Header with Glassmorphism */}
       <header className="sticky top-16 z-40 backdrop-blur-xl bg-background/95 border-b border-border/50 shadow-lg">

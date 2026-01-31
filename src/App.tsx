@@ -34,6 +34,7 @@ import Admin from "./pages/Admin";
 import InphroSync from "./pages/InphroSync";
 import YourTurn from "./pages/YourTurn";
 import HypeIt from "./pages/HypeIt";
+import FounderPage from "./pages/FounderPage";
 import { supabase } from "@/integrations/supabase/client";
 import { ChatBot } from "./components/ChatBot";
 import { CookieConsent } from "./components/CookieConsent";
@@ -67,6 +68,7 @@ function AnimatedRoutes() {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<PageTransition><Landing /></PageTransition>} />
         <Route path="/about" element={<PageTransition><About /></PageTransition>} />
+        <Route path="/about/founder" element={<PageTransition><FounderPage /></PageTransition>} />
         <Route path="/auth" element={<PageTransition><Auth /></PageTransition>} />
         <Route path="/forgot-password" element={<PageTransition><ForgotPassword /></PageTransition>} />
         <Route path="/password-reset" element={<PageTransition><PasswordReset /></PageTransition>} />
@@ -92,6 +94,7 @@ function AnimatedRoutes() {
         <Route path="/inphrosync" element={<PageTransition><InphroSync /></PageTransition>} />
         <Route path="/yourturn" element={<PageTransition><YourTurn /></PageTransition>} />
         <Route path="/hype" element={<PageTransition><HypeIt /></PageTransition>} />
+        <Route path="/hype-it" element={<PageTransition><HypeIt /></PageTransition>} />
         <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
       </Routes>
     </AnimatePresence>

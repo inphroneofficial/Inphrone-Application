@@ -190,12 +190,12 @@ export const UnifiedLiveDashboard = () => {
       const [opinionsRes, upvotesRes] = await Promise.all([
         supabase
           .from("opinions")
-          .select("id, created_at, profiles:user_id(user_type), categories:category_id(name)")
+          .select("id, created_at, user_id, categories:category_id(name)")
           .order("created_at", { ascending: false })
           .limit(5),
         supabase
           .from("opinion_upvotes")
-          .select("id, created_at, user_type, opinions:opinion_id(categories:category_id(name))")
+          .select("id, created_at, user_type")
           .order("created_at", { ascending: false })
           .limit(5),
       ]);
@@ -206,8 +206,8 @@ export const UnifiedLiveDashboard = () => {
         allActivities.push({
           id: `opinion-${op.id}`,
           type: "opinion",
-          category: op.categories?.name,
-          userType: op.profiles?.user_type || "Audience",
+          category: op.categories?.name || "Entertainment",
+          userType: "Audience", // Default since join was removed
           time: new Date(op.created_at),
         });
       });
@@ -216,7 +216,7 @@ export const UnifiedLiveDashboard = () => {
         allActivities.push({
           id: `upvote-${up.id}`,
           type: "upvote",
-          category: up.opinions?.categories?.name,
+          category: "Entertainment",
           userType: up.user_type || "Audience",
           time: new Date(up.created_at),
         });
